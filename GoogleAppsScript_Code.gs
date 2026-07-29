@@ -599,10 +599,21 @@ function filterOrders_(rows, params) {
   return {
     items: filtered.slice(start, start + pageSize).map(stripSearchText_),
     total: filtered.length,
+    summary: makeOrderStatusSummary_(filtered),
     page: page,
     pageSize: pageSize,
     totalPages: Math.max(1, Math.ceil(filtered.length / pageSize))
   };
+}
+
+function makeOrderStatusSummary_(rows) {
+  const summary = { total: rows.length, confirm: 0, cancel: 0 };
+  rows.forEach(function (order) {
+    const status = normalize_(order.status);
+    if (status === 'confirm') summary.confirm++;
+    if (status === 'cancel') summary.cancel++;
+  });
+  return summary;
 }
 
 function makeSummary_(rows) {

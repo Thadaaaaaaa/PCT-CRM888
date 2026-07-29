@@ -3886,6 +3886,7 @@ mnavSync();</script>
     dashboardState.orderFilters.dateFrom = '';
     dashboardState.orderFilters.dateTo = '';
     dashboardState.page = 1;
+    renderDashboardStatusCards(dashboardState.summary || {});
     renderAppointmentDaily(dashboardState.summary || {});
     switchNativeDashboardTab('orders');
   }
@@ -3939,6 +3940,12 @@ mnavSync();</script>
 
   function renderDashboardSummary(summary) {
     dashboardState.summary = summary || {};
+    renderDashboardStatusCards(summary);
+    renderAppointmentDaily(summary);
+  }
+
+  function renderDashboardStatusCards(summary) {
+    summary = summary || {};
     const set = function (id, value) {
       const element = document.getElementById(id);
       if (element) element.textContent = reportNumber(value).toLocaleString();
@@ -3946,7 +3953,6 @@ mnavSync();</script>
     set('pctNsOrders', summary.total);
     set('pctNsConfirm', summary.confirm);
     set('pctNsCancel', summary.cancel);
-    renderAppointmentDaily(summary);
   }
 
   function orderFilterParams() {
@@ -3973,6 +3979,7 @@ mnavSync();</script>
     dashboardState.orders = data;
     dashboardState.page = data.page || 1;
     dashboardState.totalPages = data.totalPages || 1;
+    renderDashboardStatusCards(dashboardState.appointmentFilterActive ? (data.summary || { total: data.total }) : dashboardState.summary);
     const content = document.getElementById('pctNativeContent');
     if (!content) return;
     if (dashboardState.appointmentFilterActive) {
