@@ -3949,6 +3949,10 @@ mnavSync();</script>
     dashboardState.totalPages = data.totalPages || 1;
     const content = document.getElementById('pctNativeContent');
     if (!content) return;
+    if (dashboardState.appointmentFilterActive) {
+      const selectedCount = document.getElementById('pctAppointmentSelectedCount');
+      if (selectedCount) selectedCount.textContent = reportNumber(data.total).toLocaleString();
+    }
     content.innerHTML = '<div class="pct-native-toolbar">' +
       '<input id="pctOrderQ" type="search" placeholder="ค้นหา SO, ชื่อ, เบอร์โทร หรือที่อยู่">' +
       '<input id="pctOrderFrom" type="date" title="ตั้งแต่วันที่">' +
