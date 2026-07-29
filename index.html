@@ -209,12 +209,21 @@ input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
 .pct-appointment-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:16px 18px;border-bottom:1px solid #f0e8e2}
 .pct-appointment-head h3{margin:5px 0 3px;font-size:16px}.pct-appointment-head p{margin:0;color:#929292;font-size:10.5px}
 .pct-appointment-controls{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}
-.pct-appointment-controls>span{color:#999;font-size:9.5px}.pct-appointment-controls input{height:34px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:10.5px}
+.pct-appointment-controls>span{width:100%;color:#999;font-size:9.5px;text-align:right}
+.pct-appointment-date-nav{display:grid;grid-template-columns:36px minmax(150px,1fr) 36px;align-items:center;gap:6px;padding:5px;border:1px solid #eadfd7;border-radius:12px;background:#fff}
+.pct-appointment-date-nav button{width:36px;height:36px;padding:0;border:0;border-radius:9px;color:#9a5324;background:#fff5ed;font-size:18px;font-weight:900;cursor:pointer}
+.pct-appointment-date-nav button:hover{background:#ffe8d5}
+.pct-appointment-controls input{width:100%;height:36px;padding:0 10px;border:0;border-radius:9px;background:#fff;font-size:11.5px;font-weight:800}
+.pct-appointment-quick{display:flex;gap:6px;flex-wrap:wrap}
+.pct-appointment-quick button.active{color:#fff;border-color:var(--orange);background:var(--orange);box-shadow:0 6px 14px rgba(255,105,0,.18)}
 .pct-appointment-summary{display:flex;align-items:center;gap:15px;padding:13px 18px;background:linear-gradient(90deg,#fffaf6,#fff)}
 .pct-appointment-summary>div:first-child{min-width:220px}.pct-appointment-summary span{display:block;color:#999;font-size:9.5px;font-weight:750}.pct-appointment-summary>div:first-child strong{display:block;margin-top:3px;font-size:12.5px}
 .pct-appointment-count{display:flex;align-items:baseline;gap:5px;margin-left:auto;color:var(--orange-dark)}.pct-appointment-count strong{font-size:28px;letter-spacing:-.04em}.pct-appointment-count span{color:var(--orange-dark)}
-.pct-appointment-days{display:grid;grid-template-columns:repeat(14,minmax(68px,1fr));gap:7px;overflow-x:auto;padding:11px 13px 14px}
-.pct-appointment-day{min-width:68px;padding:9px 7px;border:1px solid #ece6e1;border-radius:12px;color:#777;background:#fff;text-align:center;cursor:pointer;transition:.15s}
+.pct-appointment-filter-state{display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #dceee5;border-radius:10px;color:#147b4f;background:#f5fbf8;font-size:10px;font-weight:850}
+.pct-appointment-filter-state::before{content:"✓";display:grid;place-items:center;width:18px;height:18px;border-radius:50%;color:#fff;background:#25b874;font-size:10px}
+.pct-appointment-filter-state.all{color:#777;border-color:#e8e2dd;background:#f8f7f6}.pct-appointment-filter-state.all::before{content:"∞";background:#aaa}
+.pct-appointment-days{display:grid;grid-template-columns:repeat(7,minmax(82px,1fr));gap:8px;padding:12px 13px 14px}
+.pct-appointment-day{min-width:82px;padding:11px 8px;border:1px solid #ece6e1;border-radius:13px;color:#777;background:#fff;text-align:center;cursor:pointer;transition:.15s}
 .pct-appointment-day:hover{border-color:#ffc79f;background:#fff9f4;transform:translateY(-1px)}
 .pct-appointment-day span,.pct-appointment-day small{display:block;font-size:8.5px}.pct-appointment-day b{display:block;margin:4px 0 3px;color:#333;font-size:17px}
 .pct-appointment-day small{color:#999;font-weight:750}.pct-appointment-day.today{box-shadow:inset 0 0 0 1px #ffc89f}.pct-appointment-day.active{color:#fff;border-color:var(--orange);background:var(--orange);box-shadow:0 7px 16px rgba(255,105,0,.2)}
@@ -281,7 +290,9 @@ input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
   .pct-native-stats{grid-template-columns:1fr 1fr}.pct-native-toolbar,.pct-native-toolbar.problem,.pct-native-toolbar.ac{grid-template-columns:1fr}
   .pct-native-toolbar>*:first-child{grid-column:auto}.pct-native-tabs{overflow-x:auto}
   .pct-native-form-grid{grid-template-columns:1fr}.pct-native-field.full{grid-column:auto}
-  .pct-appointment-head,.pct-appointment-summary{align-items:flex-start;flex-direction:column}.pct-appointment-controls{justify-content:flex-start}
+  .pct-appointment-head,.pct-appointment-summary{align-items:stretch;flex-direction:column}.pct-appointment-controls{width:100%;justify-content:flex-start}
+  .pct-appointment-controls>span{text-align:left}.pct-appointment-date-nav{width:100%}.pct-appointment-quick{width:100%}.pct-appointment-quick button{flex:1}
+  .pct-appointment-days{grid-template-columns:repeat(7,minmax(76px,1fr));overflow-x:auto}.pct-appointment-day{min-width:76px}
   .pct-appointment-count{margin-left:0}.pct-appointment-summary>div:first-child{min-width:0}
 }
 
@@ -3585,7 +3596,8 @@ mnavSync();</script>
     acFilters: { q: '', date: '', month: '' },
     searchTimer: 0,
     liveTimer: 0,
-    appointmentDate: ''
+    appointmentDate: '',
+    appointmentFilterActive: true
   };
 
   function clean(value) {
@@ -3795,9 +3807,11 @@ mnavSync();</script>
     const selected = dashboardState.appointmentDate || dashboardTodayIso();
     dashboardState.appointmentDate = selected;
     return '<section class="pct-appointment-panel">' +
-      '<div class="pct-appointment-head"><div><div class="pct-native-kicker">Appointment workload</div><h3>จำนวนเคสตามวันนัดหมาย</h3><p>ข้อมูลสดจากคอลัมน์ Date appointment ในหน้า Orders</p></div>' +
-      '<div class="pct-appointment-controls"><span id="pctAppointmentUpdated">กำลังอัปเดต</span><input type="date" id="pctAppointmentDate" value="' + selected + '"><button class="pct-native-button" id="pctAppointmentToday">วันนี้</button></div></div>' +
-      '<div class="pct-appointment-summary"><div><span>วันที่เลือก</span><strong id="pctAppointmentSelectedDate">—</strong></div><div class="pct-appointment-count"><strong id="pctAppointmentSelectedCount">—</strong><span>เคส</span></div><button class="pct-native-button primary" id="pctAppointmentOpenCases">ดูรายการเคสวันนี้</button></div>' +
+      '<div class="pct-appointment-head"><div><div class="pct-native-kicker">เลือกวันนัดหมาย</div><h3>แตะวันที่เพื่อดูเฉพาะเคสของวันนั้น</h3><p>เมื่อเลือกวัน ตาราง Orders ด้านล่างจะเปลี่ยนให้ทันที</p></div>' +
+      '<div class="pct-appointment-controls"><span id="pctAppointmentUpdated">กำลังอัปเดต</span>' +
+      '<div class="pct-appointment-date-nav"><button type="button" id="pctAppointmentPrev" aria-label="วันก่อนหน้า">‹</button><input type="date" id="pctAppointmentDate" value="' + selected + '" aria-label="เลือกวันที่นัดหมาย"><button type="button" id="pctAppointmentNext" aria-label="วันถัดไป">›</button></div>' +
+      '<div class="pct-appointment-quick"><button class="pct-native-button" id="pctAppointmentToday">วันนี้</button><button class="pct-native-button" id="pctAppointmentTomorrow">พรุ่งนี้</button><button class="pct-native-button" id="pctAppointmentAll">ดูทุกวัน</button></div></div></div>' +
+      '<div class="pct-appointment-summary"><div><span>วันที่เลือก</span><strong id="pctAppointmentSelectedDate">—</strong></div><div class="pct-appointment-count"><strong id="pctAppointmentSelectedCount">—</strong><span>เคส</span></div><div class="pct-appointment-filter-state" id="pctAppointmentFilterState">กำลังแสดงเฉพาะวันที่เลือก</div></div>' +
       '<div class="pct-appointment-days" id="pctAppointmentDays"></div></section>';
   }
 
@@ -3814,28 +3828,50 @@ mnavSync();</script>
     document.getElementById('pctAppointmentSelectedCount').textContent = reportNumber(counts[selected]).toLocaleString();
     document.getElementById('pctAppointmentDate').value = selected;
     document.getElementById('pctAppointmentUpdated').textContent = 'อัปเดต ' + clean(summary.updatedAt || 'ล่าสุด');
+    const filterState = document.getElementById('pctAppointmentFilterState');
+    if (filterState) {
+      filterState.classList.toggle('all', !dashboardState.appointmentFilterActive);
+      filterState.textContent = dashboardState.appointmentFilterActive ? 'กำลังแสดงเฉพาะวันที่เลือก' : 'กำลังแสดงข้อมูลทุกวัน';
+    }
+    const todayButton = document.getElementById('pctAppointmentToday');
+    const tomorrowButton = document.getElementById('pctAppointmentTomorrow');
+    const allButton = document.getElementById('pctAppointmentAll');
+    if (todayButton) todayButton.classList.toggle('active', dashboardState.appointmentFilterActive && selected === dashboardTodayIso());
+    if (tomorrowButton) tomorrowButton.classList.toggle('active', dashboardState.appointmentFilterActive && selected === dashboardAddDays(dashboardTodayIso(), 1));
+    if (allButton) allButton.classList.toggle('active', !dashboardState.appointmentFilterActive);
 
     const days = [];
-    for (let offset = -3; offset <= 10; offset++) days.push(dashboardAddDays(selected, offset));
+    for (let offset = -1; offset <= 5; offset++) days.push(dashboardAddDays(selected, offset));
     host.innerHTML = days.map(function (iso) {
       const date = dashboardDateFromIso(iso);
       const isToday = iso === dashboardTodayIso();
-      return '<button class="pct-appointment-day' + (iso === selected ? ' active' : '') + (isToday ? ' today' : '') + '" data-appointment-date="' + iso + '">' +
+      return '<button class="pct-appointment-day' + (dashboardState.appointmentFilterActive && iso === selected ? ' active' : '') + (isToday ? ' today' : '') + '" data-appointment-date="' + iso + '">' +
         '<span>' + date.toLocaleDateString('th-TH', { weekday: 'short' }) + '</span><b>' + date.getDate() + '</b><small>' + reportNumber(counts[iso]) + ' เคส</small></button>';
     }).join('');
     host.querySelectorAll('[data-appointment-date]').forEach(function (button) {
       button.onclick = function () {
-        dashboardState.appointmentDate = button.dataset.appointmentDate;
-        renderAppointmentDaily(dashboardState.summary || summary);
+        applyAppointmentDateFilter(button.dataset.appointmentDate);
       };
     });
   }
 
-  function openSelectedAppointmentCases() {
-    const selected = dashboardState.appointmentDate || dashboardTodayIso();
+  function applyAppointmentDateFilter(date) {
+    const selected = clean(date) || dashboardTodayIso();
+    dashboardState.appointmentDate = selected;
+    dashboardState.appointmentFilterActive = true;
     dashboardState.orderFilters.dateFrom = selected;
     dashboardState.orderFilters.dateTo = selected;
     dashboardState.page = 1;
+    renderAppointmentDaily(dashboardState.summary || {});
+    switchNativeDashboardTab('orders');
+  }
+
+  function showAllAppointmentCases() {
+    dashboardState.appointmentFilterActive = false;
+    dashboardState.orderFilters.dateFrom = '';
+    dashboardState.orderFilters.dateTo = '';
+    dashboardState.page = 1;
+    renderAppointmentDaily(dashboardState.summary || {});
     switchNativeDashboardTab('orders');
   }
 
@@ -4168,7 +4204,13 @@ mnavSync();</script>
     const content = document.getElementById('pctNativeContent');
     if (content) content.innerHTML = dashboardLoadingHtml();
     try {
-      const payload = await dashboardGet('dashboardBootstrap', { page: 1, pageSize: 30 });
+      const selected = dashboardState.appointmentDate || dashboardTodayIso();
+      const payload = await dashboardGet('dashboardBootstrap', {
+        page: 1,
+        pageSize: 30,
+        dateFrom: dashboardState.appointmentFilterActive ? selected : '',
+        dateTo: dashboardState.appointmentFilterActive ? selected : ''
+      });
       setDashboardStatus(true, 'Google Sheet connected');
       renderDashboardSummary(payload.summary);
       dashboardState.page = 1;
@@ -4181,7 +4223,15 @@ mnavSync();</script>
   function renderDashboard(main) {
     dashboardState.tab = 'orders';
     dashboardState.page = 1;
-    dashboardState.orderFilters = { q: '', dateFrom: '', dateTo: '', status: '', difficulty: '' };
+    dashboardState.appointmentDate = dashboardState.appointmentDate || dashboardTodayIso();
+    dashboardState.appointmentFilterActive = true;
+    dashboardState.orderFilters = {
+      q: '',
+      dateFrom: dashboardState.appointmentDate,
+      dateTo: dashboardState.appointmentDate,
+      status: '',
+      difficulty: ''
+    };
     main.innerHTML = '<section class="pct-native-dashboard">' +
       dashboardHeaderHtml() + dashboardStatsHtml() + dashboardAppointmentHtml() +
       '<section class="pct-native-panel">' + dashboardTabsHtml() + '</section></section>';
@@ -4195,14 +4245,21 @@ mnavSync();</script>
     };
     main.querySelector('#pctNativeSettings').onclick = renderDashboardSettings;
     main.querySelector('#pctAppointmentDate').onchange = function () {
-      dashboardState.appointmentDate = this.value || dashboardTodayIso();
-      renderAppointmentDaily(dashboardState.summary || {});
+      applyAppointmentDateFilter(this.value || dashboardTodayIso());
     };
     main.querySelector('#pctAppointmentToday').onclick = function () {
-      dashboardState.appointmentDate = dashboardTodayIso();
-      renderAppointmentDaily(dashboardState.summary || {});
+      applyAppointmentDateFilter(dashboardTodayIso());
     };
-    main.querySelector('#pctAppointmentOpenCases').onclick = openSelectedAppointmentCases;
+    main.querySelector('#pctAppointmentTomorrow').onclick = function () {
+      applyAppointmentDateFilter(dashboardAddDays(dashboardTodayIso(), 1));
+    };
+    main.querySelector('#pctAppointmentPrev').onclick = function () {
+      applyAppointmentDateFilter(dashboardAddDays(dashboardState.appointmentDate || dashboardTodayIso(), -1));
+    };
+    main.querySelector('#pctAppointmentNext').onclick = function () {
+      applyAppointmentDateFilter(dashboardAddDays(dashboardState.appointmentDate || dashboardTodayIso(), 1));
+    };
+    main.querySelector('#pctAppointmentAll').onclick = showAllAppointmentCases;
     startDashboardLiveRefresh();
     loadNativeDashboardBootstrap();
   }
