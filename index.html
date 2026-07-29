@@ -3651,6 +3651,13 @@ mnavSync();</script>
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  document.addEventListener('click', function (event) {
+    const dashboardButton = event.target.closest('[data-special-dashboard]');
+    if (!dashboardButton) return;
+    event.preventDefault();
+    openDashboard();
+  });
+
   function addDashboardNav() {
     const nav = document.getElementById('sidebarNav');
     if (!nav || nav.querySelector('[data-special-dashboard]')) return;
