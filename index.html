@@ -4251,7 +4251,7 @@ mnavSync();</script>
   }
 
   function readTheme() {
-    const saved = safeParse(localStorage.getItem(THEME_KEY), {});
+    const saved = safeParse(localStorage.getItem(THEME_KEY), {}) || {};
     return {
       color: /^#[0-9a-f]{6}$/i.test(saved.color || '') ? saved.color : DEFAULT_THEME.color,
       radius: Math.min(24, Math.max(10, Number(saved.radius) || DEFAULT_THEME.radius)),
