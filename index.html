@@ -5,19 +5,440 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>PCT x Xiaomi Fleet Operations Hub</title>
 <!-- ===== PWA / Mobile App ===== -->
-<meta name="theme-color" content="#1f2a44">
+<meta name="theme-color" content="#FF6900">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PCT Hub">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23FF6900'/%3E%3Ctext x='90' y='118' font-family='Arial,sans-serif' font-size='72' font-weight='800' fill='%23fff' text-anchor='middle'%3EPCT%3C/text%3E%3C/svg%3E">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FF6900'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='24' font-weight='800' fill='%23fff' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
-<link rel="manifest" href='data:application/manifest+json,{"name":"PCT x Xiaomi Fleet Operations Hub","short_name":"PCT Hub","display":"standalone","start_url":".","background_color":"%23F6F7F9","theme_color":"%231f2a44","icons":[{"src":"data:image/svg+xml,%253Csvg xmlns=%2527http://www.w3.org/2000/svg%2527 viewBox=%25270 0 512 512%2527%253E%253Crect width=%2527512%2527 height=%2527512%2527 rx=%2527110%2527 fill=%2527%2523FF6900%2527/%253E%253Ctext x=%2527256%2527 y=%2527330%2527 font-family=%2527Arial,sans-serif%2527 font-size=%2527200%2527 font-weight=%2527800%2527 fill=%2527%2523fff%2527 text-anchor=%2527middle%2527%253EPCT%253C/text%253E%253C/svg%253E","sizes":"512x512","type":"image/svg+xml","purpose":"any"}]}'>
+<link rel="manifest" href='data:application/manifest+json,{"name":"PCT x Xiaomi Fleet Operations Hub","short_name":"PCT Hub","display":"standalone","start_url":".","background_color":"%23F6F7F9","theme_color":"%23FF6900","icons":[{"src":"data:image/svg+xml,%253Csvg xmlns=%2527http://www.w3.org/2000/svg%2527 viewBox=%25270 0 512 512%2527%253E%253Crect width=%2527512%2527 height=%2527512%2527 rx=%2527110%2527 fill=%2527%2523FF6900%2527/%253E%253Ctext x=%2527256%2527 y=%2527330%2527 font-family=%2527Arial,sans-serif%2527 font-size=%2527200%2527 font-weight=%2527800%2527 fill=%2527%2523fff%2527 text-anchor=%2527middle%2527%253EPCT%253C/text%253E%253C/svg%253E","sizes":"512x512","type":"image/svg+xml","purpose":"any"}]}'>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>:root{--bg:#F6F7F9;--panel:#ffffff;--panel2:#F1F2F4;--line:#E5E6EA;--text:#1D1D1F;--muted:#86868B;--muted2:#B0B0B5;--orange:#FF6900;--orange-dark:#E85E00;--orange-tint:#FFF1E6;--navy:#1f2a44}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,"Segoe UI","PingFang SC","Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text)}.app{display:flex;min-height:100vh}.sidebar{width:256px;flex:0 0 256px;background:#fff;border-right:1px solid var(--line);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;padding:20px 14px;z-index:90;transition:left .2s}.sidebar-brand{display:flex;align-items:center;gap:10px;padding:6px 8px 18px;border-bottom:1px solid var(--line);margin-bottom:14px}.sidebar-brand .logo{width:38px;height:38px;border-radius:10px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:0 0 auto}.sidebar-brand .txt{font-weight:700;font-size:14.5px;line-height:1.25;letter-spacing:-.01em}.sidebar-brand .txt small{display:block;font-weight:500;font-size:10.5px;color:var(--muted);margin-top:1px}.sidebar-section-label{font-size:10.5px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;margin-top:4px}.navitem{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-size:13.3px;font-weight:600;margin-bottom:2px;position:relative;user-select:none}.navitem .ic{font-size:15px;width:20px;text-align:center;flex:0 0 auto}.navitem .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.navitem .cnt{font-size:10.5px;font-weight:700;color:var(--muted2);background:var(--panel2);border-radius:999px;padding:1px 7px}.navitem:hover{background:var(--panel2)}.navitem.active{background:var(--tint,var(--orange-tint));color:var(--text)}.navitem.active::before{content:'';position:absolute;left:-4px;top:6px;bottom:6px;width:3px;border-radius:3px;background:var(--accent,var(--orange))}.navitem .editTab{opacity:0;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10.5px;background:#fff;border:1px solid var(--line);color:var(--muted);flex:0 0 auto}.navitem:hover .editTab{opacity:1}.navitem{touch-action:pan-y}.navitem.dragging-active{box-shadow:0 10px 22px rgba(0,0,0,.18);background:#fff;cursor:grabbing;z-index:50;touch-action:none}.navitem.drop-above{box-shadow:inset 0 2px 0 0 var(--orange)}.navitem.drop-below{box-shadow:inset 0 -2px 0 0 var(--orange)}.sidebar-addtab{width:100%;margin-top:8px;border:1.5px dashed var(--line);background:transparent;color:var(--orange-dark);font-weight:700;font-size:12.5px;padding:10px;border-radius:10px;cursor:pointer}.sidebar-addtab:hover{border-color:var(--orange);background:var(--orange-tint)}.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,17,21,.45);z-index:85}.sidebar-overlay.show{display:block}.main-col{margin-left:256px;flex:1;min-width:0;display:flex;flex-direction:column}.topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;padding:12px 24px}.hamburger{display:none;background:var(--panel2);border:1px solid var(--line);width:36px;height:36px;border-radius:10px;font-size:15px;cursor:pointer;color:var(--text);flex:0 0 auto}.breadcrumb{font-size:12.5px;color:var(--muted);font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.breadcrumb b{color:var(--text)}.breadcrumb .sep{color:var(--muted2);margin:0 6px}.btn{cursor:pointer;border:none;border-radius:10px;padding:9px 16px;font-size:12.8px;font-weight:700;color:#fff;background:var(--orange);transition:.15s;white-space:nowrap}.btn:hover{background:var(--orange-dark)}.btn.secondary{background:#fff;color:var(--text);border:1px solid var(--line)}.btn.secondary:hover{background:var(--panel2)}.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}.btn.small{padding:6px 11px;font-size:11.5px}.askbar-wrap{padding:18px 24px 6px}.askbar{max-width:760px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 18px;box-shadow:0 2px 10px rgba(16,24,40,.05)}.askbar .ic{font-size:16px;color:var(--orange)}.askbar input{flex:1;border:none;outline:none;font-size:14px;color:var(--text);background:transparent}.askbar input::placeholder{color:var(--muted2)}.askbar .clearbtn{cursor:pointer;color:var(--muted2);font-size:13px;display:none}.askbar.has-text .clearbtn{display:block}main{padding:14px 24px 40px;max-width:1320px}.page-banner{background:var(--banner-bg,#fff);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.page-banner .left{display:flex;align-items:center;gap:14px;min-width:0}.page-banner .badge{width:42px;height:42px;border-radius:11px;background:var(--badge-bg,var(--orange-tint));display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 auto}.page-banner h2{font-size:17px;margin:0;font-weight:800;letter-spacing:-.01em}.page-banner .sub{color:var(--muted);font-size:12px;margin-top:2px}.page-banner .right-actions{display:flex;gap:8px;flex-wrap:wrap}.row-block{margin-bottom:16px}.row-label-view{font-size:12px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.03em;margin:0 0 10px;display:flex;align-items:center;gap:8px}.row-label-view .line{flex:1;height:1px;background:var(--line)}.row-edit-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px}.row-edit-bar input[type=text]{flex:1;background:var(--panel2);border:1px dashed var(--line);color:var(--text);padding:7px 12px;border-radius:8px;font-size:12.5px}.row-edit-bar input[type=text]:focus{outline:none;border-color:var(--orange);border-style:solid}.row-flex{display:flex;gap:14px;flex-wrap:wrap;min-height:40px;border-radius:12px;transition:.15s;align-items:flex-start}.row-flex.reorder-on{padding:8px;border:1px dashed transparent}.row-flex.reorder-on:hover{border-color:#d8d8db}.row-empty-hint{flex:1;text-align:center;color:var(--muted);font-size:12px;padding:14px;border:1px dashed var(--line);border-radius:10px}.newrow-zone{margin-top:6px;border:2px dashed var(--line);border-radius:12px;padding:16px;text-align:center;color:var(--muted);font-size:13px;cursor:pointer;font-weight:600}.newrow-zone:hover{border-color:var(--orange);color:var(--orange-dark);background:var(--orange-tint)}.newrow-zone.drag-over{border-color:var(--orange);background:var(--orange-tint)}.card{background:var(--bgc,#fff);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;border-top:3px solid var(--c);position:relative;box-shadow:0 1px 2px rgba(16,24,40,.04);min-width:230px;min-height:180px;transition:box-shadow .15s}.card:hover{box-shadow:0 6px 16px rgba(16,24,40,.09)}.card .tagchip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:var(--muted);background:var(--panel2);border-radius:999px;padding:2px 8px;width:fit-content}.card h3{margin:0;font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;overflow-wrap:anywhere;word-break:break-word;letter-spacing:-.005em}.card h3 .titletext{flex:1;min-width:0}.card p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.card ul.bullets{margin:0;padding-left:17px;color:var(--muted);font-size:12.3px;line-height:1.55;overflow-wrap:anywhere;word-break:break-word}.card ul.bullets li{margin-bottom:2px}.card .row{display:flex;gap:8px;flex-wrap:wrap;max-width:100%;align-items:center}.card a.link{font-size:12px;color:var(--orange-dark);text-decoration:none;word-break:break-all;overflow-wrap:anywhere;font-weight:600;max-width:100%;display:inline-block}.card .actions{position:absolute;top:10px;right:10px;display:flex;gap:6px;opacity:0;transition:.15s;z-index:2}.card:hover .actions{opacity:1}.iconbtn{background:var(--panel2);border:1px solid var(--line);color:var(--muted);width:25px;height:25px;border-radius:7px;cursor:pointer;font-size:11.5px;line-height:1;display:flex;align-items:center;justify-content:center}.iconbtn:hover{color:#fff;background:var(--orange);border-color:var(--orange)}.inlinecopy{background:transparent;border:none;color:var(--muted2);font-size:12px;cursor:pointer;padding:0 2px;flex:0 0 auto;line-height:1}.inlinecopy:hover{color:var(--orange-dark)}.cred{font-size:11px;background:#FFF8F0;color:#9a5300;border:1px dashed #f0c79a;border-radius:7px;padding:5px 8px;overflow-wrap:anywhere;word-break:break-word;display:flex;align-items:center;gap:6px}.cred .credtext{flex:1;min-width:0}.copybtn{font-size:10.5px;padding:6px 11px;max-width:100%;overflow:hidden;text-overflow:ellipsis}.desc-wrap{position:relative;max-height:80px;overflow:hidden;transition:max-height .2s}.desc-wrap.expanded{max-height:none}.desc-fade{position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(to bottom,rgba(255,255,255,0),var(--bgc,#fff));pointer-events:none;display:none}.desc-wrap.has-overflow .desc-fade{display:block}.desc-wrap.expanded .desc-fade{display:none}.desc-tools{display:flex;align-items:center;gap:10px}.expandbtn{background:transparent;border:none;color:var(--orange-dark);font-size:11px;font-weight:700;cursor:pointer;padding:2px 0;display:none}.desc-wrap.has-overflow ~ .desc-tools .expandbtn{display:inline-block}.copy-sm{background:transparent;border:none;color:var(--muted2);font-size:11px;font-weight:600;cursor:pointer;padding:2px 0}.copy-sm:hover{color:var(--orange-dark)}.card-footer{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:6px;padding-top:6px;border-top:1px solid var(--line)}.editor-tag{font-size:10.5px;color:var(--muted2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.historybtn{background:transparent;border:none;color:var(--muted2);font-size:13px;cursor:pointer;flex:0 0 auto}.historybtn:hover{color:var(--orange-dark)}.empty{color:var(--muted);font-size:13px;padding:60px 20px;text-align:center}.card.dragging{opacity:.35}.card.drag-over{outline:2px dashed var(--orange);outline-offset:2px}.draghandle{cursor:grab;background:var(--panel2);border:1px solid var(--line);color:var(--muted);width:25px;height:25px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px}.reorder-toggle.on{background:var(--orange);color:#fff;border-color:transparent}.rowDelBtn{background:#fff;border:1px solid var(--line);color:#c0392b;border-radius:7px;width:26px;height:26px;font-size:11px;cursor:pointer;flex:0 0 auto}.rowDelBtn:disabled{opacity:.35;cursor:not-allowed}.search-result-tag{font-size:10.5px;font-weight:700;color:var(--orange-dark);background:var(--orange-tint);border-radius:999px;padding:2px 8px;width:fit-content}.overlay{position:fixed;inset:0;background:rgba(15,17,21,0.5);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}.overlay.show{display:flex}.modal{background:#fff;border-radius:16px;padding:22px;width:100%;max-width:480px;max-height:88vh;overflow:auto}.modal.wide{max-width:560px}.modal h3{margin:0 0 14px;font-size:16px}.field{margin-bottom:13px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:600}.field .hint{font-size:11px;color:#9a9aa0;margin-top:4px}.field input[type=text],.field select,.field textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:9px 11px;border-radius:8px;font-size:13px;font-family:inherit}.field input[type=text]:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--orange)}.field textarea{min-height:90px;resize:vertical}.colorrow{display:flex;gap:10px;align-items:center}.colorrow input[type=color]{width:44px;height:36px;border:1px solid var(--line);border-radius:8px;padding:2px;background:#fff;cursor:pointer}.swatches{display:flex;gap:6px;flex-wrap:wrap}.swatch{width:21px;height:21px;border-radius:50%;cursor:pointer;border:2px solid transparent}.swatch.sel{border-color:#1c1c1e}.iconpicker{display:flex;gap:6px;flex-wrap:wrap}.iconopt{width:32px;height:32px;border-radius:8px;background:var(--panel2);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer}.iconopt.sel{border-color:var(--orange);background:var(--orange-tint)}.modal-actions{display:flex;justify-content:space-between;gap:8px;margin-top:16px}.modal-actions .right{display:flex;gap:8px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);border:1px solid #2a3650;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;z-index:200;max-width:90vw;text-align:center}.toast.show{opacity:1}.loading{color:var(--muted);text-align:center;padding:80px;font-size:14px}footer{text-align:center;color:var(--muted2);font-size:11px;padding:20px 24px 30px}.history-list{display:flex;flex-direction:column;gap:10px}.history-item{border:1px solid var(--line);border-radius:10px;padding:10px 12px}.history-item .hrow{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--muted2);margin-bottom:4px}.history-item .hname{font-weight:700;color:var(--text)}.history-item .hsummary{font-size:12.5px;color:var(--muted)}.help-steps{display:flex;flex-direction:column;gap:10px}.help-steps .step{display:flex;gap:10px;align-items:flex-start}.help-steps .num{width:22px;height:22px;border-radius:50%;background:var(--orange-tint);color:var(--orange-dark);font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}.help-steps p{margin:0;font-size:13px;color:var(--text);line-height:1.5}.crm-panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 1px 3px rgba(16,24,40,.05)}.crm-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap}.crm-panel-head h3{margin:0;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}.crm-panel-head .crm-sub{font-size:11.5px;color:var(--muted);margin-top:2px}.crm-controlbar{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px}.crm-controlbar .crm-toprow{margin-bottom:0}.crm-controlbar .crm-toprow + .crm-toprow{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}.crm-toprow{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end}.crm-toprow .field{flex:1;min-width:160px;margin-bottom:0}.crm-toprow .field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}.crm-status-pill{display:flex;gap:7px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px}.crm-status-pill button{flex:1;border:none;background:transparent;border-radius:999px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);white-space:nowrap;transition:.15s}.crm-status-pill button:hover{background:var(--panel2);color:var(--text)}.crm-status-pill button.sel-confirm{background:#16a34a;color:#fff;box-shadow:0 2px 6px rgba(22,163,74,.35)}.crm-status-pill button.sel-noanswer{background:#ef4444;color:#fff;box-shadow:0 2px 6px rgba(239,68,68,.35)}.crm-status-pill button.sel-pending{background:#d97706;color:#fff;box-shadow:0 2px 6px rgba(217,119,6,.35)}.crm-status-pill button.sel-cancel{background:#52525b;color:#fff;box-shadow:0 2px 6px rgba(82,82,91,.35)}.crm-status-pill button.sel-transfer{background:#0ea5e9;color:#fff;box-shadow:0 2px 6px rgba(14,165,233,.35)}.crm-status-pill.pt-pill{padding:4px}.crm-status-pill.pt-pill button{padding:11px 14px;font-size:13px}.crm-controlbar input[type=date],.crm-controlbar input[type=text],.crm-controlbar select{background:#fff}.crm-controlbar .crm-status-pill{background:#fff}.crm-panel-head{border-bottom:1px solid var(--line);padding-bottom:14px}.crm-dropdown-btn{appearance:none;-webkit-appearance:none;-moz-appearance:none;background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path d="M0 0L5 6L10 0Z" fill="%2386868B"/></svg>') no-repeat right 14px center !important;border:1.5px solid var(--line) !important;border-radius:999px !important;padding:10px 36px 10px 16px !important;font-weight:700 !important;font-size:12.5px !important;color:var(--text) !important;cursor:pointer}.crm-dropdown-btn:hover{border-color:var(--orange) !important}.crm-dropdown-btn:focus{outline:none;border-color:var(--orange) !important}.crm-reset-btn{background:#fff;border:1.5px solid var(--orange);color:var(--orange-dark);font-weight:800;border-radius:9px;padding:9px 16px;font-size:12.5px;cursor:pointer;white-space:nowrap}.crm-reset-btn:hover{background:var(--orange-tint)}.crm-mode-toggle{display:flex;gap:6px;margin:12px 0 16px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:5px}.crm-mode-btn{flex:1;border:none;background:transparent;border-radius:7px;padding:9px 10px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--muted)}.crm-mode-btn.active{background:var(--orange);color:#fff}.patch-paste-zone{margin-bottom:14px}.patch-paste-zone textarea{width:100%;min-height:160px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:12.5px;font-family:ui-monospace,monospace;line-height:1.6;resize:vertical}.patch-paste-zone textarea:focus{outline:none;border-color:var(--orange)}.patch-fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}@media(max-width:720px){.patch-fields-grid{grid-template-columns:1fr}}.patch-field label{font-size:10.5px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;display:block}.patch-field input,.patch-field textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:13px}.patch-field input:focus,.patch-field textarea:focus{outline:none;border-color:var(--orange)}.patch-field.missing input,.patch-field.missing textarea{border-color:#f59e0b;background:#fffbeb}.patch-q-item{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px}.patch-q-item.missing{border-color:#f59e0b;background:#fffbeb}.patch-q-text{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:7px;line-height:1.5}.patch-q-item textarea{width:100%;min-height:52px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;resize:vertical}.patch-q-item textarea:focus{outline:none;border-color:var(--orange)}.patch-missing-tag{display:inline-block;font-size:10px;font-weight:800;color:#b45309;background:#fef3c7;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}.patch-summary{display:flex;align-items:center;gap:10px;background:var(--orange-tint);border:1px solid var(--orange);border-radius:10px;padding:11px 14px;margin-bottom:14px;font-size:12.5px;color:var(--orange-dark);font-weight:700}.crm-subfields{border-left:2px solid var(--line);padding-left:10px;margin:6px 0 12px;display:grid;gap:8px}.crm-subfields label{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:3px;display:block}.crm-subfields input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:12.5px}.crm-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.crm-grid .full{grid-column:1/-1}.crm-grid label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px;font-weight:600}.crm-grid input[type=text],.crm-grid input[type=date],.crm-grid input[type=time],.crm-grid input[type=number],.crm-grid select,.crm-grid textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:9px 11px;border-radius:8px;font-size:13px;font-family:inherit}.crm-grid input:focus,.crm-grid select:focus,.crm-grid textarea:focus{outline:none;border-color:var(--orange)}.crm-addr-row{display:grid;grid-template-columns:1fr 110px;gap:10px}@media (max-width:720px){.crm-grid{grid-template-columns:1fr}.crm-addr-row{grid-template-columns:1fr}}.crm-extra-toggle{font-size:12px;font-weight:700;color:var(--orange-dark);background:none;border:none;cursor:pointer;padding:4px 0;margin-bottom:8px}.crm-survey{border:1px dashed var(--line);border-radius:10px;padding:14px;margin-bottom:14px}.crm-survey-item{margin-bottom:12px}.crm-survey-item .qtext{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.5}.crm-survey-item textarea{width:100%;min-height:46px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;font-family:inherit;resize:vertical}.crm-survey-item textarea:focus{outline:none;border-color:var(--orange)}.crm-o-preview{background:#fafafa;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:11.5px;color:var(--muted);white-space:pre-wrap;max-height:160px;overflow:auto;line-height:1.6;font-family:ui-monospace,monospace}.crm-actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.crm-section-title{font-size:10.5px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.07em;margin:20px 0 10px;display:flex;align-items:center;gap:10px}.crm-section-title::after{content:'';flex:1;height:1px;background:var(--line)}.crm-line-box{background:#EAFBEF;border:1px dashed #9fd9b3;border-radius:10px;padding:12px;font-size:12.5px;color:#1c1c1e;white-space:pre-wrap;line-height:1.6;max-height:220px;overflow:auto;margin-bottom:10px}.crm-sheet-box{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:6px}.crm-sheet-box .row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}@media (max-width:720px){.crm-sheet-box .row2{grid-template-columns:1fr}}.crm-signin-status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:10px}.crm-signin-status .dot{width:8px;height:8px;border-radius:50%;background:#ccc}.crm-signin-status.online .dot{background:#16a34a}.crm-divider{display:flex;align-items:center;gap:10px;margin:22px 0 14px;color:var(--muted2);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.crm-divider .line{flex:1;height:1px;background:var(--line)}.case-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}table.case-table{width:100%;border-collapse:collapse;font-size:12.5px}table.case-table thead{background:var(--navy)}table.case-table th{text-align:left;padding:11px 12px;color:rgba(255,255,255,.8);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;border:none}table.case-table td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}table.case-table tbody tr:last-child td{border-bottom:none}table.case-table tbody tr:nth-child(even) td{background:#fafbfc}table.case-table tbody tr:hover td{background:var(--orange-tint)}.case-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:10.5px;font-weight:700;white-space:nowrap}.case-badge.confirm{background:#dcfce7;color:#15803d}.case-badge.reschedule{background:#ffedd5;color:#c2410c}.case-badge.no_answer{background:#fce7f3;color:#be185d}.case-badge.pending,.case-badge.waiting_confirm_date{background:#fef3c7;color:#92600a}.case-badge.cancel{background:#f1f5f9;color:#475569}.case-badge.transfer_case{background:#dbeafe;color:#1d4ed8}.case-actions-cell{display:flex;gap:4px}.qr-panel-body{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}.qr-form{flex:1;min-width:240px}.qr-form .field{margin-bottom:12px}.qr-row2{display:flex;gap:10px}.qr-row2 .field{flex:1}.qr-preview{flex:1;min-width:240px;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:18px}.qr-preview .qr-img-long{width:100%;max-width:420px;height:auto;border-radius:8px;background:#fff;padding:14px}.qr-preview .qr-img-square{width:220px;height:220px;border-radius:8px;background:#fff;padding:10px}.qr-preview .qr-placeholder{width:100%;max-width:420px;height:120px;border-radius:8px;background:#fff;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted2);font-size:12px;text-align:center;padding:10px}.qr-actions{display:flex;gap:8px;flex-wrap:wrap}.rpt-stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}@media (max-width:900px){.rpt-stats-grid{grid-template-columns:repeat(2,1fr)}}.rpt-stat-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 16px 14px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.06)}.rpt-stat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--orange);border-radius:12px 0 0 12px}.rpt-stat-card .num{font-size:30px;font-weight:800;color:var(--text);letter-spacing:-.03em;line-height:1}.rpt-stat-card .lbl{font-size:10.5px;font-weight:700;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.04em}.rpt-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}@media (max-width:900px){.rpt-breakdown{grid-template-columns:1fr}}.rpt-bd-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.06)}.rpt-bd-box h4{font-size:10.5px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line)}.rpt-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}.rpt-bar-row .lbl{flex:0 0 148px;font-size:12.5px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rpt-bar-track{flex:1;height:7px;background:var(--panel2);border-radius:999px;overflow:hidden}.rpt-bar-fill{height:100%;background:var(--orange);border-radius:999px}.rpt-bar-row .cnt{flex:0 0 28px;text-align:right;font-size:13px;font-weight:800;color:var(--text)}.rpt-daterange{display:flex;gap:10px;align-items:flex-end;margin-bottom:18px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;flex-wrap:wrap}.rpt-daterange .field{margin-bottom:0}.rpt-daterange input[type=date]{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px}.der-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}@media (max-width:720px){.der-grid{grid-template-columns:1fr 1fr}}.der-grid .field label{font-size:10.5px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;display:block}.der-grid input[type=number],.der-grid input[type=text]{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:15px;font-weight:800;color:var(--text)}.der-grid input[type=number]:focus,.der-grid input[type=text]:focus{outline:none;border-color:var(--orange)}.der-preview{background:#fff;border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:8px;padding:18px 20px;font-size:13px;white-space:pre-wrap;line-height:1.9;font-family:"Segoe UI","PingFang SC",sans-serif;margin-bottom:12px;color:var(--text);box-shadow:0 1px 4px rgba(16,24,40,.05)}.der-trend{display:flex;gap:8px;align-items:flex-end;height:100px;margin-top:6px}.der-trend-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:flex-end;height:100%}.der-trend-bar{width:100%;border-radius:4px 4px 0 0;background:var(--orange);min-height:2px}.der-trend-bar.wm{background:#0ea5e9}.der-trend-lbl{font-size:9.5px;color:var(--muted2);font-weight:600}.der-trend-legend{display:flex;gap:16px;font-size:10.5px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}.der-trend-legend span{display:flex;align-items:center;gap:6px}.der-trend-legend .dot{width:10px;height:10px;border-radius:3px}@media (max-width:880px){.att-stats-grid{grid-template-columns:repeat(3,1fr)}}.att-stat-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 14px 14px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.06)}.att-stat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:12px 0 0 12px;background:#e5e7eb}.att-stat-card.work::before{background:#16a34a}.att-stat-card.late::before{background:#ef4444}.att-stat-card.mc::before{background:#d97706}.att-stat-card.ul::before{background:var(--orange)}.att-stat-card.al::before{background:#0ea5e9}.att-stat-card.rate::before{background:var(--orange)}.att-stat-card .num{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.02em;line-height:1}.att-stat-card .lbl{font-size:10.5px;font-weight:700;color:var(--muted2);margin-top:6px;text-transform:uppercase;letter-spacing:.04em}.att-group-list{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6}.so-panel-wrap{--tc:#FF6900}.so-paste-zone{border:2px dashed var(--line);border-radius:12px;background:#fff;padding:28px 20px;text-align:center;cursor:pointer;transition:.15s;margin-bottom:12px}.so-paste-zone:hover,.so-paste-zone.drag{border-color:var(--orange);background:var(--orange-tint)}.so-paste-zone .so-iz{font-size:26px;margin-bottom:6px}.so-paste-zone .so-lbl{font-size:13px;font-weight:700;color:var(--text)}.so-paste-zone .so-hint{font-size:11.5px;color:var(--muted);margin-top:2px}textarea#so_paste-input{width:100%;min-height:60px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;resize:none;margin-top:8px;display:block}textarea#so_paste-input:focus{outline:none;border-color:var(--orange)}.so-parse-status.error{font-size:12px;color:#c0392b;margin-top:6px}.so-hd-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}.so-hd-sub{font-size:12px;color:var(--muted)}input#so_search-i{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:10px}input#so_search-i:focus{outline:none;border-color:var(--orange)}.so-fbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.so-fbar .pill{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted)}.so-fbar .pill.on{background:var(--orange);border-color:var(--orange);color:#fff}.so-copy-all-w{display:none;margin-bottom:10px}.so-copy-all-w.show{display:flex}#so_btn-ca{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:7px}#so_btn-ca:hover{opacity:.9}#so_btn-ca.ok{background:#16a34a}.so-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}.so-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.05)}.so-card-hd{padding:12px 14px 8px;border-bottom:1px solid var(--line)}.so-card-badges{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:5px}.so-card-bl{display:flex;gap:5px;flex-wrap:wrap;flex:1}.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:10.5px;font-weight:700}.b-c1{background:#dbeafe;color:#1d4ed8}.b-c2{background:#fef3c7;color:#92600a}.b-c3{background:#fce7f3;color:#be185d}.b-vip{background:#fef3c7;color:#92600a}.b-so{font-size:10.5px;font-weight:700;color:var(--muted2)}.so-card-name{font-size:13px;font-weight:700;color:var(--text)}.so-card-meta{font-size:11.5px;color:var(--muted);margin-top:2px}.so-card-body{padding:8px 14px 0}.card-ta{width:100%;min-height:80px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;font-family:inherit;resize:vertical;background:var(--panel2);line-height:1.6}.card-ta.mod{border-color:var(--orange)}.card-ta:focus{outline:none;border-color:var(--orange)}.mod-tag{font-size:10.5px;color:var(--orange-dark);font-weight:700;display:none;margin-top:3px}.mod-tag.show{display:block}.card-act{display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:8px 14px 12px}.btn-cp{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px}.btn-cp.ok{background:#16a34a}.btn-rst{background:none;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12px;cursor:pointer;color:var(--muted);display:none}.btn-rst.show{display:block}.crm-preset-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.survey-yesno-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:5px}.survey-yn-btn{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:.12s;color:var(--muted)}.survey-yn-btn:hover{border-color:var(--orange);background:var(--orange-tint)}.survey-yn-btn.yn-active.yn-yes{background:#dcfce7;border-color:#16a34a;color:#15803d}.survey-yn-btn.yn-active.yn-no{background:#fce7f3;border-color:#ef4444;color:#c0392b}.survey-yn-note{font-size:11.5px;color:var(--muted);font-style:italic}.survey-short-input{width:180px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}.survey-short-input:focus{outline:none;border-color:var(--orange)}.bulk-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;background:var(--panel2);border:1px solid var(--line);border-radius:10px 10px 0 0;border-bottom:none}.bulk-selectall{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;cursor:pointer}tr.row-selected td{background:#fff8f0 !important}.case-table-wrap{border-radius:0 0 12px 12px;border-top:none}@media (max-width:880px){.sidebar{left:-260px}.sidebar.open{left:0;box-shadow:0 0 30px rgba(0,0,0,.25)}.main-col{margin-left:0}.hamburger{display:flex;align-items:center;justify-content:center}main{padding:14px 16px calc(78px + env(safe-area-inset-bottom))}.card{min-width:0}.topbar .btn span.lbl{display:none}.btn{padding:11px 16px;font-size:13.5px}.iconbtn{width:38px;height:38px;font-size:15px}input,select,textarea{font-size:16px !important}.crm-dropdown-btn{padding:11px 12px}.mnav{display:flex}}.mnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));justify-content:space-around;box-shadow:0 -2px 12px rgba(16,24,40,.08)}.mnav-btn{flex:1;max-width:88px;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:5px 2px;border-radius:10px;color:var(--muted2)}.mnav-btn .ic{font-size:20px;line-height:1}.mnav-btn .lb{font-size:9.5px;font-weight:700;letter-spacing:.01em}.mnav-btn.on{color:var(--orange)}.mnav-btn.on .ic{transform:scale(1.08)}.mnav-btn:active{background:var(--orange-tint)}.kb-home{padding:2px 0 8px}.kb-home-title{font-size:16px;font-weight:800;margin-bottom:3px}.kb-home-sub{font-size:12.5px;color:var(--muted);margin-bottom:16px}.kb-pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:720px){.kb-pcards{grid-template-columns:1fr}}.kb-pcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 16px;cursor:pointer;transition:.15s;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.05)}.kb-pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kb-cc)}.kb-pcard:hover{box-shadow:0 4px 14px rgba(16,24,40,.1);transform:translateY(-2px)}.kb-pci{font-size:26px;margin-bottom:6px}.kb-pcl{font-size:14.5px;font-weight:800;color:var(--text)}.kb-pcs{font-size:11.5px;color:var(--muted);margin-top:2px}.kb-pcm{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.kb-pcchip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--panel2);color:var(--muted)}.kb-pcr{font-size:19px;color:var(--muted2);text-align:right;margin-top:6px}.kb-page{display:none}.kb-page.show{display:block}.kb-ph{display:flex;align-items:center;gap:12px;margin-bottom:12px}.kb-back{background:none;border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted)}.kb-back:hover{border-color:var(--orange);color:var(--orange)}.kb-phi{font-size:24px}.kb-phtx{font-size:15px;font-weight:800}.kb-phsx{font-size:11.5px;color:var(--muted);margin-top:1px}.kb-sticky{position:sticky;top:0;z-index:20;background:var(--bg,#f6f7f9);padding-top:2px;padding-bottom:4px;margin:0 -2px}.kb-tabbar{display:flex;gap:5px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:5px;margin-bottom:6px}.kb-tab{flex:1;border:none;background:transparent;border-radius:7px;padding:9px 8px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--muted)}.kb-tab.on{background:var(--orange);color:#fff}.kb-sbar{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}.kb-si{flex:1;border:none;background:none;font-size:13px;color:var(--text);outline:none}.kb-si::placeholder{color:var(--muted2)}.kb-sreset{background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted2)}.kb-tc{display:none;padding-top:10px}.kb-tc.on{display:block}.kb-ggrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}@media(max-width:640px){.kb-ggrid{grid-template-columns:1fr}}.kb-gcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}.kb-gcard.editing{border-color:var(--orange);box-shadow:0 0 0 2px rgba(255,105,0,.12)}.kb-gtopic{font-size:10.5px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}.kb-gtopic[contenteditable=true]{background:var(--panel2);border-radius:4px;padding:2px 4px;outline:none}.kb-gdetail{font-size:12.5px;color:var(--text);line-height:1.7;white-space:pre-wrap;min-height:18px}.kb-gdetail[contenteditable=true]{background:var(--panel2);border-radius:6px;padding:6px 8px;outline:none;min-height:36px}.kb-gcta{display:flex;gap:5px;margin-top:8px;align-items:center}.kb-btn-copy{background:none;border:1px solid var(--line);border-radius:7px;padding:5px 10px;font-size:11px;cursor:pointer;color:var(--muted)}.kb-btn-copy:hover{border-color:var(--orange);color:var(--orange)}.kb-btn-copy.ok{background:#dcfce7;border-color:#16a34a;color:#15803d}.kb-btn-del{background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted2);padding:4px 6px;margin-left:auto}.kb-btn-del:hover{color:#c0392b}.kb-btn-save{background:var(--orange);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;display:none}.kb-btn-cancel{background:none;border:1px solid var(--line);border-radius:7px;padding:5px 10px;font-size:11px;cursor:pointer;color:var(--muted);display:none}.kb-gcard.editing .kb-btn-save,.kb-gcard.editing .kb-btn-cancel{display:inline-flex}.kb-add-btn{display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px dashed var(--line);background:none;border-radius:10px;padding:9px 16px;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;width:100%}.kb-add-btn:hover{border-color:var(--orange);color:var(--orange)}.kb-qlist{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}.kb-qitem{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}.kb-qitem.hidden{display:none}.kb-qitem.editing{border-color:var(--orange)}.kb-qq{width:100%;background:none;border:none;padding:11px 13px;display:flex;align-items:flex-start;gap:8px;cursor:pointer;text-align:left;font-family:inherit}.kb-qq:hover{background:#fafafa}.kb-qqt{flex:1;font-size:12.5px;font-weight:700;color:var(--text);line-height:1.5}.kb-qarr{font-size:17px;color:var(--muted2);transition:transform .15s;flex:0 0 auto}.kb-qitem.open .kb-qarr{transform:rotate(90deg)}.kb-qa{display:none;border-top:1px solid var(--line)}.kb-qitem.open .kb-qa{display:block}.kb-qai{padding:11px 13px;font-size:12.5px;line-height:1.75;color:var(--text);white-space:pre-wrap;min-height:18px}.kb-qai[contenteditable=true]{background:var(--panel2);border-radius:6px;outline:none;min-height:56px}.kb-qact{display:flex;gap:6px;padding:0 13px 11px;align-items:center}.kb-remark{margin:4px 13px 11px;padding:8px 11px;background:#fff8f0;border-left:3px solid var(--orange);border-radius:6px;font-size:11.5px;color:var(--muted)}@keyframes kbFlash{0%,100%{opacity:1}50%{opacity:.5}}.kb-saved{animation:kbFlash .4s}</style>
+
+<style id="pctFleetRedesignStyles">
+:root{
+  --orange:#ff6900;
+  --orange-dark:#e85e00;
+  --orange-tint:#fff1e6;
+  --bg:#f7f7f8;
+  --panel:#fff;
+  --panel2:#f6f3f1;
+  --line:#eee6df;
+  --text:#252525;
+  --muted:#777;
+  --muted2:#aaa;
+  --navy:#252525;
+  --pct-radius:16px;
+  --pct-shadow:0 10px 32px rgba(71,49,32,.07);
+}
+html{scroll-behavior:smooth}
+body{
+  background:#fff!important;
+}
+.app,.main-col,main{background:#fff}
+body::before{
+  content:"";position:fixed;left:0;top:0;z-index:10020;width:0;height:3px;
+  opacity:0;pointer-events:none;background:linear-gradient(90deg,var(--orange),#ffb47b,var(--orange));
+  box-shadow:0 1px 10px rgba(255,105,0,.4)
+}
+body.pct-rendering::before{opacity:1;animation:pct-route-progress .75s ease infinite}
+@keyframes pct-route-progress{0%{width:0;transform:translateX(0)}55%{width:58%;transform:translateX(38%)}100%{width:35%;transform:translateX(280%)}}
+
+.sidebar{
+  width:272px!important;flex-basis:272px!important;padding:17px 13px!important;
+  border-right-color:var(--line)!important;
+  background:#fff!important;
+  box-shadow:10px 0 40px rgba(75,52,34,.035)
+}
+.main-col{margin-left:272px!important}
+.sidebar-brand{
+  padding:8px 9px 18px!important;margin-bottom:10px!important;border-bottom-color:var(--line)!important
+}
+.sidebar-brand .logo{
+  width:43px!important;height:43px!important;border-radius:14px!important;
+  background:linear-gradient(145deg,#ff8534,var(--orange))!important;
+  box-shadow:0 11px 24px rgba(255,105,0,.25)
+}
+.sidebar-brand .txt{font-size:14px!important}.sidebar-brand .txt small{margin-top:3px!important}
+.sidebar-section-label,.pct-pinned-label{
+  color:#b0a59d!important;font-size:9.5px!important;letter-spacing:.1em!important;
+  padding:8px 11px 6px!important
+}
+.pct-pinned-label{margin-top:3px;text-transform:uppercase;font-weight:800}
+.navitem{
+  min-height:42px;padding:10px 11px!important;margin-bottom:3px!important;border-radius:12px!important;
+  transition:background .16s ease,transform .16s ease,box-shadow .16s ease
+}
+.navitem:hover{background:#fff2e8!important;transform:translateX(2px)}
+.navitem.active{
+  color:var(--orange-dark)!important;background:var(--orange-tint)!important;
+  box-shadow:inset 0 0 0 1px #ffd7bc
+}
+.navitem.active::before{left:-2px!important;background:var(--orange)!important}
+.pct-dashboard-nav .ic{
+  width:27px!important;height:27px;display:grid!important;place-items:center;
+  border-radius:9px;background:linear-gradient(145deg,#ff812b,var(--orange));color:#fff;
+  box-shadow:0 6px 14px rgba(255,105,0,.2)
+}
+.pct-dashboard-nav .cnt{color:var(--orange-dark)!important;background:#fff!important}
+.pct-report-nav.active .editTab{opacity:1}
+.pct-nav-divider{height:1px;margin:10px 7px 4px;background:var(--line)}
+.sidebar-addtab{
+  border-color:#ead9cc!important;border-radius:12px!important;background:rgba(255,255,255,.68)!important
+}
+
+.topbar{
+  min-height:65px;padding:11px 24px!important;border-bottom-color:var(--line)!important;
+  background:rgba(255,255,255,.9)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)
+}
+.breadcrumb{font-size:12px!important}.btn{border-radius:11px!important;transition:.16s ease!important}
+.btn:not(.secondary):not(.ghost){
+  background:linear-gradient(135deg,#ff7c24,var(--orange))!important;
+  box-shadow:0 7px 18px rgba(255,105,0,.17)
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.secondary,.btn.ghost{border-color:var(--line)!important;background:#fff!important}
+.btn.secondary:hover,.btn.ghost:hover{color:var(--orange-dark)!important;background:var(--orange-tint)!important}
+.askbar-wrap{padding:18px 24px 7px!important}
+.askbar{
+  max-width:840px!important;border-color:var(--line)!important;border-radius:16px!important;
+  box-shadow:var(--pct-shadow)!important;background:rgba(255,255,255,.96)!important
+}
+main{max-width:1440px!important;padding:15px 24px 44px!important}
+.page-banner,.crm-panel,.card,.kb-pcard,.kb-gcard,.kb-qitem,.so-card,.rpt-stat-card,.rpt-bd-box,.att-stat-card{
+  border-color:var(--line)!important;border-radius:var(--pct-radius)!important;box-shadow:var(--pct-shadow)!important
+}
+.page-banner{padding:20px 22px!important;background:rgba(255,255,255,.94)!important}
+.card{border-top-width:4px!important}
+.card:hover,.kb-pcard:hover,.kb-gcard:hover,.kb-qitem:hover,.so-card:hover{
+  border-color:#ffcba7!important;box-shadow:0 15px 38px rgba(255,105,0,.1)!important
+}
+.crm-controlbar,.panel2{border-color:var(--line)!important;background:#faf8f6!important}
+input:focus,select:focus,textarea:focus{
+  outline:none!important;border-color:var(--orange)!important;box-shadow:0 0 0 3px rgba(255,105,0,.11)!important
+}
+input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
+::selection{color:#422000;background:#ffd8bb}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#f7f3f0}
+::-webkit-scrollbar-thumb{border:2px solid #f7f3f0;border-radius:99px;background:#ffb27b}
+::-webkit-scrollbar-thumb:hover{background:var(--orange)}
+.card,.kb-pcard,.kb-gcard,.kb-qitem,.so-card{
+  content-visibility:auto;contain-intrinsic-size:1px 180px
+}
+
+.pct-dashboard-mode .askbar-wrap{display:none!important}
+.pct-dashboard-mode main,.pct-report-mode main{max-width:none!important;padding-top:18px!important}
+.pct-dashboard-shell{display:grid;gap:14px}
+.pct-dashboard-hero{
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  min-height:126px;padding:24px 27px;border:1px solid var(--line);border-radius:20px;color:var(--text);
+  background:#fff;box-shadow:var(--pct-shadow)
+}
+.pct-dashboard-hero::after{
+  content:"";position:absolute;right:-55px;top:-118px;width:280px;height:280px;
+  border:46px solid rgba(255,105,0,.07);border-radius:50%
+}
+.pct-dashboard-copy{position:relative;z-index:1}.pct-dashboard-kicker{font-size:10px;font-weight:900;letter-spacing:.13em;color:var(--orange-dark)}
+.pct-dashboard-hero h2{margin:7px 0 5px;font-size:clamp(22px,2.6vw,32px);letter-spacing:-.025em}
+.pct-dashboard-hero p{margin:0;color:var(--muted);font-size:12.5px}
+.pct-dashboard-live{
+  position:relative;z-index:1;display:flex;align-items:center;gap:8px;padding:9px 12px;
+  border:1px solid #dfeee7;border-radius:999px;color:#147b4f;background:#f3fbf7;
+  font-size:11px;font-weight:800;white-space:nowrap
+}
+.pct-dashboard-live i{width:8px;height:8px;border-radius:50%;background:#66eda6;box-shadow:0 0 0 5px rgba(102,237,166,.15)}
+.pct-dashboard-panel{overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--pct-shadow)}
+.pct-dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.pct-dashboard-head b{font-size:14px}.pct-dashboard-head small{display:block;margin-top:2px;color:var(--muted);font-size:10.5px}
+.pct-dashboard-actions{display:flex;gap:7px;flex-wrap:wrap}
+.pct-dashboard-btn{
+  min-height:35px;padding:0 11px;border:1px solid var(--line);border-radius:10px;
+  color:#555;background:#fff;font-size:11.5px;font-weight:800;cursor:pointer
+}
+.pct-dashboard-btn:hover{color:var(--orange-dark);border-color:#ffc59e;background:var(--orange-tint)}
+.pct-dashboard-btn.primary{color:#fff;border-color:var(--orange);background:var(--orange)}
+.pct-frame-wrap{position:relative;min-height:720px;background:#faf8f6}
+.pct-dashboard-frame{display:block;width:100%;height:calc(100vh - 245px);min-height:720px;border:0;background:#fff}
+.pct-frame-loader{
+  position:absolute;inset:0;z-index:2;display:grid;place-items:center;text-align:center;
+  color:#777;background:linear-gradient(180deg,#fff,#fffaf6);transition:opacity .24s ease,visibility .24s ease
+}
+.pct-frame-loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.pct-frame-spinner{width:44px;height:44px;margin:0 auto 12px;border:4px solid #ffe2cc;border-top-color:var(--orange);border-radius:50%;animation:pct-spin .85s linear infinite}
+.pct-dashboard-setup{display:grid;place-items:center;min-height:500px;padding:30px}
+.pct-setup-card{width:min(650px,100%);text-align:center}
+.pct-setup-icon{width:66px;height:66px;margin:0 auto 14px;display:grid;place-items:center;border-radius:19px;background:var(--orange-tint);font-size:28px}
+.pct-setup-card h3{margin:0 0 7px;font-size:19px}.pct-setup-card p{max-width:520px;margin:0 auto 17px;color:#7d7d7d;font-size:12.5px;line-height:1.65}
+.pct-url-row{display:flex;gap:8px}.pct-url-row input{flex:1;min-width:0;height:43px;padding:0 12px;border:1px solid var(--line);border-radius:11px;background:#faf8f6}
+.pct-url-note{margin-top:10px;color:#aaa;font-size:10.5px}
+
+/* Native Google Sheets dashboard */
+.pct-native-dashboard{display:grid;gap:13px}
+.pct-native-head{
+  position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:25px 27px;
+  border:1px solid #ffd9bd;border-radius:20px;background:linear-gradient(120deg,#fff 0%,#fff9f4 58%,#ffeadb 100%);
+  box-shadow:0 14px 35px rgba(115,66,30,.09)
+}
+.pct-native-head::before{content:"";position:absolute;z-index:-1;right:-72px;top:-120px;width:285px;height:285px;border:42px solid rgba(255,105,0,.08);border-radius:50%}
+.pct-native-head::after{content:"";position:absolute;z-index:-1;right:155px;bottom:-54px;width:110px;height:110px;border-radius:50%;background:rgba(255,105,0,.045)}
+.pct-native-head-copy{max-width:720px}
+.pct-native-kicker{color:var(--orange-dark);font-size:9.5px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.pct-native-head h2{margin:7px 0 5px;font-size:clamp(24px,2.7vw,34px);letter-spacing:-.035em}
+.pct-native-head p{margin:0;color:#746c66;font-size:12px}
+.pct-native-head-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+.pct-native-head-chips span{padding:5px 9px;border:1px solid rgba(255,105,0,.14);border-radius:999px;color:#9a5324;background:rgba(255,255,255,.75);font-size:9.5px;font-weight:800}
+.pct-native-head-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.pct-native-status{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #dceee5;border-radius:999px;color:#147b4f;background:#f5fbf8;font-size:10.5px;font-weight:800}
+.pct-native-status i{width:7px;height:7px;border-radius:50%;background:#25b874}
+.pct-native-status.offline{color:#a65b16;border-color:#f2dfcd;background:#fff8f2}.pct-native-status.offline i{background:#e99a42}
+.pct-native-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.pct-native-stat{
+  position:relative;overflow:hidden;padding:15px 16px 14px;border:1px solid var(--line);
+  border-radius:16px;background:linear-gradient(145deg,#fff 25%,var(--ns-tint,#fff8f2) 160%);box-shadow:0 8px 24px rgba(65,48,35,.06);
+  transition:transform .18s ease,box-shadow .18s ease
+}
+.pct-native-stat:hover{transform:translateY(-2px);box-shadow:0 13px 28px rgba(65,48,35,.1)}
+.pct-native-stat::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--ns-color,var(--orange))}
+.pct-native-stat-top{display:flex;align-items:center;gap:7px}.pct-native-stat-top i{width:24px;height:24px;display:grid;place-items:center;border-radius:8px;color:var(--ns-color);background:var(--ns-tint);font-size:12px;font-style:normal;font-weight:900}
+.pct-native-stat span{display:block;color:#74706d;font-size:9.5px;font-weight:850;text-transform:uppercase;letter-spacing:.04em}
+.pct-native-stat strong{display:block;margin-top:8px;font-size:27px;letter-spacing:-.045em}
+.pct-native-stat small{display:block;margin-top:2px;color:#aaa;font-size:9.5px}
+.pct-appointment-panel{overflow:hidden;border:1px solid #eadfd7;border-radius:18px;background:#fff;box-shadow:0 10px 30px rgba(65,48,35,.065)}
+.pct-appointment-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:16px 18px;border-bottom:1px solid #f0e8e2}
+.pct-appointment-head h3{margin:5px 0 3px;font-size:16px}.pct-appointment-head p{margin:0;color:#929292;font-size:10.5px}
+.pct-appointment-controls{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+.pct-appointment-controls>span{color:#999;font-size:9.5px}.pct-appointment-controls input{height:34px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:10.5px}
+.pct-appointment-summary{display:flex;align-items:center;gap:15px;padding:13px 18px;background:linear-gradient(90deg,#fffaf6,#fff)}
+.pct-appointment-summary>div:first-child{min-width:220px}.pct-appointment-summary span{display:block;color:#999;font-size:9.5px;font-weight:750}.pct-appointment-summary>div:first-child strong{display:block;margin-top:3px;font-size:12.5px}
+.pct-appointment-count{display:flex;align-items:baseline;gap:5px;margin-left:auto;color:var(--orange-dark)}.pct-appointment-count strong{font-size:28px;letter-spacing:-.04em}.pct-appointment-count span{color:var(--orange-dark)}
+.pct-appointment-days{display:grid;grid-template-columns:repeat(14,minmax(68px,1fr));gap:7px;overflow-x:auto;padding:11px 13px 14px}
+.pct-appointment-day{min-width:68px;padding:9px 7px;border:1px solid #ece6e1;border-radius:12px;color:#777;background:#fff;text-align:center;cursor:pointer;transition:.15s}
+.pct-appointment-day:hover{border-color:#ffc79f;background:#fff9f4;transform:translateY(-1px)}
+.pct-appointment-day span,.pct-appointment-day small{display:block;font-size:8.5px}.pct-appointment-day b{display:block;margin:4px 0 3px;color:#333;font-size:17px}
+.pct-appointment-day small{color:#999;font-weight:750}.pct-appointment-day.today{box-shadow:inset 0 0 0 1px #ffc89f}.pct-appointment-day.active{color:#fff;border-color:var(--orange);background:var(--orange);box-shadow:0 7px 16px rgba(255,105,0,.2)}
+.pct-appointment-day.active b,.pct-appointment-day.active small{color:#fff}
+.pct-native-panel{overflow:hidden;border:1px solid #e8e2dd;border-radius:18px;background:#fff;box-shadow:0 12px 34px rgba(65,48,35,.07)}
+.pct-native-tabs{display:flex;gap:5px;padding:10px;border-bottom:1px solid var(--line);background:#fcfcfc}
+.pct-native-tab{
+  min-height:38px;padding:0 14px;border:1px solid transparent;border-radius:10px;
+  color:#777;background:transparent;font-size:11.5px;font-weight:850;cursor:pointer
+}
+.pct-native-tab:hover{color:var(--orange-dark);background:var(--orange-tint)}
+.pct-native-tab.active{color:#fff;border-color:var(--tab-color,var(--orange));background:var(--tab-color,var(--orange));box-shadow:0 6px 16px color-mix(in srgb,var(--tab-color,var(--orange)) 25%,transparent)}
+.pct-native-toolbar{display:grid;grid-template-columns:minmax(220px,1.4fr) repeat(4,minmax(130px,.65fr));gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.pct-native-toolbar.problem{grid-template-columns:minmax(220px,1fr) minmax(150px,.45fr) auto}
+.pct-native-toolbar.ac{grid-template-columns:minmax(220px,1fr) minmax(150px,.45fr) minmax(150px,.45fr) auto}
+.pct-native-toolbar input,.pct-native-toolbar select{
+  width:100%;height:39px;padding:0 10px;border:1px solid #e7e2de;border-radius:10px;background:#fff;font-size:11.5px
+}
+.pct-native-table-wrap{overflow:auto;max-height:62vh}
+.pct-native-table{width:100%;min-width:1060px;border-collapse:separate;border-spacing:0}
+.pct-native-table th{
+  position:sticky;top:0;z-index:2;padding:10px 11px;border-bottom:1px solid var(--line);
+  color:#777;background:#fafafa;text-align:left;font-size:9.5px;white-space:nowrap
+}
+.pct-native-table td{padding:11px;border-bottom:1px solid #f1eeeb;font-size:10.5px;vertical-align:top}
+.pct-native-table tr:hover td{background:#fffaf6}
+.pct-native-so{font-weight:900;white-space:nowrap}.pct-native-sub{display:block;margin-top:3px;color:#999;font-size:9.5px}
+.pct-native-clip{display:block;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pct-native-pill{display:inline-flex;padding:4px 8px;border-radius:999px;color:#666;background:#f2f2f2;font-size:9.5px;font-weight:850;white-space:nowrap}
+.pct-native-pill.confirm,.pct-native-pill.done{color:#13734b;background:#eaf8f1}
+.pct-native-pill.cancel{color:#b43b3b;background:#fdeeee}
+.pct-native-pill.class-iii{color:#a5520c;background:#fff0e2}.pct-native-pill.class-ii{color:#3663a6;background:#ecf2ff}
+.pct-native-button{
+  min-height:34px;padding:0 11px;border:1px solid var(--line);border-radius:9px;
+  color:#555;background:#fff;font-size:10.5px;font-weight:850;cursor:pointer;white-space:nowrap
+}
+.pct-native-button:hover{color:var(--orange-dark);border-color:#ffc8a2;background:var(--orange-tint)}
+.pct-native-button.primary{color:#fff;border-color:var(--orange);background:var(--orange)}
+.pct-native-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:11px 14px;color:#888;font-size:10.5px}
+.pct-native-empty{padding:55px 20px;text-align:center;color:#999;font-size:11.5px}
+.pct-native-loading{padding:70px 20px;text-align:center;color:#888;font-size:11.5px}
+.pct-native-loading .pct-frame-spinner{margin:0 auto 12px}
+.pct-native-error{padding:38px 20px;text-align:center;color:#777}.pct-native-error b{display:block;margin-bottom:7px;color:#444}
+.pct-native-modal{
+  position:fixed;inset:0;z-index:10030;display:none;place-items:center;padding:18px;
+  background:rgba(35,29,25,.42);backdrop-filter:blur(5px)
+}
+.pct-native-modal.open{display:grid}
+.pct-native-modal-card{width:min(720px,100%);max-height:90vh;overflow:auto;border:1px solid var(--line);border-radius:19px;background:#fff;box-shadow:0 28px 80px rgba(0,0,0,.22)}
+.pct-native-modal-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.96)}
+.pct-native-modal-head h3{margin:0;font-size:14px}.pct-native-close{width:33px;height:33px;border:0;border-radius:9px;color:#777;background:#f4f2f0;font-size:19px;cursor:pointer}
+.pct-native-modal-body{padding:16px 17px}.pct-native-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.pct-native-field.full{grid-column:1/-1}.pct-native-field label{display:block;margin-bottom:5px;color:#666;font-size:10.5px;font-weight:850}
+.pct-native-field input,.pct-native-field select,.pct-native-field textarea{width:100%;border:1px solid #e7e2de;border-radius:10px;background:#fff;font-family:inherit}
+.pct-native-field input,.pct-native-field select{height:39px;padding:0 10px}.pct-native-field textarea{min-height:82px;padding:10px;resize:vertical}
+.pct-native-modal-actions{display:flex;justify-content:flex-end;gap:8px;padding:13px 17px;border-top:1px solid var(--line);background:#fafafa}
+
+@media(max-width:1050px){
+  .pct-native-stats{grid-template-columns:repeat(3,1fr)}
+  .pct-native-toolbar{grid-template-columns:1fr 1fr}.pct-native-toolbar>*:first-child{grid-column:1/-1}
+}
+@media(max-width:720px){
+  .pct-native-head{flex-direction:column}.pct-native-head-actions{justify-content:flex-start}
+  .pct-native-stats{grid-template-columns:1fr 1fr}.pct-native-toolbar,.pct-native-toolbar.problem,.pct-native-toolbar.ac{grid-template-columns:1fr}
+  .pct-native-toolbar>*:first-child{grid-column:auto}.pct-native-tabs{overflow-x:auto}
+  .pct-native-form-grid{grid-template-columns:1fr}.pct-native-field.full{grid-column:auto}
+  .pct-appointment-head,.pct-appointment-summary{align-items:flex-start;flex-direction:column}.pct-appointment-controls{justify-content:flex-start}
+  .pct-appointment-count{margin-left:0}.pct-appointment-summary>div:first-child{min-width:0}
+}
+
+#pctThemeButton{
+  width:38px;height:38px;display:grid;place-items:center;flex:0 0 auto;border:1px solid #efdfd2;
+  border-radius:11px;color:var(--orange-dark);background:#fff7f1;cursor:pointer;font-size:16px
+}
+#pctThemePanel{
+  position:fixed;top:70px;right:18px;z-index:10010;width:min(325px,calc(100vw - 28px));padding:18px;
+  border:1px solid #efdfd2;border-radius:18px;background:rgba(255,255,255,.97);
+  box-shadow:0 22px 60px rgba(62,40,23,.2);backdrop-filter:blur(18px);
+  transform:translateY(-8px) scale(.98);transform-origin:top right;opacity:0;visibility:hidden;pointer-events:none;transition:.2s ease
+}
+#pctThemePanel.open{transform:none;opacity:1;visibility:visible;pointer-events:auto}
+.pct-theme-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pct-theme-head strong{font-size:14px}.pct-theme-close{border:0;background:transparent;color:#888;font-size:20px;cursor:pointer}
+.pct-theme-field{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid #f3ebe5}
+.pct-theme-field label{font-size:12px;font-weight:800}.pct-theme-field small{display:block;margin-top:3px;color:#999;font-weight:400}
+.pct-theme-field input[type=color]{width:43px;height:34px;padding:2px;border:1px solid #e8d7ca;border-radius:9px;background:#fff}
+.pct-theme-field select,.pct-theme-field input[type=range]{max-width:135px}
+.pct-theme-reset{width:100%;margin-top:9px;padding:10px;border:1px solid #efd8c8;border-radius:10px;color:var(--orange-dark);background:#fff8f3;font-weight:800;cursor:pointer}
+.pct-compact .card,.pct-compact .crm-panel,.pct-compact .kb-gcard,.pct-compact .kb-qitem{padding:12px!important}
+
+/* Professional Report workspace */
+.pct-report-shell{display:grid;gap:14px}
+.pct-report-category-banner{position:relative;overflow:hidden;margin-bottom:0;border-color:#eadfd7;box-shadow:0 10px 28px rgba(65,48,35,.065)}
+.pct-report-category-banner::after{content:"";position:absolute;right:-45px;top:-80px;width:180px;height:180px;border:28px solid color-mix(in srgb,var(--report-accent,#ff6900) 10%,transparent);border-radius:50%;pointer-events:none}
+.pct-report-category-banner .badge{color:var(--report-accent);background:color-mix(in srgb,var(--report-accent) 13%,#fff)!important}
+.pct-report-category-banner .left,.pct-report-category-banner .right-actions{position:relative;z-index:1}
+.pct-report-header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:22px 24px;
+  border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--pct-shadow)
+}
+.pct-report-kicker{color:var(--orange-dark);font-size:9.5px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+.pct-report-header h2{margin:6px 0 4px;font-size:25px;letter-spacing:-.025em}
+.pct-report-header p{margin:0;color:var(--muted);font-size:12px}
+.pct-report-status{
+  display:flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--line);
+  border-radius:999px;color:#777;background:#fafafa;font-size:10.5px;font-weight:800;white-space:nowrap
+}
+.pct-report-status i{width:7px;height:7px;border-radius:50%;background:#f0a02c}
+.pct-report-status.online{color:#147b4f;border-color:#d9eee4;background:#f5fbf8}
+.pct-report-status.online i{background:#24b873}
+.pct-report-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.pct-report-stat{
+  position:relative;overflow:hidden;padding:16px 17px;border:1px solid var(--line);
+  border-radius:15px;background:#fff;box-shadow:0 6px 20px rgba(65,48,35,.045)
+}
+.pct-report-stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--stat-color,var(--orange))}
+.pct-report-stat span{display:block;color:#8a8a8a;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.pct-report-stat strong{display:block;margin-top:6px;font-size:25px;letter-spacing:-.04em}
+.pct-report-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.7fr);gap:14px;align-items:start}
+.pct-report-links{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.pct-report-link-card{
+  position:relative;overflow:hidden;padding:17px 18px;border:1px solid var(--line);
+  border-radius:16px;background:#fff;box-shadow:0 7px 23px rgba(65,48,35,.05)
+}
+.pct-report-link-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--link-color,var(--orange))}
+.pct-report-link-card h3{margin:0 0 5px;font-size:14px}.pct-report-link-card p{margin:0;color:#777;font-size:10.5px;line-height:1.55}
+.pct-report-link-url{display:block;margin:11px 0 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--orange-dark);font-size:10.5px}
+.pct-report-link-actions{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pct-report-link-badge{padding:4px 8px;border-radius:999px;color:#666;background:#f3f3f3;font-size:9.5px;font-weight:800}
+.pct-report-link-open{padding:7px 10px;border:1px solid #ffd0af;border-radius:9px;color:var(--orange-dark);background:var(--orange-tint);font-size:10.5px;font-weight:850;text-decoration:none}
+.pct-report-card{border:1px solid #e9e3de;border-radius:18px;background:#fff;box-shadow:0 10px 28px rgba(65,48,35,.06)}
+.pct-report-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;border-bottom:1px solid var(--line)}
+.pct-report-card-head h3{margin:0;font-size:14px}.pct-report-card-head small{display:block;margin-top:3px;color:#999;font-size:10.5px}
+.pct-report-form{padding:17px 18px 18px}
+.pct-report-auto-note{
+  display:flex;flex-wrap:wrap;align-items:center;gap:5px 10px;margin-bottom:13px;padding:11px 12px;
+  border:1px solid #ffe0c8;border-radius:11px;color:#6f4a30;background:#fff8f2;font-size:10.5px
+}
+.pct-report-auto-note b{color:var(--orange-dark)}.pct-report-auto-note span{font-weight:750}.pct-report-auto-note small{width:100%;color:#9a7b65}
+.pct-report-form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.pct-report-form-grid-core{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pct-report-section-title{display:flex;align-items:center;gap:9px;margin:15px 0 10px;padding-bottom:8px;border-bottom:1px solid #f1ece8}
+.pct-report-auto-note+.pct-report-section-title{margin-top:2px}
+.pct-report-section-title>span{width:26px;height:26px;display:grid;place-items:center;flex:0 0 auto;border-radius:9px;color:#fff;background:var(--orange);font-size:11px;font-weight:900;box-shadow:0 5px 12px rgba(255,105,0,.2)}
+.pct-report-section-title b{display:block;font-size:11.5px}.pct-report-section-title small{display:block;margin-top:1px;color:#aaa;font-size:9.5px}
+.pct-report-field{min-width:0}
+.pct-report-field.span-2{grid-column:span 2}.pct-report-field.full{grid-column:1/-1}
+.pct-report-field label{display:block;margin-bottom:5px;color:#666;font-size:10.5px;font-weight:800}
+.pct-report-field label em{margin-left:5px;color:var(--orange-dark);font-size:9px;font-style:normal}
+.pct-report-field input,.pct-report-field textarea{
+  width:100%;border:1px solid #e7e2de;border-radius:10px;color:var(--text);background:#fff;font-family:inherit
+}
+.pct-report-field.important{padding:10px;border:1px solid #ffddc5;border-radius:13px;background:linear-gradient(145deg,#fffaf6,#fff5ed)}
+.pct-report-field.important input,.pct-report-field.important textarea{border-color:#ffc89f;background:#fff}
+.pct-report-field.important input:focus,.pct-report-field.important textarea:focus{outline:2px solid rgba(255,105,0,.14);border-color:var(--orange)}
+.pct-report-field input{height:39px;padding:0 10px}.pct-report-field textarea{min-height:76px;padding:10px;resize:vertical}
+.pct-report-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.pct-report-action{
+  min-height:38px;padding:0 14px;border:1px solid var(--line);border-radius:10px;
+  color:#555;background:#fff;font-size:11.5px;font-weight:850;cursor:pointer
+}
+.pct-report-action.primary{color:#fff;border-color:var(--orange);background:var(--orange);box-shadow:0 7px 17px rgba(255,105,0,.17)}
+.pct-report-action.primary:hover{background:var(--orange-dark);transform:translateY(-1px)}
+.pct-report-action:disabled{opacity:.55;cursor:wait}
+.pct-trend{height:205px;padding:18px 16px 12px;display:flex;align-items:flex-end;gap:7px}
+.pct-trend-col{flex:1;min-width:8px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}
+.pct-trend-bars{width:100%;height:160px;display:flex;align-items:flex-end;justify-content:center;gap:2px}
+.pct-trend-bar{width:42%;min-height:2px;border-radius:5px 5px 1px 1px;background:var(--orange)}
+.pct-trend-bar.pending{background:#ddd8d3}
+.pct-trend-label{color:#aaa;font-size:8px;white-space:nowrap}
+.pct-report-empty{padding:36px 18px;text-align:center;color:#999;font-size:11.5px}
+.pct-report-table-card{overflow:hidden}
+.pct-report-table-wrap{overflow:auto;max-height:460px}
+.pct-report-table{width:100%;min-width:1080px;border-collapse:separate;border-spacing:0}
+.pct-report-table th{
+  position:sticky;top:0;z-index:2;padding:10px 11px;border-bottom:1px solid var(--line);
+  color:#777;background:#fafafa;text-align:left;font-size:9.5px;white-space:nowrap
+}
+.pct-report-table td{padding:11px;border-bottom:1px solid #f1eeeb;font-size:10.5px;vertical-align:top}
+.pct-report-table tr:hover td{background:#fffaf6}
+.pct-report-edit{border:1px solid #ffd2b3;border-radius:8px;color:var(--orange-dark);background:var(--orange-tint);padding:5px 8px;font-size:10px;font-weight:800;cursor:pointer}
+.pct-report-table-note{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pct-report-toolbar{display:flex;align-items:center;gap:8px}
+.pct-report-toolbar input{height:34px;border:1px solid var(--line);border-radius:9px;padding:0 9px;font-size:10.5px}
+.pct-report-resources{padding-top:3px}
+.pct-report-resources-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:4px 2px 9px}
+.pct-report-resources-head h3{margin:0;font-size:14px}.pct-report-resources-head p{margin:3px 0 0;color:#888;font-size:10.5px}
+.pct-report-resources-head>span{padding:5px 9px;border-radius:999px;color:var(--orange-dark);background:var(--orange-tint);font-size:9.5px;font-weight:850}
+.pct-report-resources>.pct-report-empty{border:1px dashed #eadfd7;border-radius:14px;background:#fff}
+.pct-report-resources .row-flex>.pct-report-empty{width:100%;flex:1;border:1px dashed #eadfd7;border-radius:14px;background:#fff}
+
+@media(max-width:1050px){
+  .pct-report-stats{grid-template-columns:repeat(3,1fr)}
+  .pct-report-grid{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  .pct-report-form-grid{grid-template-columns:1fr 1fr}
+  .pct-report-stats{grid-template-columns:1fr 1fr}
+  .pct-report-header{padding:18px;flex-direction:column}
+  .pct-report-links{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .pct-report-form-grid{grid-template-columns:1fr}
+  .pct-report-field.span-2,.pct-report-field.full{grid-column:auto}
+  .pct-report-stats{grid-template-columns:1fr 1fr}
+  .pct-report-stat{padding:13px}.pct-report-stat strong{font-size:21px}
+}
+
+@media(max-width:880px){
+  .sidebar{left:-280px!important}.sidebar.open{left:0!important}.main-col{margin-left:0!important}
+  .pct-dashboard-frame{height:74vh;min-height:650px}
+}
+@media(max-width:680px){
+  .pct-dashboard-hero{min-height:120px;padding:21px;align-items:flex-start;flex-direction:column}
+  .pct-dashboard-live{display:none}.pct-url-row{display:grid}.pct-frame-wrap{min-height:620px}
+  .pct-dashboard-frame{min-height:620px}.pct-dashboard-mode main{padding-left:12px!important;padding-right:12px!important}
+  #pctThemePanel{top:64px;right:9px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
 </head>
 <body>
-
 <div class="app">
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside class="sidebar" id="sidebar">
@@ -1048,7 +1469,8 @@ document.getElementById('addBtn').onclick = openAdd;
 document.getElementById('addTabBtn').onclick = ()=>openCatModal(null);
 document.getElementById('cancelBtn').onclick = closeModal;
 document.getElementById('saveBtn').onclick = saveModal;
-document.getElementById('ask').addEventListener('input', render);
+let pctSearchRenderTimer = null;
+document.getElementById('ask').addEventListener('input', ()=>{ window.clearTimeout(pctSearchRenderTimer); pctSearchRenderTimer = window.setTimeout(render, 170); });
 document.getElementById('askClear').onclick = ()=>{ document.getElementById('ask').value=''; render(); };
 document.getElementById('hamburgerBtn').onclick = openSidebarMobile;
 document.getElementById('sidebarOverlay').onclick = closeSidebarMobile;
@@ -3136,5 +3558,1166 @@ window.scrollTo({top:0});
 })();
 loadAll();
 mnavSync();</script>
+
+<script id="pctIntegratedDashboardModule">
+(function () {
+  'use strict';
+
+  const DASHBOARD_ID = '__pct_dashboard__';
+  const URL_KEY = 'pctDashboardWebAppUrl_v2';
+  const THEME_KEY = 'pctFleetTheme_v2';
+  const REPORT_CACHE_KEY = 'pctReportCache_v1';
+  const DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbxLUoq_OCTXKKEkTaSvtegOTr1l3PKefmtvj-OlP7E-Ir7qZtq8fOxPmJxbwZkpNxrtgA/exec';
+  const DEFAULT_THEME = { color: '#ff6900', radius: 16, density: 'comfortable' };
+  let dashboardActive = false;
+  let renderTimer = 0;
+  let reportServerReady = false;
+  const dashboardState = {
+    tab: 'orders',
+    page: 1,
+    totalPages: 1,
+    summary: null,
+    orders: null,
+    problems: null,
+    services: null,
+    orderFilters: { q: '', dateFrom: '', dateTo: '', status: '', difficulty: '' },
+    problemFilters: { q: '', date: '' },
+    acFilters: { q: '', date: '', month: '' },
+    searchTimer: 0,
+    liveTimer: 0,
+    appointmentDate: ''
+  };
+
+  function clean(value) {
+    return String(value == null ? '' : value).trim();
+  }
+
+  function safeParse(value, fallback) {
+    try { return JSON.parse(value); } catch (error) { return fallback; }
+  }
+
+  function validWebAppUrl(value) {
+    return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:[?#].*)?$/i.test(clean(value));
+  }
+
+  function getDashboardUrl() {
+    const stored = clean(localStorage.getItem(URL_KEY));
+    return validWebAppUrl(stored) ? stored : DEFAULT_URL;
+  }
+
+  function setDashboardUrl(value) {
+    value = clean(value);
+    if (!validWebAppUrl(value)) {
+      showToast('กรุณาใช้ Google Apps Script Web App URL ที่ลงท้ายด้วย /exec');
+      return false;
+    }
+    localStorage.setItem(URL_KEY, value);
+    if (typeof SHEET_CONFIG !== 'undefined') SHEET_CONFIG.webAppUrl = value;
+    return true;
+  }
+
+  function escapeAttr(value) {
+    return clean(value).replace(/[&<>"']/g, function (character) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+    });
+  }
+
+  function setModuleChrome(active, mode) {
+    document.body.classList.toggle('pct-dashboard-mode', active && mode === 'dashboard');
+    document.body.classList.toggle('pct-report-mode', active && mode === 'report');
+    const hideStandardActions = active && mode === 'dashboard';
+    ['addBtn', 'exportBtn', 'importBtn', 'resetBtn'].forEach(function (id) {
+      const element = document.getElementById(id);
+      if (element) element.style.display = hideStandardActions ? 'none' : '';
+    });
+    const search = document.querySelector('.askbar-wrap');
+    if (search) search.style.display = hideStandardActions ? 'none' : '';
+  }
+
+  function addDashboardNav() {
+    const nav = document.getElementById('sidebarNav');
+    if (!nav || nav.querySelector('[data-special-dashboard]')) return;
+
+    const item = document.createElement('div');
+    item.className = 'navitem pct-dashboard-nav' + (dashboardActive ? ' active' : '');
+    item.dataset.specialDashboard = 'true';
+    item.innerHTML = '<span class="ic">▦</span><span class="nm">Dashboard</span><span class="cnt">LIVE</span>';
+    item.onclick = function () {
+      dashboardActive = true;
+      const ask = document.getElementById('ask');
+      if (ask) ask.value = '';
+      closeSidebarMobile();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const label = document.createElement('div');
+    label.className = 'pct-pinned-label';
+    label.textContent = 'Operations';
+    const divider = document.createElement('div');
+    divider.className = 'pct-nav-divider';
+    nav.prepend(divider);
+    nav.prepend(item);
+    nav.prepend(label);
+
+    const reportItem = nav.querySelector('.navitem[data-catid="claims"]');
+    if (reportItem) {
+      reportItem.classList.add('pct-report-nav');
+      const count = reportItem.querySelector('.cnt');
+      if (count && typeof DATA !== 'undefined') {
+        count.textContent = DATA.filter(function (item) { return item.category === 'claims'; }).length;
+      }
+    }
+  }
+
+  function addMobileDashboardNav() {
+    const mobileNav = document.querySelector('.mnav');
+    if (!mobileNav || mobileNav.querySelector('[data-special-dashboard]')) return;
+    const button = document.createElement('button');
+    button.className = 'mnav-btn';
+    button.dataset.specialDashboard = 'true';
+    button.innerHTML = '<span class="ic">▦</span><span class="lb">Dashboard</span>';
+    button.onclick = function () {
+      dashboardActive = true;
+      document.getElementById('sidebar').classList.remove('open');
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    mobileNav.prepend(button);
+  }
+
+  function syncMobileNav() {
+    document.querySelectorAll('.mnav-btn').forEach(function (button) {
+      if (button.dataset.specialDashboard) button.classList.toggle('on', dashboardActive);
+      else if (dashboardActive) button.classList.remove('on');
+    });
+  }
+
+  function dashboardHero() {
+    return '<section class="pct-dashboard-hero">' +
+      '<div class="pct-dashboard-copy">' +
+      '<div class="pct-dashboard-kicker">PCT × XIAOMI · FLEET OPERATIONS</div>' +
+      '<h2>Order Operations Dashboard</h2>' +
+      '<p>Orders, Problem Case และ AC Service เป็นฟังก์ชันหนึ่งภายใน Fleet Hub</p>' +
+      '</div>' +
+      '<div class="pct-dashboard-live"><i></i>Connected to Google Sheets</div>' +
+      '</section>';
+  }
+
+  function dashboardApiUrl(action, params) {
+    const base = getDashboardUrl();
+    const query = new URLSearchParams(Object.assign({ action: action, _: Date.now() }, params || {}));
+    return base + (base.includes('?') ? '&' : '?') + query.toString();
+  }
+
+  async function dashboardGet(action, params) {
+    const response = await fetch(dashboardApiUrl(action, params), { method: 'GET', cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || !payload || payload.ok !== true || payload.dashboardApi !== true) {
+      throw new Error(payload && payload.message ? payload.message : 'Dashboard API is not ready');
+    }
+    return payload;
+  }
+
+  async function dashboardPost(action, data) {
+    const response = await fetch(getDashboardUrl(), {
+      method: 'POST',
+      body: JSON.stringify(Object.assign({ action: action }, data || {}))
+    });
+    const payload = await response.json();
+    if (!response.ok || !payload || payload.ok !== true || payload.dashboardApi !== true) {
+      throw new Error(payload && payload.message ? payload.message : 'บันทึกข้อมูลไม่สำเร็จ');
+    }
+    return payload;
+  }
+
+  function dashboardLoadingHtml(message) {
+    return '<div class="pct-native-loading"><div class="pct-frame-spinner"></div>' +
+      reportEscape(message || 'กำลังโหลดข้อมูลจาก Google Sheets') + '</div>';
+  }
+
+  function dashboardHeaderHtml() {
+    return '<header class="pct-native-head">' +
+      '<div class="pct-native-head-copy"><div class="pct-native-kicker">Google Sheets · Live Operations</div>' +
+      '<h2>Order Operations Dashboard</h2>' +
+      '<p>ภาพรวมงานประจำวันจาก Orders, Problem Case และ AC Service ในพื้นที่ทำงานเดียว</p>' +
+      '<div class="pct-native-head-chips"><span>Orders</span><span>Problem Case</span><span>AC Service</span></div></div>' +
+      '<div class="pct-native-head-actions">' +
+      '<span class="pct-native-status offline" id="pctNativeStatus"><i></i>กำลังเชื่อมต่อ</span>' +
+      '<button class="pct-native-button" id="pctNativeRefresh">↻ รีเฟรช</button>' +
+      '<button class="pct-native-button" id="pctNativeSettings">⚙ ตั้งค่า</button>' +
+      '</div></header>';
+  }
+
+  function dashboardStatsHtml() {
+    return '<section class="pct-native-stats">' +
+      '<article class="pct-native-stat" style="--ns-color:#ff6900;--ns-tint:#fff1e6"><div class="pct-native-stat-top"><i>▦</i><span>Orders</span></div><strong id="pctNsOrders">—</strong><small>รายการทั้งหมด</small></article>' +
+      '<article class="pct-native-stat" style="--ns-color:#27a86f;--ns-tint:#eaf8f1"><div class="pct-native-stat-top"><i>✓</i><span>Confirm</span></div><strong id="pctNsConfirm">—</strong><small>ยืนยันแล้ว</small></article>' +
+      '<article class="pct-native-stat" style="--ns-color:#df5353;--ns-tint:#fdeeee"><div class="pct-native-stat-top"><i>×</i><span>Cancel</span></div><strong id="pctNsCancel">—</strong><small>ยกเลิก</small></article>' +
+      '<article class="pct-native-stat" style="--ns-color:#8d67d5;--ns-tint:#f2edfb"><div class="pct-native-stat-top"><i>!</i><span>Open Problem</span></div><strong id="pctNsProblems">—</strong><small>รอดำเนินการ</small></article>' +
+      '<article class="pct-native-stat" style="--ns-color:#3984df;--ns-tint:#eaf3fd"><div class="pct-native-stat-top"><i>❄</i><span>AC Upcoming</span></div><strong id="pctNsAC">—</strong><small>นัดหมายล้างแอร์</small></article>' +
+      '</section>';
+  }
+
+  function dashboardTodayIso() {
+    const now = new Date();
+    return now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  }
+
+  function dashboardDateFromIso(iso) {
+    const parts = clean(iso).split('-').map(Number);
+    return parts.length === 3 ? new Date(parts[0], parts[1] - 1, parts[2]) : new Date();
+  }
+
+  function dashboardAddDays(iso, days) {
+    const date = dashboardDateFromIso(iso);
+    date.setDate(date.getDate() + days);
+    return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+  }
+
+  function dashboardAppointmentHtml() {
+    const selected = dashboardState.appointmentDate || dashboardTodayIso();
+    dashboardState.appointmentDate = selected;
+    return '<section class="pct-appointment-panel">' +
+      '<div class="pct-appointment-head"><div><div class="pct-native-kicker">Appointment workload</div><h3>จำนวนเคสตามวันนัดหมาย</h3><p>ข้อมูลสดจากคอลัมน์ Date appointment ในหน้า Orders</p></div>' +
+      '<div class="pct-appointment-controls"><span id="pctAppointmentUpdated">กำลังอัปเดต</span><input type="date" id="pctAppointmentDate" value="' + selected + '"><button class="pct-native-button" id="pctAppointmentToday">วันนี้</button></div></div>' +
+      '<div class="pct-appointment-summary"><div><span>วันที่เลือก</span><strong id="pctAppointmentSelectedDate">—</strong></div><div class="pct-appointment-count"><strong id="pctAppointmentSelectedCount">—</strong><span>เคส</span></div><button class="pct-native-button primary" id="pctAppointmentOpenCases">ดูรายการเคสวันนี้</button></div>' +
+      '<div class="pct-appointment-days" id="pctAppointmentDays"></div></section>';
+  }
+
+  function renderAppointmentDaily(summary) {
+    const host = document.getElementById('pctAppointmentDays');
+    if (!host) return;
+    const rows = summary && Array.isArray(summary.appointmentsByDate) ? summary.appointmentsByDate : [];
+    const counts = {};
+    rows.forEach(function (item) { counts[clean(item.date)] = reportNumber(item.count); });
+    const selected = dashboardState.appointmentDate || dashboardTodayIso();
+    const selectedDate = dashboardDateFromIso(selected);
+    const dateLabel = selectedDate.toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('pctAppointmentSelectedDate').textContent = dateLabel;
+    document.getElementById('pctAppointmentSelectedCount').textContent = reportNumber(counts[selected]).toLocaleString();
+    document.getElementById('pctAppointmentDate').value = selected;
+    document.getElementById('pctAppointmentUpdated').textContent = 'อัปเดต ' + clean(summary.updatedAt || 'ล่าสุด');
+
+    const days = [];
+    for (let offset = -3; offset <= 10; offset++) days.push(dashboardAddDays(selected, offset));
+    host.innerHTML = days.map(function (iso) {
+      const date = dashboardDateFromIso(iso);
+      const isToday = iso === dashboardTodayIso();
+      return '<button class="pct-appointment-day' + (iso === selected ? ' active' : '') + (isToday ? ' today' : '') + '" data-appointment-date="' + iso + '">' +
+        '<span>' + date.toLocaleDateString('th-TH', { weekday: 'short' }) + '</span><b>' + date.getDate() + '</b><small>' + reportNumber(counts[iso]) + ' เคส</small></button>';
+    }).join('');
+    host.querySelectorAll('[data-appointment-date]').forEach(function (button) {
+      button.onclick = function () {
+        dashboardState.appointmentDate = button.dataset.appointmentDate;
+        renderAppointmentDaily(dashboardState.summary || summary);
+      };
+    });
+  }
+
+  function openSelectedAppointmentCases() {
+    const selected = dashboardState.appointmentDate || dashboardTodayIso();
+    dashboardState.orderFilters.dateFrom = selected;
+    dashboardState.orderFilters.dateTo = selected;
+    dashboardState.page = 1;
+    switchNativeDashboardTab('orders');
+  }
+
+  function stopDashboardLiveRefresh() {
+    window.clearInterval(dashboardState.liveTimer);
+    dashboardState.liveTimer = 0;
+  }
+
+  function startDashboardLiveRefresh() {
+    stopDashboardLiveRefresh();
+    dashboardState.liveTimer = window.setInterval(async function () {
+      if (!dashboardActive) return;
+      try {
+        const payload = await dashboardGet('dashboardLiveSummary');
+        dashboardState.summary = Object.assign({}, dashboardState.summary || {}, payload.summary || {});
+        renderAppointmentDaily(dashboardState.summary);
+        setDashboardStatus(true, 'Live · อัปเดตอัตโนมัติ');
+      } catch (error) {
+        setDashboardStatus(false, 'รอการเชื่อมต่อครั้งถัดไป');
+      }
+    }, 30000);
+  }
+
+  function dashboardTabsHtml() {
+    return '<div class="pct-native-tabs">' +
+      '<button class="pct-native-tab active" style="--tab-color:#ff6900" data-native-tab="orders">Orders</button>' +
+      '<button class="pct-native-tab" style="--tab-color:#8d67d5" data-native-tab="problems">Problem Case</button>' +
+      '<button class="pct-native-tab" style="--tab-color:#3984df" data-native-tab="ac">AC Service</button>' +
+      '</div><div id="pctNativeContent">' + dashboardLoadingHtml() + '</div>';
+  }
+
+  function setDashboardStatus(online, text) {
+    const status = document.getElementById('pctNativeStatus');
+    if (!status) return;
+    status.classList.toggle('offline', !online);
+    status.innerHTML = '<i></i>' + reportEscape(text || (online ? 'Google Sheet connected' : 'เชื่อมต่อไม่สำเร็จ'));
+  }
+
+  function renderDashboardSummary(summary) {
+    dashboardState.summary = summary || {};
+    const set = function (id, value) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = reportNumber(value).toLocaleString();
+    };
+    set('pctNsOrders', summary.total);
+    set('pctNsConfirm', summary.confirm);
+    set('pctNsCancel', summary.cancel);
+    set('pctNsProblems', summary.openProblems);
+    set('pctNsAC', summary.acUpcoming);
+    renderAppointmentDaily(summary);
+  }
+
+  function orderFilterParams() {
+    const previous = dashboardState.orderFilters;
+    const params = {
+      q: clean(document.getElementById('pctOrderQ') ? document.getElementById('pctOrderQ').value : previous.q),
+      dateFrom: clean(document.getElementById('pctOrderFrom') ? document.getElementById('pctOrderFrom').value : previous.dateFrom),
+      dateTo: clean(document.getElementById('pctOrderTo') ? document.getElementById('pctOrderTo').value : previous.dateTo),
+      status: clean(document.getElementById('pctOrderStatus') ? document.getElementById('pctOrderStatus').value : previous.status),
+      difficulty: clean(document.getElementById('pctOrderClass') ? document.getElementById('pctOrderClass').value : previous.difficulty),
+      page: dashboardState.page,
+      pageSize: 30
+    };
+    dashboardState.orderFilters = params;
+    return params;
+  }
+
+  function nativeEmptyRow(columns, message) {
+    return '<tr><td colspan="' + columns + '"><div class="pct-native-empty">' + reportEscape(message) + '</div></td></tr>';
+  }
+
+  function renderNativeOrders(data) {
+    dashboardState.orders = data;
+    dashboardState.page = data.page || 1;
+    dashboardState.totalPages = data.totalPages || 1;
+    const content = document.getElementById('pctNativeContent');
+    if (!content) return;
+    content.innerHTML = '<div class="pct-native-toolbar">' +
+      '<input id="pctOrderQ" type="search" placeholder="ค้นหา SO, ชื่อ, เบอร์โทร หรือที่อยู่">' +
+      '<input id="pctOrderFrom" type="date" title="ตั้งแต่วันที่">' +
+      '<input id="pctOrderTo" type="date" title="ถึงวันที่">' +
+      '<select id="pctOrderStatus"><option value="">ทุกสถานะ</option><option>Confirm</option><option>Cancel</option></select>' +
+      '<select id="pctOrderClass"><option value="">ทุก Class</option><option>Class I</option><option>Class II</option><option>Class III</option></select>' +
+      '</div><div class="pct-native-table-wrap"><table class="pct-native-table"><thead><tr>' +
+      '<th>SO / Delivery Order</th><th>ลูกค้า</th><th>สถานะ</th><th>วันนัดหมาย</th><th>Class</th><th>Type / Model</th><th>ที่อยู่</th><th></th>' +
+      '</tr></thead><tbody id="pctNativeOrdersBody"></tbody></table></div>' +
+      '<div class="pct-native-footer"><span>พบ ' + reportNumber(data.total).toLocaleString() + ' รายการ · หน้า ' + dashboardState.page + '/' + dashboardState.totalPages + '</span>' +
+      '<button class="pct-native-button" id="pctOrderPrev">ก่อนหน้า</button><button class="pct-native-button" id="pctOrderNext">ถัดไป</button></div>';
+
+    const body = document.getElementById('pctNativeOrdersBody');
+    body.innerHTML = data.items && data.items.length ? data.items.map(function (order) {
+      const statusClass = clean(order.status).toLowerCase();
+      const className = clean(order.difficulty).toLowerCase().replace(/\s/g, '-');
+      return '<tr><td><span class="pct-native-so">' + reportEscape(order.so) + '</span><span class="pct-native-sub">' + reportEscape(order.deliveryOrder) + '</span></td>' +
+        '<td><b>' + reportEscape(order.name || '-') + '</b><span class="pct-native-sub">' + reportEscape(order.phone) + '</span></td>' +
+        '<td><span class="pct-native-pill ' + reportEscape(statusClass) + '">' + reportEscape(order.status || '-') + '</span></td>' +
+        '<td><b>' + reportEscape(order.appointmentDate || '-') + '</b><span class="pct-native-sub">' + reportEscape(order.appointmentTime) + '</span></td>' +
+        '<td><span class="pct-native-pill ' + reportEscape(className) + '">' + reportEscape(order.difficulty || '-') + '</span></td>' +
+        '<td>' + reportEscape(order.type || '-') + '<span class="pct-native-sub">' + reportEscape(order.model) + '</span></td>' +
+        '<td><span class="pct-native-clip" title="' + reportEscape(order.address) + '">' + reportEscape(order.address || '-') + '</span></td>' +
+        '<td><button class="pct-native-button" data-edit-so="' + reportEscape(order.so) + '">แก้ J/K/P</button></td></tr>';
+    }).join('') : nativeEmptyRow(8, 'ไม่พบ Orders ตามเงื่อนไขที่เลือก');
+    document.getElementById('pctOrderQ').value = dashboardState.orderFilters.q || '';
+    document.getElementById('pctOrderFrom').value = dashboardState.orderFilters.dateFrom || '';
+    document.getElementById('pctOrderTo').value = dashboardState.orderFilters.dateTo || '';
+    document.getElementById('pctOrderStatus').value = dashboardState.orderFilters.status || '';
+    document.getElementById('pctOrderClass').value = dashboardState.orderFilters.difficulty || '';
+
+    const schedule = function () {
+      window.clearTimeout(dashboardState.searchTimer);
+      dashboardState.searchTimer = window.setTimeout(function () {
+        dashboardState.page = 1;
+        loadNativeOrders();
+      }, 300);
+    };
+    ['pctOrderQ', 'pctOrderFrom', 'pctOrderTo', 'pctOrderStatus', 'pctOrderClass'].forEach(function (id) {
+      const element = document.getElementById(id);
+      element.addEventListener(id === 'pctOrderQ' ? 'input' : 'change', schedule);
+    });
+    document.getElementById('pctOrderPrev').disabled = dashboardState.page <= 1;
+    document.getElementById('pctOrderNext').disabled = dashboardState.page >= dashboardState.totalPages;
+    document.getElementById('pctOrderPrev').onclick = function () {
+      if (dashboardState.page > 1) { dashboardState.page--; loadNativeOrders(); }
+    };
+    document.getElementById('pctOrderNext').onclick = function () {
+      if (dashboardState.page < dashboardState.totalPages) { dashboardState.page++; loadNativeOrders(); }
+    };
+    body.querySelectorAll('[data-edit-so]').forEach(function (button) {
+      button.onclick = function () { openOrderCaseModal(button.dataset.editSo); };
+    });
+  }
+
+  async function loadNativeOrders() {
+    const content = document.getElementById('pctNativeContent');
+    if (content) content.innerHTML = dashboardLoadingHtml('กำลังอ่าน Orders');
+    try {
+      const payload = await dashboardGet('getOrders', orderFilterParams());
+      renderNativeOrders(payload.orders);
+    } catch (error) {
+      showNativeDashboardError(error);
+    }
+  }
+
+  function renderNativeProblems(data) {
+    dashboardState.problems = data;
+    const content = document.getElementById('pctNativeContent');
+    if (!content) return;
+    content.innerHTML = '<div class="pct-native-toolbar problem">' +
+      '<input id="pctProblemQ" type="search" placeholder="ค้นหา SO, ปัญหา, ช่าง หรือสถานะ">' +
+      '<input id="pctProblemDate" type="date" title="วันที่รับเคสหรือวันนัดหมาย">' +
+      '<button class="pct-native-button primary" id="pctNewProblem">＋ บันทึก Problem Case</button></div>' +
+      '<div class="pct-native-table-wrap"><table class="pct-native-table"><thead><tr><th>SO / ลูกค้า</th><th>วันที่รับเคส</th><th>ปัญหา</th><th>วันนัดแก้ไข</th><th>สถานะ</th><th>ช่างแก้ไข</th><th>ขั้นตอน / ผลลัพธ์</th></tr></thead>' +
+      '<tbody id="pctNativeProblemsBody"></tbody></table></div><div class="pct-native-footer">พบ ' + reportNumber(data.total).toLocaleString() + ' เคส</div>';
+    const body = document.getElementById('pctNativeProblemsBody');
+    body.innerHTML = data.items && data.items.length ? data.items.map(function (item) {
+      return '<tr><td><span class="pct-native-so">' + reportEscape(item.so) + '</span><span class="pct-native-sub">' + reportEscape(item.name) + ' · ' + reportEscape(item.phone) + '</span></td>' +
+        '<td>' + reportEscape(item.dateReceived || '-') + '</td><td><span class="pct-native-clip" title="' + reportEscape(item.problem) + '">' + reportEscape(item.problem || '-') + '</span></td>' +
+        '<td>' + reportEscape(item.appointmentDate || '-') + '<span class="pct-native-sub">' + reportEscape(item.appointmentTime) + '</span></td>' +
+        '<td><span class="pct-native-pill ' + (item.status === 'แก้ไขแล้ว' ? 'done' : '') + '">' + reportEscape(item.status || '-') + '</span></td>' +
+        '<td>' + reportEscape(item.repairTeam || '-') + '</td><td><span class="pct-native-clip">' + reportEscape(item.steps || item.result || '-') + '</span></td></tr>';
+    }).join('') : nativeEmptyRow(7, 'ไม่พบ Problem Case');
+    document.getElementById('pctProblemQ').value = dashboardState.problemFilters.q || '';
+    document.getElementById('pctProblemDate').value = dashboardState.problemFilters.date || '';
+    const schedule = function () {
+      window.clearTimeout(dashboardState.searchTimer);
+      dashboardState.searchTimer = window.setTimeout(loadNativeProblems, 300);
+    };
+    document.getElementById('pctProblemQ').addEventListener('input', schedule);
+    document.getElementById('pctProblemDate').addEventListener('change', schedule);
+    document.getElementById('pctNewProblem').onclick = openProblemModal;
+  }
+
+  async function loadNativeProblems() {
+    const q = clean(document.getElementById('pctProblemQ') ? document.getElementById('pctProblemQ').value : dashboardState.problemFilters.q);
+    const date = clean(document.getElementById('pctProblemDate') ? document.getElementById('pctProblemDate').value : dashboardState.problemFilters.date);
+    dashboardState.problemFilters = { q: q, date: date };
+    const content = document.getElementById('pctNativeContent');
+    if (content) content.innerHTML = dashboardLoadingHtml('กำลังอ่าน Problem Case');
+    try {
+      const payload = await dashboardGet('getProblemCases', { q: q, date: date });
+      renderNativeProblems(payload.problems);
+    } catch (error) {
+      showNativeDashboardError(error);
+    }
+  }
+
+  function renderNativeAC(data) {
+    dashboardState.services = data;
+    const content = document.getElementById('pctNativeContent');
+    if (!content) return;
+    content.innerHTML = '<div class="pct-native-toolbar ac">' +
+      '<input id="pctACQ" type="search" placeholder="ค้นหา SO, ชื่อ, เบอร์โทร หรือที่อยู่">' +
+      '<input id="pctACDate" type="date" title="วันนัดล้างแอร์"><input id="pctACMonth" type="month" title="เดือน">' +
+      '<button class="pct-native-button primary" id="pctNewAC">＋ เพิ่มด้วย SO</button></div>' +
+      '<div class="pct-native-table-wrap"><table class="pct-native-table"><thead><tr><th>SO / ลูกค้า</th><th>เบอร์โทร</th><th>วันติดตั้ง</th><th>วันนัดล้างแอร์</th><th>Type / Model</th><th>ที่อยู่</th><th>หมายเหตุ</th></tr></thead>' +
+      '<tbody id="pctNativeACBody"></tbody></table></div><div class="pct-native-footer">พบ ' + reportNumber(data.total).toLocaleString() + ' นัด</div>';
+    const body = document.getElementById('pctNativeACBody');
+    body.innerHTML = data.items && data.items.length ? data.items.map(function (item) {
+      return '<tr><td><span class="pct-native-so">' + reportEscape(item.so) + '</span><span class="pct-native-sub">' + reportEscape(item.name) + '</span></td>' +
+        '<td>' + reportEscape(item.phone || '-') + '</td><td>' + reportEscape(item.installDate || '-') + '</td>' +
+        '<td><span class="pct-native-pill" style="color:#2869ad;background:#eaf3ff">' + reportEscape(item.serviceDate || '-') + '</span></td>' +
+        '<td>' + reportEscape(item.type || '-') + '<span class="pct-native-sub">' + reportEscape(item.model) + '</span></td>' +
+        '<td><span class="pct-native-clip" title="' + reportEscape(item.address) + '">' + reportEscape(item.address || '-') + '</span></td>' +
+        '<td><span class="pct-native-clip" title="' + reportEscape(item.noted) + '">' + reportEscape(item.noted || '-') + '</span></td></tr>';
+    }).join('') : nativeEmptyRow(7, 'ไม่พบนัดล้างแอร์');
+    document.getElementById('pctACQ').value = dashboardState.acFilters.q || '';
+    document.getElementById('pctACDate').value = dashboardState.acFilters.date || '';
+    document.getElementById('pctACMonth').value = dashboardState.acFilters.month || '';
+    const schedule = function () {
+      window.clearTimeout(dashboardState.searchTimer);
+      dashboardState.searchTimer = window.setTimeout(loadNativeAC, 300);
+    };
+    document.getElementById('pctACQ').addEventListener('input', schedule);
+    document.getElementById('pctACDate').addEventListener('change', schedule);
+    document.getElementById('pctACMonth').addEventListener('change', schedule);
+    document.getElementById('pctNewAC').onclick = openACModal;
+  }
+
+  async function loadNativeAC() {
+    const params = {
+      q: clean(document.getElementById('pctACQ') ? document.getElementById('pctACQ').value : dashboardState.acFilters.q),
+      date: clean(document.getElementById('pctACDate') ? document.getElementById('pctACDate').value : dashboardState.acFilters.date),
+      month: clean(document.getElementById('pctACMonth') ? document.getElementById('pctACMonth').value : dashboardState.acFilters.month)
+    };
+    dashboardState.acFilters = params;
+    const content = document.getElementById('pctNativeContent');
+    if (content) content.innerHTML = dashboardLoadingHtml('กำลังอ่าน AC Service');
+    try {
+      const payload = await dashboardGet('getACServices', params);
+      renderNativeAC(payload.services);
+    } catch (error) {
+      showNativeDashboardError(error);
+    }
+  }
+
+  function switchNativeDashboardTab(tab) {
+    dashboardState.tab = tab;
+    document.querySelectorAll('[data-native-tab]').forEach(function (button) {
+      button.classList.toggle('active', button.dataset.nativeTab === tab);
+    });
+    if (tab === 'orders') loadNativeOrders();
+    if (tab === 'problems') loadNativeProblems();
+    if (tab === 'ac') loadNativeAC();
+  }
+
+  function nativeModal(title, bodyHtml, saveLabel) {
+    let modal = document.getElementById('pctNativeModal');
+    if (modal) modal.remove();
+    modal = document.createElement('div');
+    modal.id = 'pctNativeModal';
+    modal.className = 'pct-native-modal open';
+    modal.innerHTML = '<div class="pct-native-modal-card"><div class="pct-native-modal-head"><h3>' + reportEscape(title) + '</h3><button class="pct-native-close" type="button">×</button></div>' +
+      '<form id="pctNativeModalForm"><div class="pct-native-modal-body">' + bodyHtml + '</div><div class="pct-native-modal-actions"><button class="pct-native-button" type="button" data-native-close>ยกเลิก</button><button class="pct-native-button primary" type="submit">' + reportEscape(saveLabel) + '</button></div></form></div>';
+    document.body.appendChild(modal);
+    const close = function () { modal.remove(); };
+    modal.querySelector('.pct-native-close').onclick = close;
+    modal.querySelector('[data-native-close]').onclick = close;
+    modal.addEventListener('click', function (event) { if (event.target === modal) close(); });
+    return { modal: modal, form: modal.querySelector('form'), close: close };
+  }
+
+  async function openOrderCaseModal(so) {
+    try {
+      const payload = await dashboardGet('getEditableOrderCase', { so: so });
+      const item = payload.data;
+      const ui = nativeModal('แก้ไขข้อมูลเคส — เฉพาะ J, K, P',
+        '<div class="pct-native-form-grid"><div class="pct-native-field full"><label>Service Order</label><input name="so" value="' + reportEscape(item.so) + '" readonly></div>' +
+        '<div class="pct-native-field"><label>Date appointment (J)</label><input type="date" name="dateAppointment" value="' + reportEscape(reportDate(item.dateAppointment)) + '"></div>' +
+        '<div class="pct-native-field"><label>Time (K)</label><input type="time" name="time" value="' + reportEscape(clean(item.time).slice(0, 5)) + '"></div>' +
+        '<div class="pct-native-field full"><label>Noted (P)</label><textarea name="noted">' + reportEscape(item.noted) + '</textarea></div></div>', 'บันทึก J, K, P');
+      ui.form.onsubmit = async function (event) {
+        event.preventDefault();
+        const data = Object.fromEntries(new FormData(ui.form).entries());
+        try {
+          const result = await dashboardPost('updateOrderCase', { data: data });
+          ui.close(); showToast(result.message || 'อัปเดตข้อมูลแล้ว'); loadNativeOrders();
+        } catch (error) { showToast(error.message); }
+      };
+    } catch (error) { showToast(error.message); }
+  }
+
+  function openProblemModal() {
+    const today = new Date();
+    const iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    const ui = nativeModal('บันทึก Problem Case',
+      '<div class="pct-native-form-grid"><div class="pct-native-field full"><label>Service Order</label><input name="so" required placeholder="ASTH..."></div>' +
+      '<div class="pct-native-field"><label>วันที่รับเคส</label><input type="date" name="dateReceived" value="' + iso + '" required></div>' +
+      '<div class="pct-native-field"><label>สถานะ</label><select name="status"><option>รับเรื่องแล้ว</option><option>รอนัดหมาย</option><option>กำลังแก้ไข</option><option>แก้ไขแล้ว</option></select></div>' +
+      '<div class="pct-native-field full"><label>รายละเอียดปัญหา</label><textarea name="problem" required></textarea></div>' +
+      '<div class="pct-native-field full"><label>ช่างที่เคยรับผิดชอบ</label><input name="previousTeam"></div>' +
+      '<div class="pct-native-field"><label>Date appointment</label><input type="date" name="appointmentDate"></div>' +
+      '<div class="pct-native-field"><label>Time</label><input type="time" name="appointmentTime"></div>' +
+      '<div class="pct-native-field full"><label>ช่างที่เข้าแก้ไข</label><input name="repairTeam"></div>' +
+      '<div class="pct-native-field full"><label>ขั้นตอนการแก้ไข</label><textarea name="steps"></textarea></div>' +
+      '<div class="pct-native-field full"><label>ผลลัพธ์</label><textarea name="result"></textarea></div></div>', 'บันทึก Problem Case');
+    ui.form.onsubmit = async function (event) {
+      event.preventDefault();
+      try {
+        const result = await dashboardPost('saveProblemCase', { data: Object.fromEntries(new FormData(ui.form).entries()) });
+        ui.close(); showToast(result.message || 'บันทึก Problem Case แล้ว'); loadNativeProblems();
+      } catch (error) { showToast(error.message); }
+    };
+  }
+
+  function openACModal() {
+    const ui = nativeModal('เพิ่มนัดล้างแอร์ด้วย SO',
+      '<div class="pct-native-form-grid"><div class="pct-native-field full"><label>Service Order</label><input name="so" required placeholder="ASTH..."></div>' +
+      '<div class="pct-native-field full"><div style="padding:11px;border-radius:10px;background:#f4f8ff;color:#456;font-size:11px">ระบบจะดึงชื่อ เบอร์โทร ที่อยู่ Type, Model และวันติดตั้งจาก Orders พร้อมคำนวณวันนัดล้างแอร์ให้อัตโนมัติ</div></div></div>', 'บันทึกด้วย SO');
+    ui.form.onsubmit = async function (event) {
+      event.preventDefault();
+      try {
+        const so = clean(new FormData(ui.form).get('so'));
+        const result = await dashboardPost('addACService', { so: so });
+        ui.close(); showToast(result.message || 'เพิ่มนัดล้างแอร์แล้ว'); loadNativeAC();
+      } catch (error) { showToast(error.message); }
+    };
+  }
+
+  function showNativeDashboardError(error) {
+    setDashboardStatus(false, 'ต้อง Deploy Apps Script ล่าสุด');
+    const content = document.getElementById('pctNativeContent');
+    if (!content) return;
+    content.innerHTML = '<div class="pct-native-error"><b>ยังเชื่อมต่อ Dashboard API ไม่สำเร็จ</b>' +
+      '<div>กรุณา Deploy Code.gs เวอร์ชันล่าสุด แล้วตรวจสอบ Web App URL</div>' +
+      '<button class="pct-native-button" id="pctNativeErrorSettings" style="margin-top:12px">ตั้งค่า Web App URL</button></div>';
+    document.getElementById('pctNativeErrorSettings').onclick = renderDashboardSettings;
+  }
+
+  async function loadNativeDashboardBootstrap() {
+    const content = document.getElementById('pctNativeContent');
+    if (content) content.innerHTML = dashboardLoadingHtml();
+    try {
+      const payload = await dashboardGet('dashboardBootstrap', { page: 1, pageSize: 30 });
+      setDashboardStatus(true, 'Google Sheet connected');
+      renderDashboardSummary(payload.summary);
+      dashboardState.page = 1;
+      renderNativeOrders(payload.orders);
+    } catch (error) {
+      showNativeDashboardError(error);
+    }
+  }
+
+  function renderDashboard(main) {
+    dashboardState.tab = 'orders';
+    dashboardState.page = 1;
+    dashboardState.orderFilters = { q: '', dateFrom: '', dateTo: '', status: '', difficulty: '' };
+    main.innerHTML = '<section class="pct-native-dashboard">' +
+      dashboardHeaderHtml() + dashboardStatsHtml() + dashboardAppointmentHtml() +
+      '<section class="pct-native-panel">' + dashboardTabsHtml() + '</section></section>';
+    main.querySelectorAll('[data-native-tab]').forEach(function (button) {
+      button.onclick = function () { switchNativeDashboardTab(button.dataset.nativeTab); };
+    });
+    main.querySelector('#pctNativeRefresh').onclick = function () {
+      if (dashboardState.tab === 'orders') loadNativeDashboardBootstrap();
+      if (dashboardState.tab === 'problems') loadNativeProblems();
+      if (dashboardState.tab === 'ac') loadNativeAC();
+    };
+    main.querySelector('#pctNativeSettings').onclick = renderDashboardSettings;
+    main.querySelector('#pctAppointmentDate').onchange = function () {
+      dashboardState.appointmentDate = this.value || dashboardTodayIso();
+      renderAppointmentDaily(dashboardState.summary || {});
+    };
+    main.querySelector('#pctAppointmentToday').onclick = function () {
+      dashboardState.appointmentDate = dashboardTodayIso();
+      renderAppointmentDaily(dashboardState.summary || {});
+    };
+    main.querySelector('#pctAppointmentOpenCases').onclick = openSelectedAppointmentCases;
+    startDashboardLiveRefresh();
+    loadNativeDashboardBootstrap();
+  }
+
+  function renderDashboardSettings() {
+    const main = document.getElementById('main');
+    main.innerHTML = '<section class="pct-dashboard-shell">' +
+      dashboardHero() +
+      '<section class="pct-dashboard-panel pct-dashboard-setup">' +
+      '<div class="pct-setup-card">' +
+      '<div class="pct-setup-icon">🔗</div>' +
+      '<h3>ตั้งค่า Google Apps Script Web App</h3>' +
+      '<p>วาง URL จาก Deploy → Web app ระบบจะเปิด Dashboard เป็นฟังก์ชันภายในไฟล์นี้ และจดจำ URL ไว้เฉพาะบนเครื่องที่ใช้งาน</p>' +
+      '<div class="pct-url-row"><input id="pctDashboardUrlInput" type="url" value="' + escapeAttr(getDashboardUrl()) + '" placeholder="https://script.google.com/macros/s/…/exec">' +
+      '<button class="pct-dashboard-btn primary" id="pctDashboardUrlSave">บันทึกและเปิด Dashboard</button></div>' +
+      '<div class="pct-url-note">ควรใช้ URL ที่ลงท้ายด้วย /exec ไม่ใช่ URL หน้าแก้ไข Apps Script</div>' +
+      '</div></section></section>';
+    main.querySelector('#pctDashboardUrlSave').onclick = function () {
+      if (setDashboardUrl(main.querySelector('#pctDashboardUrlInput').value)) render();
+    };
+  }
+
+  function markRendering() {
+    document.body.classList.add('pct-rendering');
+    window.clearTimeout(renderTimer);
+    renderTimer = window.setTimeout(function () {
+      requestAnimationFrame(function () { document.body.classList.remove('pct-rendering'); });
+    }, 190);
+  }
+
+  function hexToRgb(hex) {
+    const value = clean(hex).replace('#', '');
+    if (!/^[0-9a-f]{6}$/i.test(value)) return { r: 255, g: 105, b: 0 };
+    return {
+      r: parseInt(value.slice(0, 2), 16),
+      g: parseInt(value.slice(2, 4), 16),
+      b: parseInt(value.slice(4, 6), 16)
+    };
+  }
+
+  function shade(hex, amount) {
+    const rgb = hexToRgb(hex);
+    return '#' + [rgb.r, rgb.g, rgb.b].map(function (channel) {
+      return Math.max(0, Math.min(255, channel + amount)).toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  function readTheme() {
+    const saved = safeParse(localStorage.getItem(THEME_KEY), {});
+    return {
+      color: /^#[0-9a-f]{6}$/i.test(saved.color || '') ? saved.color : DEFAULT_THEME.color,
+      radius: Math.min(24, Math.max(10, Number(saved.radius) || DEFAULT_THEME.radius)),
+      density: saved.density === 'compact' ? 'compact' : 'comfortable'
+    };
+  }
+
+  function applyTheme(theme) {
+    const rgb = hexToRgb(theme.color);
+    document.documentElement.style.setProperty('--orange', theme.color);
+    document.documentElement.style.setProperty('--orange-dark', shade(theme.color, -22));
+    document.documentElement.style.setProperty('--orange-tint', 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',.10)');
+    document.documentElement.style.setProperty('--pct-radius', theme.radius + 'px');
+    document.body.classList.toggle('pct-compact', theme.density === 'compact');
+  }
+
+  function saveTheme(theme) {
+    localStorage.setItem(THEME_KEY, JSON.stringify(theme));
+    applyTheme(theme);
+  }
+
+  function buildThemePanel() {
+    if (document.getElementById('pctThemeButton')) return;
+    const button = document.createElement('button');
+    button.id = 'pctThemeButton';
+    button.type = 'button';
+    button.title = 'ปรับหน้าตาเว็บไซต์';
+    button.setAttribute('aria-label', 'ปรับหน้าตาเว็บไซต์');
+    button.textContent = '🎨';
+
+    const panel = document.createElement('section');
+    panel.id = 'pctThemePanel';
+    panel.innerHTML = '<div class="pct-theme-head"><strong>ปรับหน้าตา Fleet Hub</strong><button class="pct-theme-close" type="button">×</button></div>' +
+      '<div class="pct-theme-field"><label>สีหลัก<small>ค่าเริ่มต้นเป็นส้ม Xiaomi</small></label><input id="pctThemeColor" type="color"></div>' +
+      '<div class="pct-theme-field"><label>ความโค้งของการ์ด<small>ปรับตั้งแต่ 10–24 px</small></label><input id="pctThemeRadius" type="range" min="10" max="24"></div>' +
+      '<div class="pct-theme-field"><label>ระยะห่างข้อมูล<small>เลือกตามขนาดหน้าจอ</small></label><select id="pctThemeDensity"><option value="comfortable">สบายตา</option><option value="compact">กระชับ</option></select></div>' +
+      '<button class="pct-theme-reset" type="button">คืนค่าธีมส้ม–ขาว</button>';
+
+    const topbar = document.querySelector('.topbar');
+    if (topbar) topbar.appendChild(button);
+    document.body.appendChild(panel);
+
+    let theme = readTheme();
+    const color = panel.querySelector('#pctThemeColor');
+    const radius = panel.querySelector('#pctThemeRadius');
+    const density = panel.querySelector('#pctThemeDensity');
+    color.value = theme.color;
+    radius.value = theme.radius;
+    density.value = theme.density;
+
+    const update = function () {
+      theme = { color: color.value, radius: Number(radius.value), density: density.value };
+      saveTheme(theme);
+    };
+    color.addEventListener('input', update);
+    radius.addEventListener('input', update);
+    density.addEventListener('change', update);
+    button.onclick = function (event) {
+      event.stopPropagation();
+      panel.classList.toggle('open');
+    };
+    panel.querySelector('.pct-theme-close').onclick = function () { panel.classList.remove('open'); };
+    panel.querySelector('.pct-theme-reset').onclick = function () {
+      theme = Object.assign({}, DEFAULT_THEME);
+      color.value = theme.color;
+      radius.value = theme.radius;
+      density.value = theme.density;
+      saveTheme(theme);
+    };
+    document.addEventListener('click', function (event) {
+      if (!panel.contains(event.target) && event.target !== button) panel.classList.remove('open');
+    });
+  }
+
+  function reportEscape(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (character) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+    });
+  }
+
+  function reportNumber(value) {
+    const number = Number(String(value == null ? '' : value).replace(/,/g, ''));
+    return Number.isFinite(number) ? number : 0;
+  }
+
+  function reportDate(value) {
+    const text = clean(value);
+    let match = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (match) return match[1] + '-' + match[2].padStart(2, '0') + '-' + match[3].padStart(2, '0');
+    match = text.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/);
+    if (!match) return '';
+    let year = Number(match[3]);
+    if (year < 100) year += 2000;
+    if (year > 2400) year -= 543;
+    const first = Number(match[1]);
+    const second = Number(match[2]);
+    const month = first > 12 ? second : first;
+    const day = first > 12 ? first : second;
+    return year + '-' + String(month).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+  }
+
+  function readLocalReports() {
+    const rows = safeParse(localStorage.getItem(REPORT_CACHE_KEY), []);
+    return Array.isArray(rows) ? rows : [];
+  }
+
+  function storeLocalReports(rows) {
+    localStorage.setItem(REPORT_CACHE_KEY, JSON.stringify(rows.slice(-365)));
+  }
+
+  function upsertLocalReport(record) {
+    const rows = readLocalReports();
+    const index = rows.findIndex(function (row) {
+      return reportDate(row.date) === record.date;
+    });
+    if (index >= 0) rows[index] = Object.assign({}, rows[index], record);
+    else rows.push(record);
+    rows.sort(function (a, b) { return reportDate(a.date).localeCompare(reportDate(b.date)); });
+    storeLocalReports(rows);
+    return rows;
+  }
+
+  async function fetchReportRows() {
+    const baseUrl = getDashboardUrl();
+    const url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'action=getReports&limit=365&_=' + Date.now();
+    try {
+      const response = await fetch(url, { method: 'GET', cache: 'no-store' });
+      const payload = await response.json();
+      if (!response.ok || !payload || payload.reportApi !== true || !Array.isArray(payload.items)) {
+        throw new Error('Report API is not ready');
+      }
+      reportServerReady = true;
+      storeLocalReports(payload.items);
+      return payload.items;
+    } catch (error) {
+      reportServerReady = false;
+      return readLocalReports();
+    }
+  }
+
+  function reportRecordFromForm(form) {
+    const data = new FormData(form);
+    return {
+      date: clean(data.get('date')),
+      teamNumber: reportNumber(data.get('teamNumber')),
+      newOrder: reportNumber(data.get('newOrder')),
+      acWork: reportNumber(data.get('acWork')),
+      wmWork: reportNumber(data.get('wmWork')),
+      cancelOrder: reportNumber(data.get('cancelOrder')),
+      reschedule: clean(data.get('reschedule')),
+      cancelDetail: clean(data.get('cancelDetail')),
+      outOfSystem: clean(data.get('outOfSystem')),
+      remarks: clean(data.get('remarks'))
+    };
+  }
+
+  function reportFormValue(form, name, value) {
+    const field = form.elements.namedItem(name);
+    if (field) field.value = value == null ? '' : value;
+  }
+
+  function fillReportForm(form, record) {
+    Object.keys(record).forEach(function (key) { reportFormValue(form, key, record[key]); });
+    reportFormValue(form, 'date', reportDate(record.date));
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function sendReportToSheet(record) {
+    if (!reportServerReady) return { localOnly: true };
+    const response = await fetch(getDashboardUrl(), {
+      method: 'POST',
+      body: JSON.stringify({ action: 'saveReport', data: record })
+    });
+    const payload = await response.json();
+    if (!response.ok || !payload || payload.ok !== true) {
+      throw new Error(payload && payload.message ? payload.message : 'บันทึก Report ไม่สำเร็จ');
+    }
+    return payload;
+  }
+
+  function reportStatsHtml() {
+    return '<section class="pct-report-stats">' +
+      '<article class="pct-report-stat" style="--stat-color:#ff6900"><span>Current Pending</span><strong id="pctRptPending">—</strong></article>' +
+      '<article class="pct-report-stat" style="--stat-color:#23a66f"><span>Closed Today</span><strong id="pctRptClosed">—</strong></article>' +
+      '<article class="pct-report-stat" style="--stat-color:#4d7de5"><span>New Order</span><strong id="pctRptNew">—</strong></article>' +
+      '<article class="pct-report-stat" style="--stat-color:#d34d4d"><span>Cancel Order</span><strong id="pctRptCancel">—</strong></article>' +
+      '<article class="pct-report-stat" style="--stat-color:#8d67d5"><span>Team Number</span><strong id="pctRptTeams">—</strong></article>' +
+      '</section>';
+  }
+
+  function reportQuickLinksHtml() {
+    const monitorUrl = 'https://mi.feishu.cn/sheets/TgMdsVOJBhj6z5tQDvncirbnn3f?sheet=5f6d62';
+    const cancelUrl = 'https://mi-p.feishu.cn/sheets/RAKbsbADUhtINGtYulIcihxvnbC';
+    return '<section class="pct-report-links">' +
+      '<article class="pct-report-link-card" style="--link-color:#ff6900"><h3>TH-PCS Daily Installation Monitor</h3>' +
+      '<p>ลิงก์ทำ Report ส่งทุกวันตอน 16.00 น.</p><span class="pct-report-link-url">' + reportEscape(monitorUrl) + '</span>' +
+      '<div class="pct-report-link-actions"><span class="pct-report-link-badge">Daily monitor</span><a class="pct-report-link-open" href="' + reportEscape(monitorUrl) + '" target="_blank" rel="noopener">เปิดลิงก์ ↗</a></div></article>' +
+      '<article class="pct-report-link-card" style="--link-color:#d65454"><h3>Cancel/Reschedule Order Lists</h3>' +
+      '<p>รายการ Order ที่ยกเลิกหรือเปลี่ยนเวลา สำหรับสรุป Report ประจำวัน</p><span class="pct-report-link-url">' + reportEscape(cancelUrl) + '</span>' +
+      '<div class="pct-report-link-actions"><span class="pct-report-link-badge">Cancel & reschedule</span><a class="pct-report-link-open" href="' + reportEscape(cancelUrl) + '" target="_blank" rel="noopener">เปิดลิงก์ ↗</a></div></article>' +
+      '</section>';
+  }
+
+  function reportFormHtml() {
+    const today = new Date();
+    const iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    return '<section class="pct-report-card">' +
+      '<div class="pct-report-card-head"><div><h3>Daily Report Entry</h3><small>กรอกข้อมูลประจำวัน ระบบจะอัปเดตรายการของวันที่เดิมแทนการสร้างข้อมูลซ้ำ</small></div></div>' +
+      '<form class="pct-report-form" id="pctReportForm">' +
+      '<div class="pct-report-auto-note"><b>ข้อมูลอัตโนมัติจาก Google Sheet</b><span>Service Provider · Closed by Today (system) · Current Total Pending</span><small>หน้าเว็บจะแสดงผลลัพธ์ แต่จะไม่เขียนทับสูตรในชีต</small></div>' +
+      '<div class="pct-report-section-title"><span>1</span><div><b>ข้อมูลสรุปประจำวัน</b><small>จำนวนงานและทีมที่ปฏิบัติงาน</small></div></div>' +
+      '<div class="pct-report-form-grid pct-report-form-grid-core">' +
+      '<div class="pct-report-field"><label>Date</label><input type="date" name="date" value="' + iso + '" required></div>' +
+      '<div class="pct-report-field"><label>Team Number</label><input type="number" min="0" name="teamNumber" value="0"></div>' +
+      '<div class="pct-report-field"><label>New Order</label><input type="number" min="0" name="newOrder" value="0"></div>' +
+      '<div class="pct-report-field"><label>AC Install / Repair</label><input type="number" min="0" name="acWork" value="0"></div>' +
+      '<div class="pct-report-field"><label>WM Install / Repair</label><input type="number" min="0" name="wmWork" value="0"></div>' +
+      '<div class="pct-report-field"><label>Cancel Order</label><input type="number" min="0" name="cancelOrder" value="0"></div>' +
+      '</div>' +
+      '<div class="pct-report-section-title"><span>2</span><div><b>รายละเอียดที่ต้องติดตาม</b><small>ระบุเลข SO วันที่ สาเหตุ และสถานะที่เกี่ยวข้อง</small></div></div>' +
+      '<div class="pct-report-form-grid pct-report-form-grid-details">' +
+      '<div class="pct-report-field important span-2"><label>Reschedule <em>กรอกข้อมูล</em></label><textarea name="reschedule" placeholder="รายละเอียด Order ที่เลื่อนนัด เช่น เลข SO วันที่นัดใหม่ และสาเหตุ"></textarea></div>' +
+      '<div class="pct-report-field important span-2"><label>Out of system <em>กรอกข้อมูล</em></label><textarea name="outOfSystem" placeholder="รายละเอียดเคสที่อยู่นอกระบบ เช่น เลข SO สถานะ และหมายเหตุ"></textarea></div>' +
+      '<div class="pct-report-field span-2"><label>Cancel Detail</label><textarea name="cancelDetail" placeholder="รายละเอียด Order ที่ยกเลิก"></textarea></div>' +
+      '<div class="pct-report-field span-2"><label>Remarks / Capacity Improvement</label><textarea name="remarks" placeholder="หมายเหตุและแนวทางเพิ่ม Capacity"></textarea></div>' +
+      '</div>' +
+      '<div class="pct-report-actions"><button type="button" class="pct-report-action" id="pctReportClear">ล้างแบบฟอร์ม</button><button type="submit" class="pct-report-action primary" id="pctReportSave">บันทึกเข้า Google Sheet</button></div>' +
+      '</form></section>';
+  }
+
+  function renderReportData(rows) {
+    const shell = document.getElementById('pctReportShell');
+    if (!shell) return;
+    rows = Array.isArray(rows) ? rows.slice() : [];
+    rows.sort(function (a, b) { return reportDate(a.date).localeCompare(reportDate(b.date)); });
+    const latest = rows[rows.length - 1] || {};
+    document.getElementById('pctRptPending').textContent = reportNumber(latest.currentPending).toLocaleString();
+    document.getElementById('pctRptClosed').textContent = reportNumber(latest.closedToday).toLocaleString();
+    document.getElementById('pctRptNew').textContent = reportNumber(latest.newOrder).toLocaleString();
+    document.getElementById('pctRptCancel').textContent = reportNumber(latest.cancelOrder).toLocaleString();
+    document.getElementById('pctRptTeams').textContent = reportNumber(latest.teamNumber).toLocaleString();
+
+    const status = document.getElementById('pctReportStatus');
+    status.classList.toggle('online', reportServerReady);
+    status.innerHTML = '<i></i>' + (reportServerReady ? 'Google Sheet connected' : 'Local mode · Deploy Report API');
+
+    const trendRows = rows.slice(-14);
+    const trend = document.getElementById('pctReportTrend');
+    if (!trendRows.length) {
+      trend.innerHTML = '<div class="pct-report-empty">ยังไม่มีข้อมูลสำหรับแสดงแนวโน้ม</div>';
+    } else {
+      const maximum = Math.max(1, ...trendRows.map(function (row) {
+        return Math.max(reportNumber(row.closedToday), reportNumber(row.currentPending));
+      }));
+      trend.innerHTML = trendRows.map(function (row) {
+        const closedHeight = Math.max(2, Math.round(reportNumber(row.closedToday) / maximum * 100));
+        const pendingHeight = Math.max(2, Math.round(reportNumber(row.currentPending) / maximum * 100));
+        return '<div class="pct-trend-col"><div class="pct-trend-bars">' +
+          '<i class="pct-trend-bar pending" title="Pending ' + reportNumber(row.currentPending) + '" style="height:' + pendingHeight + '%"></i>' +
+          '<i class="pct-trend-bar" title="Closed ' + reportNumber(row.closedToday) + '" style="height:' + closedHeight + '%"></i>' +
+          '</div><span class="pct-trend-label">' + reportEscape(reportDate(row.date).slice(5)) + '</span></div>';
+      }).join('');
+    }
+
+    const filter = document.getElementById('pctReportDateFilter');
+    const selectedDate = filter ? filter.value : '';
+    const visibleRows = rows.slice().reverse().filter(function (row) {
+      return !selectedDate || reportDate(row.date) === selectedDate;
+    });
+    const body = document.getElementById('pctReportTableBody');
+    body.innerHTML = visibleRows.length ? visibleRows.map(function (row) {
+      return '<tr>' +
+        '<td><b>' + reportEscape(reportDate(row.date)) + '</b></td>' +
+        '<td>' + reportEscape(row.serviceProvider || '-') + '</td>' +
+        '<td>' + reportNumber(row.teamNumber) + '</td><td>' + reportNumber(row.newOrder) + '</td>' +
+        '<td>' + reportNumber(row.acWork) + '</td><td>' + reportNumber(row.wmWork) + '</td>' +
+        '<td>' + reportNumber(row.closedToday) + '</td><td>' + reportNumber(row.cancelOrder) + '</td>' +
+        '<td><b>' + reportNumber(row.currentPending) + '</b></td><td class="pct-report-table-note" title="' + reportEscape(row.reschedule) + '">' + reportEscape(row.reschedule || '-') + '</td>' +
+        '<td class="pct-report-table-note" title="' + reportEscape(row.cancelDetail) + '">' + reportEscape(row.cancelDetail || '-') + '</td>' +
+        '<td class="pct-report-table-note" title="' + reportEscape(row.outOfSystem) + '">' + reportEscape(row.outOfSystem || '-') + '</td>' +
+        '<td class="pct-report-table-note" title="' + reportEscape(row.remarks) + '">' + reportEscape(row.remarks || '-') + '</td>' +
+        '<td><button class="pct-report-edit" data-date="' + reportEscape(reportDate(row.date)) + '">แก้ไข</button></td>' +
+        '</tr>';
+    }).join('') : '<tr><td colspan="14"><div class="pct-report-empty">ไม่พบข้อมูล Report</div></td></tr>';
+
+    body.querySelectorAll('.pct-report-edit').forEach(function (button) {
+      button.onclick = function () {
+        const record = rows.find(function (row) {
+          return reportDate(row.date) === button.dataset.date;
+        });
+        if (record) fillReportForm(document.getElementById('pctReportForm'), record);
+      };
+    });
+  }
+
+  function renderReportWorkspace(main) {
+    const reportCategory = typeof CATS !== 'undefined' ? CATS.find(function (cat) { return cat.id === 'claims'; }) : null;
+    const reportName = reportCategory ? reportCategory.name : 'Report';
+    const reportIcon = reportCategory ? reportCategory.icon : '📊';
+    const reportColor = reportCategory ? reportCategory.color : '#ff6900';
+    const reportBackground = reportCategory && reportCategory.bgColor ? reportCategory.bgColor : '#ffffff';
+    const fixedReportIds = ['item_z1v2h7eu', 'item_7rzc7nuf'];
+    const customReportItems = typeof DATA !== 'undefined' ? DATA.filter(function (item) {
+      return item.category === 'claims' && fixedReportIds.indexOf(item.id) === -1;
+    }) : [];
+    main.innerHTML = '<section class="pct-report-shell" id="pctReportShell">' +
+      '<section class="page-banner pct-report-category-banner" style="--report-accent:' + escapeAttr(reportColor) + ';--banner-bg:' + escapeAttr(reportBackground) + '">' +
+      '<div class="left"><div class="badge">' + reportEscape(reportIcon) + '</div><div><h2>' + reportEscape(reportName) + '</h2><div class="sub">Daily Operations Report · ' + customReportItems.length + ' หัวข้อเพิ่มเติม</div></div></div>' +
+      '<div class="right-actions"><div class="pct-report-status" id="pctReportStatus"><i></i>กำลังตรวจการเชื่อมต่อ</div>' +
+      '<button class="btn secondary" id="pctReportEditCategory">✎ แก้ไขหมวดหมู่</button><button class="btn" id="pctReportAddTopic">＋ เพิ่มหัวข้อ</button></div></section>' +
+      reportQuickLinksHtml() +
+      '<section class="pct-report-resources"><div class="pct-report-resources-head"><div><h3>หัวข้อและลิงก์เพิ่มเติม</h3><p>กด “＋ เพิ่มหัวข้อ” ด้านบนเพื่อเพิ่มการ์ดในหมวด Report</p></div><span>' + customReportItems.length + ' รายการ</span></div>' +
+      '<div class="row-flex" id="pctReportCustomCards"></div></section>' +
+      reportStatsHtml() +
+      '<section class="pct-report-grid">' + reportFormHtml() +
+      '<section class="pct-report-card"><div class="pct-report-card-head"><div><h3>14-Day Performance</h3><small>สีส้ม = Closed · สีเทา = Pending</small></div></div><div class="pct-trend" id="pctReportTrend"></div></section></section>' +
+      '<section class="pct-report-card pct-report-table-card"><div class="pct-report-card-head"><div><h3>Report History</h3><small>ข้อมูลล่าสุดจากแท็บ Report</small></div><div class="pct-report-toolbar"><input type="date" id="pctReportDateFilter"><button class="pct-report-action" id="pctReportReload">↻ รีเฟรช</button></div></div>' +
+      '<div class="pct-report-table-wrap"><table class="pct-report-table"><thead><tr><th>Date</th><th>Provider</th><th>Team</th><th>New</th><th>AC</th><th>WM</th><th>Closed</th><th>Cancel</th><th>Pending</th><th>Reschedule</th><th>Cancel Detail</th><th>Out</th><th>Remarks</th><th></th></tr></thead><tbody id="pctReportTableBody"></tbody></table></div></section>' +
+      '</section>';
+
+    const customCardsHost = document.getElementById('pctReportCustomCards');
+    if (customReportItems.length && reportCategory) {
+      customReportItems.forEach(function (item) {
+        customCardsHost.appendChild(buildCard(
+          item,
+          reportCategory,
+          Math.min(3, Math.max(1, customReportItems.length)),
+          -1,
+          false
+        ));
+      });
+    } else {
+      customCardsHost.innerHTML = '<div class="pct-report-empty">ยังไม่มีหัวข้อเพิ่มเติม</div>';
+    }
+
+    document.getElementById('pctReportEditCategory').onclick = function () {
+      if (typeof openCatModal === 'function') openCatModal('claims');
+    };
+    document.getElementById('pctReportAddTopic').onclick = function () {
+      if (typeof openAdd === 'function') openAdd();
+    };
+
+    const form = document.getElementById('pctReportForm');
+    document.getElementById('pctReportClear').onclick = function () {
+      form.reset();
+      const now = new Date();
+      reportFormValue(form, 'date', now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0'));
+    };
+    form.onsubmit = async function (event) {
+      event.preventDefault();
+      const record = reportRecordFromForm(form);
+      if (!record.date) {
+        showToast('กรุณากรอก Date');
+        return;
+      }
+      const button = document.getElementById('pctReportSave');
+      button.disabled = true;
+      button.textContent = 'กำลังบันทึก…';
+      const localRows = upsertLocalReport(record);
+      renderReportData(localRows);
+      try {
+        const result = await sendReportToSheet(record);
+        if (result.localOnly) showToast('บันทึกในเครื่องแล้ว · กรุณา Deploy Apps Script เวอร์ชัน Report เพื่อส่งเข้าชีต');
+        else {
+          showToast('บันทึก Report เข้า Google Sheet เรียบร้อยแล้ว');
+          renderReportData(await fetchReportRows());
+        }
+      } catch (error) {
+        showToast('บันทึกในเครื่องแล้ว แต่ส่งเข้า Google Sheet ไม่สำเร็จ');
+      } finally {
+        button.disabled = false;
+        button.textContent = 'บันทึกเข้า Google Sheet';
+      }
+    };
+    document.getElementById('pctReportDateFilter').onchange = function () {
+      renderReportData(readLocalReports());
+    };
+    document.getElementById('pctReportReload').onclick = async function () {
+      renderReportData(await fetchReportRows());
+      showToast(reportServerReady ? 'อัปเดต Report จาก Google Sheet แล้ว' : 'แสดงข้อมูลที่บันทึกในเครื่อง');
+    };
+
+    renderReportData(readLocalReports());
+    fetchReportRows().then(renderReportData);
+    if (typeof detectCardOverflow === 'function') requestAnimationFrame(detectCardOverflow);
+  }
+
+  function install() {
+    if (typeof window.render !== 'function' || typeof window.renderSidebar !== 'function' ||
+        typeof window.selectCategory !== 'function') {
+      window.setTimeout(install, 60);
+      return;
+    }
+
+    const baseRenderSidebar = window.renderSidebar;
+    window.renderSidebar = function () {
+      baseRenderSidebar();
+      addDashboardNav();
+    };
+
+    const baseSelectCategory = window.selectCategory;
+    window.selectCategory = function () {
+      dashboardActive = false;
+      stopDashboardLiveRefresh();
+      setModuleChrome(false);
+      return baseSelectCategory.apply(this, arguments);
+    };
+
+    if (typeof window.renderAirCRM === 'function') {
+      const baseRenderAirCRM = window.renderAirCRM;
+      window.renderAirCRM = function (main) {
+        crmMode = 'new';
+        if (typeof SHEET_CONFIG !== 'undefined' && !SHEET_CONFIG.webAppUrl) {
+          SHEET_CONFIG.webAppUrl = getDashboardUrl();
+        }
+        baseRenderAirCRM(main);
+        const panel = main.querySelector('.crm-panel');
+        if (!panel) return;
+        const modeToggle = panel.querySelector('.crm-mode-toggle');
+        if (modeToggle) modeToggle.remove();
+        const sheetBox = panel.querySelector('.crm-sheet-box');
+        if (sheetBox) {
+          const title = sheetBox.previousElementSibling;
+          if (title && title.classList.contains('crm-section-title')) title.remove();
+          sheetBox.remove();
+        }
+        const heading = panel.querySelector('.crm-panel-head h3');
+        if (heading) heading.textContent = 'Customer Case Workspace';
+      };
+    }
+
+    const baseRender = window.render;
+    window.render = function () {
+      markRendering();
+      if (!dashboardActive) {
+        const reportSearch = clean(document.getElementById('ask') ? document.getElementById('ask').value : '');
+        if (typeof activeCategory !== 'undefined' && activeCategory === 'claims' && !reportSearch) {
+          setModuleChrome(true, 'report');
+          window.renderSidebar();
+          syncMobileNav();
+          const breadcrumb = document.getElementById('breadcrumb');
+          const reportCat = typeof CATS !== 'undefined' ? CATS.find(function (cat) { return cat.id === 'claims'; }) : null;
+          if (breadcrumb) breadcrumb.innerHTML = 'PCT × Xiaomi <span class="sep">/</span> <b>' +
+            reportEscape(reportCat ? reportCat.icon : '📊') + ' ' + reportEscape(reportCat ? reportCat.name : 'Report') + '</b>';
+          renderReportWorkspace(document.getElementById('main'));
+          return;
+        }
+        setModuleChrome(false);
+        const result = baseRender.apply(this, arguments);
+        syncMobileNav();
+        return result;
+      }
+      setModuleChrome(true, 'dashboard');
+      window.renderSidebar();
+      syncMobileNav();
+      const breadcrumb = document.getElementById('breadcrumb');
+      if (breadcrumb) breadcrumb.innerHTML = 'PCT × Xiaomi <span class="sep">/</span> <b>▦ Dashboard</b>';
+      renderDashboard(document.getElementById('main'));
+    };
+
+    addDashboardNav();
+    addMobileDashboardNav();
+    buildThemePanel();
+    applyTheme(readTheme());
+    if (typeof SHEET_CONFIG !== 'undefined' && !SHEET_CONFIG.webAppUrl) {
+      SHEET_CONFIG.webAppUrl = getDashboardUrl();
+    }
+    syncMobileNav();
+  }
+
+  install();
+
+  window.PCTDashboard = {
+    open: function () { dashboardActive = true; render(); },
+    setUrl: function (url) { if (setDashboardUrl(url)) render(); },
+    getUrl: getDashboardUrl
+  };
+  window.PCTReport = {
+    refresh: async function () { renderReportData(await fetchReportRows()); },
+    localRows: readLocalReports
+  };
+})();
+</script>
 </body>
 </html>
