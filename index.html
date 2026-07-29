@@ -3634,6 +3634,23 @@ mnavSync();</script>
     if (search) search.style.display = hideStandardActions ? 'none' : '';
   }
 
+  function openDashboard() {
+    dashboardActive = true;
+    const ask = document.getElementById('ask');
+    if (ask) ask.value = '';
+    closeSidebarMobile();
+    markRendering();
+    setModuleChrome(true, 'dashboard');
+    document.querySelectorAll('[data-special-dashboard]').forEach(function (item) {
+      item.classList.add(item.classList.contains('mnav-btn') ? 'on' : 'active');
+    });
+    syncMobileNav();
+    const breadcrumb = document.getElementById('breadcrumb');
+    if (breadcrumb) breadcrumb.innerHTML = 'PCT × Xiaomi <span class="sep">/</span> <b>▦ Dashboard</b>';
+    renderDashboard(document.getElementById('main'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function addDashboardNav() {
     const nav = document.getElementById('sidebarNav');
     if (!nav || nav.querySelector('[data-special-dashboard]')) return;
@@ -3643,12 +3660,7 @@ mnavSync();</script>
     item.dataset.specialDashboard = 'true';
     item.innerHTML = '<span class="ic">▦</span><span class="nm">Dashboard</span><span class="cnt">LIVE</span>';
     item.onclick = function () {
-      dashboardActive = true;
-      const ask = document.getElementById('ask');
-      if (ask) ask.value = '';
-      closeSidebarMobile();
-      window.render();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      openDashboard();
     };
 
     const label = document.createElement('div');
@@ -3678,10 +3690,7 @@ mnavSync();</script>
     button.dataset.specialDashboard = 'true';
     button.innerHTML = '<span class="ic">▦</span><span class="lb">Dashboard</span>';
     button.onclick = function () {
-      dashboardActive = true;
-      document.getElementById('sidebar').classList.remove('open');
-      window.render();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      openDashboard();
     };
     mobileNav.prepend(button);
   }
@@ -4709,7 +4718,7 @@ mnavSync();</script>
   install();
 
   window.PCTDashboard = {
-    open: function () { dashboardActive = true; window.render(); },
+    open: openDashboard,
     setUrl: function (url) { if (setDashboardUrl(url)) window.render(); },
     getUrl: getDashboardUrl
   };
