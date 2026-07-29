@@ -3845,8 +3845,9 @@ mnavSync();</script>
     host.innerHTML = days.map(function (iso) {
       const date = dashboardDateFromIso(iso);
       const isToday = iso === dashboardTodayIso();
+      const knownCount = reportNumber(counts[iso]);
       return '<button class="pct-appointment-day' + (dashboardState.appointmentFilterActive && iso === selected ? ' active' : '') + (isToday ? ' today' : '') + '" data-appointment-date="' + iso + '">' +
-        '<span>' + date.toLocaleDateString('th-TH', { weekday: 'short' }) + '</span><b>' + date.getDate() + '</b><small>' + reportNumber(counts[iso]) + ' เคส</small></button>';
+        '<span>' + date.toLocaleDateString('th-TH', { weekday: 'short' }) + '</span><b>' + date.getDate() + '</b><small>' + (knownCount ? knownCount + ' เคส' : 'แตะดู') + '</small></button>';
     }).join('');
     host.querySelectorAll('[data-appointment-date]').forEach(function (button) {
       button.onclick = function () {
@@ -3952,6 +3953,8 @@ mnavSync();</script>
     if (dashboardState.appointmentFilterActive) {
       const selectedCount = document.getElementById('pctAppointmentSelectedCount');
       if (selectedCount) selectedCount.textContent = reportNumber(data.total).toLocaleString();
+      const activeDayCount = document.querySelector('[data-appointment-date="' + dashboardState.appointmentDate + '"] small');
+      if (activeDayCount) activeDayCount.textContent = reportNumber(data.total).toLocaleString() + ' เคส';
     }
     content.innerHTML = '<div class="pct-native-toolbar">' +
       '<input id="pctOrderQ" type="search" placeholder="ค้นหา SO, ชื่อ, เบอร์โทร หรือที่อยู่">' +
