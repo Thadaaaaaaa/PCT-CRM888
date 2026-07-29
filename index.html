@@ -3647,7 +3647,7 @@ mnavSync();</script>
       const ask = document.getElementById('ask');
       if (ask) ask.value = '';
       closeSidebarMobile();
-      render();
+      window.render();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -3680,7 +3680,7 @@ mnavSync();</script>
     button.onclick = function () {
       dashboardActive = true;
       document.getElementById('sidebar').classList.remove('open');
-      render();
+      window.render();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     mobileNav.prepend(button);
@@ -4205,7 +4205,7 @@ mnavSync();</script>
       '<div class="pct-url-note">ควรใช้ URL ที่ลงท้ายด้วย /exec ไม่ใช่ URL หน้าแก้ไข Apps Script</div>' +
       '</div></section></section>';
     main.querySelector('#pctDashboardUrlSave').onclick = function () {
-      if (setDashboardUrl(main.querySelector('#pctDashboardUrlInput').value)) render();
+      if (setDashboardUrl(main.querySelector('#pctDashboardUrlInput').value)) window.render();
     };
   }
 
@@ -4709,8 +4709,8 @@ mnavSync();</script>
   install();
 
   window.PCTDashboard = {
-    open: function () { dashboardActive = true; render(); },
-    setUrl: function (url) { if (setDashboardUrl(url)) render(); },
+    open: function () { dashboardActive = true; window.render(); },
+    setUrl: function (url) { if (setDashboardUrl(url)) window.render(); },
     getUrl: getDashboardUrl
   };
   window.PCTReport = {
