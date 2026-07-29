@@ -295,6 +295,7 @@ function requestParams_(e) {
     dateTo: clean_(p.dateTo),
     date: clean_(p.date),
     month: clean_(p.month),
+    dateField: clean_(p.dateField) === 'coming' ? 'coming' : 'appointment',
     page: Math.max(1, Number(p.page) || 1),
     pageSize: Math.min(CONFIG.MAX_PAGE_SIZE, Math.max(10, Number(p.pageSize) || CONFIG.DEFAULT_PAGE_SIZE))
   };
@@ -572,6 +573,7 @@ function filterOrders_(rows, params) {
   const difficulty = normalize_(params.difficulty);
   const dateFrom = clean_(params.dateFrom);
   const dateTo = clean_(params.dateTo);
+  const dateField = clean_(params.dateField) === 'coming' ? 'coming' : 'appointment';
   const page = Math.max(1, Number(params.page) || 1);
   const pageSize = Math.min(
     CONFIG.MAX_PAGE_SIZE,
@@ -582,13 +584,15 @@ function filterOrders_(rows, params) {
     if (q && !o.searchText.includes(q)) return false;
     if (status && normalize_(o.status) !== status) return false;
     if (difficulty && normalize_(o.difficulty) !== difficulty) return false;
-    const iso = normalizeDateString_(o.appointmentDate);
+    const iso = normalizeDateString_(dateField === 'coming' ? o.date : o.appointmentDate);
     if (dateFrom && (!iso || iso < dateFrom)) return false;
     if (dateTo && (!iso || iso > dateTo)) return false;
     return true;
   }).sort(function (a, b) {
-    return dateSortValue_(b.appointmentDate, b.appointmentTime) -
-      dateSortValue_(a.appointmentDate, a.appointmentTime);
+    const bDate = dateField === 'coming' ? b.date : b.appointmentDate;
+    const aDate = dateField === 'coming' ? a.date : a.appointmentDate;
+    return dateSortValue_(bDate, dateField === 'coming' ? '' : b.appointmentTime) -
+      dateSortValue_(aDate, dateField === 'coming' ? '' : a.appointmentTime);
   });
 
   const start = (page - 1) * pageSize;
