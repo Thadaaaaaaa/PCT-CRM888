@@ -1753,7 +1753,13 @@ customerType: crmCustomerTypeLabel(c), // VIP / KOL / '' — column right after 
 transactionType: c.transactionType||'', // Installation only / Delivery and installation / Repair / Installation only Fee / Return of goods
 difficulty: c.cls||'', // Class I/II/III — "Difficulty for the installation" column
 columnOContent: crmBuildColumnO(c),
-noted2: c.noted2||''
+noted2: c.noted2||'',
+// Explicit column aliases keep Apps Script deployments compatible.
+columnM: crmCustomerTypeLabel(c),
+columnN: c.transactionType||'',
+columnO: c.cls||'',
+columnP: crmBuildColumnO(c),
+columnQ: c.noted2||''
 };
 }
 async function crmSendToWebApp(c){
@@ -1771,13 +1777,22 @@ const res = await fetch(SHEET_CONFIG.webAppUrl, {
 method: 'POST',
 body: JSON.stringify(crmBuildWebhookPayload(c))
 });
-if(res.ok){
-showToast('ส่งเข้า Google Sheet (แท็บ order) สำเร็จ ✓');
-return true;
-} else {
+if(!res.ok){
 showToast('ส่งข้อมูลไม่สำเร็จ (HTTP ' + res.status + ') — ตรวจสอบการ Deploy ของ Web App URL');
 return false;
 }
+let result = null;
+try { result = await res.json(); } catch(parseError) {}
+if(result && result.ok === false){
+showToast(result.message || 'Apps Script รับข้อมูลแล้ว แต่บันทึกลง Google Sheet ไม่สำเร็จ');
+return false;
+}
+if(result && result.mqVerified === false){
+showToast('บันทึกแล้ว แต่ตรวจสอบคอลัมน์ M-Q ไม่ผ่าน');
+return false;
+}
+showToast('ส่งเข้า Google Sheet (แท็บ order) สำเร็จ ✓');
+return true;
 }catch(e){
 showToast('เชื่อมต่อ Web App ไม่สำเร็จ — ตรวจสอบ URL หรือดูคำแนะนำการ Deploy ด้านล่างของกล่องตั้งค่า');
 return false;
