@@ -237,37 +237,56 @@ function copyReportFormula_(sheet, sourceRow, targetRow, column) {
  * รองรับฟอร์ม Customer Case เดิมโดยไม่ต้องแสดงช่อง Web App URL ในหน้า CRM
  */
 function saveCRMOrderFromWebhook_(payload) {
-  if (!clean_(payload.so)) throw new Error('กรุณาระบุ Service Order ID');
+  payload = payload || {};
+  const so = clean_(payload.so || payload.serviceOrder);
+  if (!so) throw new Error('กรุณาระบุ Service Order ID');
   const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
   const lock = LockService.getDocumentLock();
   lock.waitLock(15000);
   try {
-    const existingRow = findRowByValue_(sheet, 2, payload.so);
+    const existingRow = findRowByValue_(sheet, 2, so);
     const rowNumber = existingRow || Math.max(2, sheet.getLastRow() + 1);
-    sheet.getRange(rowNumber, 1, 1, 17).setValues([[
-      toSheetDate_(payload.columnA),
-      clean_(payload.so),
-      clean_(payload.doNumber),
+    const rowValues = [
+      toSheetDate_(payload.columnA || payload.caseReceivedDate),
+      so,
+      clean_(payload.doNumber || payload.deliveryOrderNumber),
       clean_(payload.customerName),
-      clean_(payload.phone),
+      clean_(payload.phone || payload.customerPhone),
       clean_(payload.address),
-      clean_(payload.postcode),
-      clean_(payload.statusLabel),
+      clean_(payload.postcode || payload.postalCode),
+      clean_(payload.statusLabel || payload.status),
       clean_(payload.fillOnFile) || 'No',
-      toSheetDate_(payload.apptDate),
-      clean_(payload.apptTime),
+      toSheetDate_(payload.apptDate || payload.appointmentDate),
+      clean_(payload.apptTime || payload.appointmentTime),
       clean_(payload.model),
-      clean_(payload.customerType),
-      clean_(payload.transactionType),
-      clean_(payload.difficulty),
-      clean_(payload.columnOContent),
-      clean_(payload.noted2)
-    ]]);
+      clean_(payload.customerType || payload.columnM),
+      clean_(payload.transactionType || payload.type || payload.columnN),
+      clean_(payload.difficulty || payload.cls || payload.columnO),
+      clean_(payload.columnOContent || payload.combinedText || payload.columnP),
+      clean_(payload.noted2 || payload.columnQ)
+    ];
+    // Column L (Model) may contain a value outside the Sheet dropdown list.
+    // Remove validation only from the target L cell so the submitted value is always written.
+    sheet.getRange(rowNumber, 12).clearDataValidations();
+    sheet.getRange(rowNumber, 1, 1, 17).setValues([rowValues]);
     invalidateOrderCache_();
     SpreadsheetApp.flush();
+
+    const writtenMQ = sheet.getRange(rowNumber, 13, 1, 5).getDisplayValues()[0].map(clean_);
+    const expectedMQ = rowValues.slice(12, 17).map(clean_);
+    const mqVerified = expectedMQ.every(function (value, index) {
+      return value === writtenMQ[index];
+    });
+    if (!mqVerified) {
+      throw new Error('ตรวจสอบคอลัมน์ M-Q ไม่ผ่าน expected=' + JSON.stringify(expectedMQ) + ' actual=' + JSON.stringify(writtenMQ));
+    }
+
     return {
       message: existingRow ? 'อัปเดต Order เรียบร้อยแล้ว' : 'เพิ่ม Order เรียบร้อยแล้ว',
-      rowNumber: rowNumber
+      rowNumber: rowNumber,
+      columnsWritten: 'A:Q',
+      mqVerified: true,
+      savedMQ: { M: writtenMQ[0], N: writtenMQ[1], O: writtenMQ[2], P: writtenMQ[3], Q: writtenMQ[4] }
     };
   } finally {
     lock.releaseLock();
