@@ -4064,6 +4064,7 @@ mnavSync();</script>
   }
 
   async function loadNativeDashboardBootstrap() {
+    const requestId = ++dashboardState.orderRequestSeq;
     const content = document.getElementById('pctNativeContent');
     if (content) content.innerHTML = dashboardLoadingHtml();
     try {
@@ -4075,11 +4076,13 @@ mnavSync();</script>
         dateTo: dashboardState.appointmentFilterActive ? selected : '',
         dateField: dashboardState.dateField
       });
+      if (requestId !== dashboardState.orderRequestSeq || dashboardState.tab !== 'orders') return;
       setDashboardStatus(true, 'Google Sheet connected');
       renderDashboardSummary(payload.summary);
       dashboardState.page = 1;
       renderNativeOrders(payload.orders);
     } catch (error) {
+      if (requestId !== dashboardState.orderRequestSeq || dashboardState.tab !== 'orders') return;
       showNativeDashboardError(error);
     }
   }
