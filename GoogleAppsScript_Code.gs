@@ -32,14 +32,12 @@ function doGet(e) {
     return jsonOutput_({ ok: true, reportApi: true, version: 'PCT_REPORT_API_V1' });
   }
   if (action === 'dashboardBootstrap') {
-    const dashboardRows = getOrderRows_(true);
+    const dashboardRows = getOrderRows_();
     const dashboardSummary = makeSummary_(dashboardRows);
-    dashboardSummary.openProblems = countOpenProblems_();
-    dashboardSummary.acUpcoming = countUpcomingACServices_();
     return jsonOutput_({
       ok: true,
       dashboardApi: true,
-      version: 'PCT_DASHBOARD_API_V1',
+      version: 'PCT_DASHBOARD_API_V2',
       summary: dashboardSummary,
       orders: filterOrders_(dashboardRows, requestParams_(e))
     });
@@ -237,56 +235,37 @@ function copyReportFormula_(sheet, sourceRow, targetRow, column) {
  * รองรับฟอร์ม Customer Case เดิมโดยไม่ต้องแสดงช่อง Web App URL ในหน้า CRM
  */
 function saveCRMOrderFromWebhook_(payload) {
-  payload = payload || {};
-  const so = clean_(payload.so || payload.serviceOrder);
-  if (!so) throw new Error('กรุณาระบุ Service Order ID');
+  if (!clean_(payload.so)) throw new Error('กรุณาระบุ Service Order ID');
   const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
   const lock = LockService.getDocumentLock();
   lock.waitLock(15000);
   try {
-    const existingRow = findRowByValue_(sheet, 2, so);
+    const existingRow = findRowByValue_(sheet, 2, payload.so);
     const rowNumber = existingRow || Math.max(2, sheet.getLastRow() + 1);
-    const rowValues = [
-      toSheetDate_(payload.columnA || payload.caseReceivedDate),
-      so,
-      clean_(payload.doNumber || payload.deliveryOrderNumber),
+    sheet.getRange(rowNumber, 1, 1, 17).setValues([[
+      toSheetDate_(payload.columnA),
+      clean_(payload.so),
+      clean_(payload.doNumber),
       clean_(payload.customerName),
-      clean_(payload.phone || payload.customerPhone),
+      clean_(payload.phone),
       clean_(payload.address),
-      clean_(payload.postcode || payload.postalCode),
-      clean_(payload.statusLabel || payload.status),
+      clean_(payload.postcode),
+      clean_(payload.statusLabel),
       clean_(payload.fillOnFile) || 'No',
-      toSheetDate_(payload.apptDate || payload.appointmentDate),
-      clean_(payload.apptTime || payload.appointmentTime),
+      toSheetDate_(payload.apptDate),
+      clean_(payload.apptTime),
       clean_(payload.model),
-      clean_(payload.customerType || payload.columnM),
-      clean_(payload.transactionType || payload.type || payload.columnN),
-      clean_(payload.difficulty || payload.cls || payload.columnO),
-      clean_(payload.columnOContent || payload.combinedText || payload.columnP),
-      clean_(payload.noted2 || payload.columnQ)
-    ];
-    // Column L (Model) may contain a value outside the Sheet dropdown list.
-    // Remove validation only from the target L cell so the submitted value is always written.
-    sheet.getRange(rowNumber, 12).clearDataValidations();
-    sheet.getRange(rowNumber, 1, 1, 17).setValues([rowValues]);
+      clean_(payload.customerType),
+      clean_(payload.transactionType),
+      clean_(payload.difficulty),
+      clean_(payload.columnOContent),
+      clean_(payload.noted2)
+    ]]);
     invalidateOrderCache_();
     SpreadsheetApp.flush();
-
-    const writtenMQ = sheet.getRange(rowNumber, 13, 1, 5).getDisplayValues()[0].map(clean_);
-    const expectedMQ = rowValues.slice(12, 17).map(clean_);
-    const mqVerified = expectedMQ.every(function (value, index) {
-      return value === writtenMQ[index];
-    });
-    if (!mqVerified) {
-      throw new Error('ตรวจสอบคอลัมน์ M-Q ไม่ผ่าน expected=' + JSON.stringify(expectedMQ) + ' actual=' + JSON.stringify(writtenMQ));
-    }
-
     return {
       message: existingRow ? 'อัปเดต Order เรียบร้อยแล้ว' : 'เพิ่ม Order เรียบร้อยแล้ว',
-      rowNumber: rowNumber,
-      columnsWritten: 'A:Q',
-      mqVerified: true,
-      savedMQ: { M: writtenMQ[0], N: writtenMQ[1], O: writtenMQ[2], P: writtenMQ[3], Q: writtenMQ[4] }
+      rowNumber: rowNumber
     };
   } finally {
     lock.releaseLock();
@@ -342,20 +321,15 @@ function getDashboardSummary() {
 function getEditableOrderCase(so) {
   const found = findOrderBySO_(so);
   if (!found) throw new Error('ไม่พบเลข SO ในหน้า Orders');
-  return {
-    so: found.data.so,
-    dateAppointment: found.data.appointmentDate,
-    time: found.data.appointmentTime,
-    noted: found.data.noted
-  };
+  return stripSearchText_(found.data);
 }
 
 /**
- * แก้ไขเฉพาะ Orders!J, Orders!K และ Orders!P
+ * แก้ไข Orders!A:P โดยใช้ SO เดิมเป็นคีย์ค้นหาแถว
  */
 function updateOrderCaseFields(payload) {
   payload = payload || {};
-  const so = clean_(payload.so);
+  const so = clean_(payload.originalSo || payload.so);
   if (!so) throw new Error('กรุณาระบุเลข SO');
 
   const lock = LockService.getDocumentLock();
@@ -365,15 +339,32 @@ function updateOrderCaseFields(payload) {
     if (!found) throw new Error('ไม่พบเลข SO ในหน้า Orders');
     const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
 
-    sheet.getRange(found.rowNumber, 10).setValue(toSheetDate_(payload.dateAppointment));
-    sheet.getRange(found.rowNumber, 11).setValue(clean_(payload.time));
-    sheet.getRange(found.rowNumber, 16).setValue(clean_(payload.noted));
+    sheet.getRange(found.rowNumber, 1, 1, 16).setValues([[
+      toSheetDate_(payload.date),
+      clean_(payload.so) || found.data.so,
+      clean_(payload.deliveryOrder),
+      clean_(payload.name),
+      clean_(payload.phone),
+      clean_(payload.address),
+      clean_(payload.postCode),
+      clean_(payload.status),
+      clean_(payload.fillOnFile),
+      toSheetDate_(payload.appointmentDate),
+      clean_(payload.appointmentTime),
+      clean_(payload.model),
+      clean_(payload.vip),
+      clean_(payload.type),
+      clean_(payload.difficulty),
+      clean_(payload.noted)
+    ]]);
+    sheet.getRange(found.rowNumber, 1).setNumberFormat('dd/MM/yyyy');
+    sheet.getRange(found.rowNumber, 10).setNumberFormat('dd/MM/yyyy');
     invalidateOrderCache_();
 
     return {
       ok: true,
-      message: 'อัปเดต Date appointment, Time และ Noted เรียบร้อยแล้ว',
-      data: getEditableOrderCase(so)
+      message: 'อัปเดตข้อมูล Orders คอลัมน์ A–P เรียบร้อยแล้ว',
+      data: getEditableOrderCase(clean_(payload.so) || so)
     };
   } finally {
     lock.releaseLock();
@@ -626,11 +617,11 @@ function filterOrders_(rows, params) {
 }
 
 function makeOrderStatusSummary_(rows) {
-  const summary = { total: rows.length, confirm: 0, cancel: 0 };
+  const summary = { total: rows.length, confirm: 0, pendingFillOnFile: 0 };
   rows.forEach(function (order) {
     const status = normalize_(order.status);
     if (status === 'confirm') summary.confirm++;
-    if (status === 'cancel') summary.cancel++;
+    if (status === 'confirm' && normalize_(order.fillOnFile) === 'no') summary.pendingFillOnFile++;
   });
   return summary;
 }
@@ -640,7 +631,7 @@ function makeSummary_(rows) {
   const summary = {
     total: rows.length,
     confirm: 0,
-    cancel: 0,
+    pendingFillOnFile: 0,
     withAppointment: 0,
     classI: 0,
     classII: 0,
@@ -651,7 +642,7 @@ function makeSummary_(rows) {
     const status = normalize_(o.status);
     const difficulty = normalize_(o.difficulty).replace(/\s/g, '');
     if (status === 'confirm') summary.confirm++;
-    if (status === 'cancel') summary.cancel++;
+    if (status === 'confirm' && normalize_(o.fillOnFile) === 'no') summary.pendingFillOnFile++;
     if (o.appointmentDate) {
       summary.withAppointment++;
       const appointmentDate = normalizeDateString_(o.appointmentDate);
@@ -779,8 +770,10 @@ function mapOrderRow_(r) {
     picture: r[18]
   };
   data.searchText = normalize_([
-    data.so, data.deliveryOrder, data.name, data.phone, data.address,
-    data.status, data.model, data.type, data.difficulty, data.noted
+    data.date, data.so, data.deliveryOrder, data.name, data.phone, data.address,
+    data.postCode, data.status, data.fillOnFile, data.appointmentDate,
+    data.appointmentTime, data.model, data.vip, data.type, data.difficulty,
+    data.noted, data.noted2, data.csUpdate, data.picture
   ].join(' '));
   return data;
 }

@@ -452,6 +452,17 @@ input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 </style>
+<style id="pct20260801Enhancements">
+.pct-order-searchbar{display:grid;grid-template-columns:minmax(300px,1fr) 160px 150px;gap:10px;position:sticky;top:65px;z-index:8;background:#fff;border:1px solid var(--line);box-shadow:0 8px 24px rgba(31,42,68,.08)}
+.pct-order-searchbar input[type=search]{font-size:14px;border-color:#ffc79f;background:#fffaf6}
+.pct-native-table{min-width:1780px}.pct-native-table th{white-space:nowrap}.pct-native-table td{max-width:220px}.pct-native-clip.wide{max-width:300px}
+.pct-native-pill.pending-fill{background:#fff4db;color:#a85b00}.pct-native-modal-card{width:min(75vw,1180px);max-height:92vh}.pct-order-edit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.pct-order-edit-grid .full{grid-column:1/-1}.pct-order-edit-grid textarea{min-height:88px}.pct-order-edit-grid .pct-order-noted textarea{min-height:260px;font-size:14px;line-height:1.65}
+.crm-customer-type-prominent{padding:12px;border:1px solid #ffcfad;background:#fff8f2;border-radius:12px}.crm-line-import{margin:10px 0 14px;padding:14px;border:1px dashed #ffad70;border-radius:12px;background:#fffaf6}.crm-line-import label{display:block;font-weight:800;font-size:12px;margin-bottom:6px}.crm-line-import textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:9px;padding:10px 12px;resize:vertical;font:12.5px/1.55 ui-monospace,monospace}.crm-line-import small{display:block;color:var(--muted);margin-top:6px}
+.survey-choice-group{display:flex;gap:7px;flex-wrap:wrap}.survey-choice-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;color:var(--muted);cursor:pointer}.survey-choice-btn.active{background:var(--orange);border-color:var(--orange);color:#fff}
+.case-pagination{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px}.case-pagination span{font-size:12px;color:var(--muted)}
+.pct-performance-toolbar{display:flex;gap:8px;flex-wrap:wrap}.pct-performance-toolbar button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 11px;font-weight:700;color:var(--muted);cursor:pointer}.pct-performance-toolbar button.active{background:var(--orange);border-color:var(--orange);color:#fff}.pct-performance-legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pct-performance-legend span{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}.pct-performance-legend i{width:9px;height:9px;border-radius:3px}.pct-performance-chart{display:flex;align-items:flex-end;gap:7px;height:260px;overflow-x:auto;padding:16px 4px 4px}.pct-performance-day{min-width:44px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}.pct-performance-bars{height:215px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px}.pct-performance-bars i{width:5px;min-height:2px;border-radius:4px 4px 0 0}.pct-performance-day small{font-size:9px;color:var(--muted);white-space:nowrap}.pct-report-date-readable{color:var(--orange-dark);font-size:11px;font-weight:700;margin-top:5px;display:block}
+@media(max-width:900px){.pct-order-searchbar{grid-template-columns:1fr;position:static}.pct-native-modal-card{width:96vw}.pct-order-edit-grid{grid-template-columns:1fr}.pct-order-edit-grid .full{grid-column:auto}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -626,7 +637,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
 <script>const ICON_OPTIONS = ['📅','💬','📊','🧰','👥','🚗','🛠️','📦','🧾','📍','🔧','💧','❄️','🧼','💰','📌','🗂️','🛡️','🔌','⚙️','📞','✅','⚠️','🏠','🧯','🔥','🌡️','🧊','📡','🪫','🔋','📋','🗃️','📁','🛒','🎯','⭐','🏷️','🧑‍🔧','🚚'];
 const COLOR_SWATCHES = ['#FF6900','#3b82f6','#16a34a','#d97706','#9333ea','#db2777','#0d9488','#ef4444','#0ea5e9','#1f2a44'];
 const BG_SWATCHES = ['#FFFFFF','#FFF4EA','#FFF9DB','#EAF6FF','#EAFBEF','#F5EAFF','#FFE9F1','#E6FFFB','#F1F2F5','#FDEAEA'];
-const DEFAULT_PAYLOAD = {"categories":[{"id":"logi","name":"XMS system","icon":"🧰","color":"#0d9488","bgColor":null},{"id":"ops","name":"Operations & Scheduling","icon":"📅","color":"#3b82f6"},{"id":"cust","name":"Customer & Service Templates","icon":"💬","color":"#16a34a"},{"id":"people","name":"Staff Management","icon":"👥","color":"#9333ea","bgColor":null},{"id":"claims","name":"Report","icon":"📊","color":"#d97706","bgColor":null},{"id":"cat_129pbvny","name":"Warehouse/Return order","icon":"🚚","color":"#0d9488","bgColor":null},{"id":"cat_t5icn0z4","name":"Cars/Easy pass","icon":"🚗","color":"#6c8ff9","bgColor":null},{"id":"cat_1ysw82rn","name":"Knowledged","icon":"📖","color":"#ff6900","bgColor":null},{"id":"cat_w4u74o7a","name":"KOL order","icon":"📌","color":"#ef4444","bgColor":null}],"items":[{"category":"ops","title":"Appointment Mi Work","desc":"นำเคสที่ Appointment และวางแพลนแล้วมาใส่สำหรับทำ report","url":"https://mi-p.feishu.cn/sheets/ASFasZknNhoC4ct36EPcCcH2nQg?from=auth_notice&hash=a328cc231e39dd2ff6fe93488b39797e","id":"item_g2f2zimm","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782230026487,"history":[{"ts":1782230026487,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"ops","title":"PCT Installation List TH","desc":"ใช้ตรวจสอบเคสก่อนใส่ใน Appointment Mi Work ใช้เป็นหลักในการลงข้อมูล","url":"https://mi-p.feishu.cn/sheets/ByETsEvWuhIPVRtSu7McB3TWnTg?sheet=837dc7","id":"item_lyvmy1vf","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782230026487,"history":[{"ts":1782230026487,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"ops","title":"Order Schedules","desc":"ใช้สำหรับนำข้อมูลจากระบบ XMS มาลง เพื่อดูข้อมูลได้อย่างง่าย","url":"https://mi-p.feishu.cn/sheets/VYSBsTQjUhSr44tsPbycnP1zn1b?sheet=60fc99","id":"item_9xx075sw","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782230026487,"history":[{"ts":1782230026487,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"claims","title":"Cancel/Reschedule order lists","desc":"ออเดอร์ที่ยกเลิกหรือเปลี่ยนเวลาจะมาใส่ในลิงก์นี้ เพื่อสรุปส่ง report ประจำวัน","url":"https://mi-p.feishu.cn/sheets/RAKbsbADUhtINGtYulIcihxvnbC","id":"item_7rzc7nuf","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782699996751,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195741406,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782230520756,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782699996751,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"}],"cred":""},{"category":"cat_129pbvny","title":"Cancel list / Warehouse","desc":"สำหรับกรณียกเลิก ใส่ข้อมูลทำคืนส่วนกลาง","url":"https://mi-p.feishu.cn/sheets/Q3UJsezB8hvNNwtUqbbc7CnSnkh?sheet=ad7e68","id":"item_40vx7eep","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782195727417,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195727417,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""},{"category":"cat_129pbvny","title":"Sino Warehouse","desc":"กรอกสินค้าที่จะเข้ารับจาก warehouse โดยตรวจสอบจากระบบ XMS และ Order Schedules","url":"https://accounts.feishu.cn/accounts/page/login?app_id=2&no_trap=1&query_scope=all&redirect_uri=https%3A%2F%2Fmi-p.feishu.cn%2Fsheets%2FCPxcsVFVyhlyU7tGDUqckp9xnMg%3Ffrom%3Dfrom_copylink%26login_redirect_times%3D1","id":"item_w73ghed7","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782195761928,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195761928,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""},{"category":"ops","title":"Appointment Area","desc":"นำที่อยู่ลูกค้ามากรอกผ่าน Excel เพื่ออัปโหลด จัดเส้นทางแต่ละทีมให้เดินทางน้อยที่สุดและใกล้กันที่สุด","url":"https://www.google.com/maps/d/u/0/edit?mid=1QUd0t0wi9J74ccujhN81j3h6P_4z0IQ&usp=sharing","id":"item_nfk2tu0h","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cat_w4u74o7a","title":"Appointment Youtuber Xiaomi V3","desc":"ข้อมูลลูกค้า KOL ที่ Xiaomi ต้องการให้เข้าติดตั้ง — ไฟล์นี้จะมีส่งมาเรื่อยๆ แยกหมวดหมู่ไว้เผื่ออนาคต","url":"https://mi.feishu.cn/wiki/NqnFwCzkHiPHw0kjAfBcIk8Pnag?sheet=78J2Iu","id":"item_n5hgi7rz","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196738180,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195665882,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782196738180,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"}],"cred":""},{"category":"cat_w4u74o7a","title":"Appointment Youtuber Xiaomi V1","desc":"ลิงก์เก่าที่เกี่ยวข้องและยังใช้งานอยู่","url":"https://mi.feishu.cn/wiki/Hha9w9tb2iMU3kkYQTVcn9KLnPp?sheet=LRuIp5","id":"item_52f92o2h","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196751024,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195678205,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782196751024,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"}],"cred":""},{"category":"cat_w4u74o7a","title":"Appointment Youtuber — Invoice เรียกเก็บเงิน","desc":"ลิงก์สำหรับ invoice เรียกเก็บเงินงาน Youtuber","url":"https://accounts.feishu.cn/accounts/page/login?app_id=2&no_trap=1&query_scope=all&redirect_uri=https%3A%2F%2Fmi-p.feishu.cn%2Fsheets%2FTdMasXRPIhHrIGtyqc5cOl3onih%3Flogin_redirect_times%3D1%26sheet%3D0fvFXt","id":"item_118uxquy","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782195691307,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195691307,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""},{"category":"cat_w4u74o7a","title":"Appointment Youtuber Xiaomi V2","desc":"ไฟล์ Appointment Youtuber เวอร์ชันใหม่","url":"https://j1zplfh5yg.feishu.cn/sheets/WSKnsPsEThoOL4tyT0QcoJifnjd?sheet=0ca4f2","id":"item_lt1ecvcw","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196744406,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195684785,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782196744406,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"}],"cred":""},{"category":"cust","title":"NSS — แบบประเมินบริการ","desc":"ไฟล์ติดต่อลูกค้าหลังติดตั้งเพื่อเก็บคะแนนการบริการ","url":"https://mi-p.feishu.cn/sheets/WBYEswTOzhOux7tDcBQcE152nLd","id":"item_18r6iv0o","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"Template สอบถามคะแนน (Line, ลูกค้าไม่รับสาย)","desc":"เรียนคุณ ......\nService order : \nทางเราขอขอบคุณที่คุณลูกค้าเลือกผลิตภัณฑ์ของทางเรา Xiaomi\nรบกวนประเมินบริการ:\n1) ภาพรวมบริการของศูนย์ (1-8 ไม่พึงพอใจ / 9-10 พึงพอใจ) — ถ้า 1-8 รบกวนแจ้งปัญหา\n2) ช่างมาตรงเวลาหรือไม่\n3) มีค่าใช้จ่ายเพิ่มเติมหน้างานหรือไม่ ถ้ามีเท่าไหร่\n4) พึงพอใจบริการทีมช่างหรือไม่ (แนะนำ Mi Home + ทำความสะอาดหลังติดตั้ง)","id":"item_uuy4x8b7","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"Air Conditioner Installation SOP (แอร์ — Template ติดต่อนัดหมาย)","desc":"Service Order :\nCustomer : \nContact :\nSecondary Contact : -\nLine ID : \nAddress : \nExpected Time : \nType : \n\n\nNoted : (หากลูกค้ามีการเปลี่ยนวันติดตั้งให้ใส่ลงด้วย)\n\nรายการสอบถาม\n1.มีแอร์เครื่องเก่าหรือไม่ (ขนาดกี่ BTU)(ใช้สารทำความเย็น R32 หรือไม่ )(เป็นท่อฝังหรือไม่)\n**หากเป็นจุดติดตั้งใหม่ ให้ลูกค้าเตรียมเมนไฟไว้**\n\n2.จุดติดตั้งคอยล์ร้อนและคอยล์เย็นอยู่ชั้นไหน\n\n- คอยล์ร้อนห่างจากพื้นกี่เมตร (หากความสูงเกิน 6 เมตร เราไม่สามารถติดตั้งได้)\n\n- คอยล์เย็นห่างจากฝ้ากี่เมตร (สำหรับรูท่อแอร์ที่มีอยู่แล้ว) (พื้นที่ว่างรวมประมาณ 50 เซนติเมตร)\n\n3.มีเซอร์กิตเบรกเกอร์ (Circuit Breaker) ที่สามารถใช้งานได้ทันทีหรือไม่\n\n4.จำเป็นต้องเจาะรูหรือไม่(รูเดิมเป็นของขนาดกี่ BTU)(หากใช้รูเดิมไม่ได้อาจจะต้องเจาะใหม่)(ความหนาของกำแพง)\n\n5.จำเป็นต้องเดินสายไฟ/ท่อร้อยสายเพิ่มเติมหรือไม่ (กรุณาบันทึกวิดีโอเพื่อยืนยัน)\n\n6.ระยะทางจาก เบรคเกอร์ ถึงตำแหน่งติดตั้งเครื่องปรับอากาศภายใน เท่าไร (ช่างจะเตรียมสายไฟไว้)\n\n7.สายไฟจำเป็นต้องเดินเข้าฝ้าเพดานหรือไม่ (บางบ้านเป็นตึกไม่มีฝ้า)\n\n8.จำเป็นต้องใช้รางครอบท่อ (Casing) หรือไม่ \n\n9.มีข้อจำกัดจากนิติบุคคลหรือไม่ เวลาในการใช้เสียงได้กี่โมงถึงกี่โมง ติดตั้งวันเสาร์ได้ไหม (ที่จอดรถ / การขออนุญาตใช้ลิฟต์)(หากต้องมีการยืนยันที่ก่อนเข้า ให้แจ้งชื่อช่าง ป้ายทะเบียนรถกับลูกค้า )(มีสายไฟหรือขอบที่ประมาณ 3.5 เมตรหรือไม่)\n\n10.คุณลูกค้าอยู่ที่หน้างานวันติดตั้งหรือไม่ (หากไม่อยู่แจ้งว่าทางช่างจะมีการติดตั้งที่หน้างานและวีดีโอคอลช่วงก่อนติดตั้งและหลังติดตั้งเพื่อให้ลูกค้าตรวจสอบ)\n\nห้ามเลื่อนนัด \nหมายเหตุ : หากพบปัญหาที่ไม่เป็นไปตามขั้นตอนการทำงาน หรือปัญหาใดๆรบกวนติดต่อเข้ามายัง Fleet/Manager เพื่อรับทราบและแก้ไขปัญหาโดยเร็วที่สุด\"\n**หากมีการยกเลิกสินค้าให้นำสินค้าของลูกค้ากลับมาด้วยทุกเคส**","id":"item_va0342il","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198193681,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198193681,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cust","title":"แอร์ — Template ส่งแจ้งลูกค้าทาง Line@","desc":"เรียนคุณ\nService Order : \nModel : \nทางเราขอขอบคุณที่คุณลูกค้าเลือกผลิตภัณฑ์ของทางเรา Xiaomi\n\nรบกวนขอข้อมูลวีดีโอมุมกว้างเพิ่มเติมดังนี้สำหรับตรวจสอบหน้างานติดตั้ง\n-วีดีโอจุดติดตั้งคอยล์ร้อนและคอยล์เย็น\n-วีดีโอจุดติดตั้งสายไฟ เบรคเกอร์ และจุดท่อน้ำทิ้ง\n-ลิ้งค์ Google map\n\n*หากมีแอร์เก่า ทางเราขอข้อมูลเพิ่มเติมดังนี้\n-วีดีโอแอร์เก่าพร้อมทั้งลักษณะรูท่อ\n-รูปภาพชนิดแอร์ โดยถ่ายที่สติ๊กเกอร์บนคอยล์ร้อยและคอยล์เย็น\n\nหมายเหตุ 1: หากเป็นจุดติดตั้งใหม่ รบกวนจัดเตรียมเมนไฟสำหรับจุดติดตั้ง\nหมายเหตุ 2: หากไม่สามารถเข้าติดตั้งได้ตามเวลาที่กำหนดทางช่างจำเป็นจะต้องเดินทางไปยังพื้นที่ถัดไปเพื่อติดตั้งตามกำหนดเวลา และรบกวนเก็บสิ่งของเตรียมพื้นที่สำหรับติดตั้งให้เรียบร้อย ขอบคุณครับ\n\nเพื่อการใช้งานอย่างเต็มประสิทธิภาพ แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่อกับอุปกรณ์\n\n**หากมีค่าใช้จ่ายการติดตั้งเพิ่มเติมหน้างานจะต้อง Scan ผ่าน QR code บัญชีของทางบริษัทเท่านั้น**","id":"item_5vit48ce","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198212464,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198212464,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cust","title":"แอร์ — Template ขอข้อมูลแบบเต็มทาง Line@","desc":"เรียนคุณ\nService Order : \nModel :\nทางเราขอขอบคุณที่คุณลูกค้าเลือกผลิตภัณฑ์ของทางเรา Xiaomi\n\n **หากเป็นจุดติดตั้งใหม่รบกวนเดินเมนไฟมายังจุดติดตั้งแอร์ด้วยนะครับ**\n\nขออนุญาติแจ้งรายละเอียดคำถามนะครับ\n1.มีแอร์เครื่องเก่าหรือไม่ (หากมีขนาดกี่ BTU ใช้สารทำความเย็น R32 หรือไม่ )\n2.จุดติดตั้งคอยล์ร้อนและคอยล์เย็นอยู่ชั้นไหน\n- คอยล์ร้อนห่างจากพื้นกี่เมตร ลักษณะพื้นที่ติดตั้ง (มีพื้นที่ให้ช่างยืนทำงานหรือไม่)\n- คอยล์เย็นห่างจากฝ้ากี่เซนติเมตร (แนะนำ 50 เซนติเมตร )\n3.มีเซอร์กิตเบรกเกอร์พร้อมใช้งานกับแอร์หรือไม่\n4.จำเป็นต้องเจาะรูท่อแอร์ใหม่หรือไม่(ความหนาของกำแพง)\n5.จำเป็นต้องเดินสายไฟใหม่หรือไม่\n6.ระยะทางจาก เบรคเกอร์ ถึงตำแหน่งติดตั้งเครื่องปรับอากาศภายใน เท่าไร\n7.สายไฟจำเป็นต้องเดินเข้าฝ้าเพดานหรือไม่\n8.จำเป็นต้องใช้รางครอบแอร์หรือไม่(ค่าใช้จ่ายแยก)\n9.มีนิติบุคคล/แลกบัตรหรือไม่ เวลาในการใช้เสียงได้ถึงกี่โมง ติดตั้งวันเสาร์ได้หรือไม่ \n(รถของทางศูนย์บริการสูง 3 เมตร)\n\n---------------------------------------------------------------------------------\n\nขอข้อมูลวีดีโอมุมกว้างเพิ่มเติมดังนี้สำหรับตรวจสอบหน้างานติดตั้ง\n-วีดีโอจุดติดตั้งคอยล์ร้อนและคอยล์เย็น\n-วีดีโอจุดติดตั้งสายไฟและเบรคเกอร์\n-วีดีโอจุดท่อน้ำทิ้ง\n-ลิ้งค์ Google map\n\n*หากมีแอร์เก่า ทางเราขอข้อมูลเพิ่มเติมดังนี้\n-วีดีโอแอร์เก่าพร้อมทั้งลักษณะรูท่อ\n-รูปภาพชนิดแอร์ โดยถ่ายที่สติ๊กเกอร์บนคอยล์ร้อยและคอยล์เย็น\n\nหมายเหตุ 1:  หากเป็นจุดติดตั้งใหม่ รบกวนจัดเตรียมเมนไฟสำหรับจุดติดตั้ง\nหมายเหตุ 2: หากไม่สามารถเข้าติดตั้งได้ตามเวลาที่กำหนดทางช่างจำเป็นจะต้องเดินทางไปยังพื้นที่ถัดไปเพื่อติดตั้งตามกำหนดเวลา และรบกวนเตรียมพื้นที่สำหรับติดตั้งให้เรียบร้อย ขอบคุณครับ\n\n**หากมีค่าใช้จ่ายการติดตั้งเพิ่มเติมหน้างานจะต้อง Scan ผ่าน QR code บัญชีของทางบริษัทเท่านั้น**","id":"item_dwuijdc6","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198224707,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198224707,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cat_1ysw82rn","title":"Mi Home — วิธีเชื่อมต่อ","desc":"1) เปิดแอป Mi Home  2) กด + เพิ่มอุปกรณ์  3) เลือกเครื่องปรับอากาศ  4) เลือกรุ่น  5) เชื่อมต่อตามขั้นตอน\nMi ID ต้องตรงภูมิภาคกับอุปกรณ์ (1 ID ต่อ 1 ภูมิภาค)\nตรวจสอบภูมิภาค: โปรไฟล์ > การตั้งค่าเพิ่มเติม > ภูมิภาค > เลือก ไทย แล้วเชื่อมต่อใหม่","id":"item_7byy97w3","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782197944092,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782197944092,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"cust","title":"แอร์ — Template สอบถามงานซ่อม","desc":"Service Order :\nCustomer : \nContact :\nSecondary Contact : -\nLine ID : \nAddress : \nExpected Time : \nType : \n\n\nNoted : (หากลูกค้ามีการเปลี่ยนวันติดตั้งให้ใส่ลงด้วย)\n\nรายการสอบถาม\n1.อาการของเครื่อง\n\n2.มีข้อจำกัดจากนิติบุคคลหรือไม่ เวลาในการใช้เสียงได้กี่โมงถึงกี่โมง ติดตั้งวันเสาร์ได้ไหม (ที่จอดรถ / การขออนุญาตใช้ลิฟต์)(หากต้องมีการยืนยันที่ก่อนเข้า ให้แจ้งชื่อช่าง ป้ายทะเบียนรถกับลูกค้า )(มีสายไฟหรือขอบที่ประมาณ 3.5 เมตรหรือไม่)\n\nห้ามเลื่อนนัด \nหมายเหตุ : หากพบปัญหาที่ไม่เป็นไปตามขั้นตอนการทำงาน หรือปัญหาใดๆรบกวนติดต่อเข้ามายัง Fleet/Manager เพื่อรับทราบและแก้ไขปัญหาโดยเร็วที่สุด","id":"item_w2hsrmy3","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198259316,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198259316,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cust","title":"เกณฑ์เลือก Class ความยากงาน","desc":"Class I: เงื่อนไขผ่านน้อยกว่า 2 ข้อ\nClass II: เท่ากับ 2 ข้อ\nClass III: มากกว่า 2 ข้อ\nเงื่อนไข: 1.ติดตั้งผ่านรูเดิม 2.ไม่ต้องต่อท่อเพิ่ม 3.ไม่ต้องดัดแปลงเบรกเกอร์ 4.ไม่ต้องเจาะผนัง 5.เดินสายไฟง่าย 6.ไม่ต้องทำงานที่สูง 7.ไม่ต้องเปิดฝ้าเพดาน","id":"item_s5w52ew7","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"เครื่องซักผ้า — Template ติดต่อนัดหมาย","desc":"Service Order / Customer / Contact / Line ID / Address / Expected Time / Type / Noted\n1) มีปลั๊กที่ใช้งานได้ มีสายกราวด์หรือไม่\n2) มีก๊อกน้ำใช้งานได้หรือต้องต่อท่อใหม่\n3) มีจุดน้ำทิ้งหรือไม่\n4) ติดต่อนิติก่อนเข้า\n5) ลูกค้าอยู่หน้างานหรือไม่\nหมายเหตุ: ติดตั้งระบบน้ำ/ไฟ ให้ถ่ายรูปลงกลุ่มทุกเคส","id":"item_29x8q7bh","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"เครื่องซักผ้า — Template ส่งแจ้งลูกค้าทาง Line@","desc":"เรียนคุณ.. Service Order / Model\nขอวิดีโอ: จุดติดตั้งเครื่องซักผ้า, จุดท่อน้ำทิ้ง, ลิงก์ Google Map\nหมายเหตุเรื่องเวลาและเตรียมพื้นที่ก่อนช่างเข้าทำงาน","id":"item_n2tjk8zk","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"เครื่องซักผ้า — Template ขอข้อมูลแบบเต็มทาง Line@","desc":"เรียนคุณ.. Service Order / Model\n1) ปลั๊กใช้กับเครื่องซักผ้าได้หรือไม่\n2) ก๊อกน้ำใช้ได้หรือต้องต่อใหม่\n3) มีจุดน้ำทิ้งหรือไม่\n4) ข้อจำกัดนิติบุคคล/เวลา/วันเสาร์\nขอวิดีโอจุดติดตั้ง + จุดน้ำทิ้ง + ลิงก์ Google Map","id":"item_peymqs17","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"Template แจ้ง/ขอข้อมูลคืนเงิน","desc":"ทางเราต้องขออภัยในความไม่สะดวกที่เกิดขึ้น ทั้งนี้รบกวนแนบเอกสารสำหรับประสานงานคืนเงินดังนี้\n1.บัตรประชาชนพร้อมเซ็นสำเนาถูกต้อง\n2.หน้าบัญชีธนาคารพร้อมเซ็นเอกสารสำเนาถูกต้อง\n3.รายละเอียดคำสั่งซื้อที่แสดงยอดชำระเงิน\n\nทั้งนี้หากส่งเอกสารและทางส่วนกลางรับเรื่องแล้วจะใช้เวลาประมาณ 40-45 วันทำการไม่รวมเสาร์อาทิตย์\nต้องขออภัยในความล่าช้าของกระบวนการดังกล่าว ทั้งนี้ทางเราจะอัปเดตหลังทางส่วนกลางรับทราบเอกสารเรียบร้อยแล้วนะครับ","id":"item_ha4n7rql","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198240197,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198240197,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cat_129pbvny","title":"ที่อยู่จัดส่ง: รับสินค้าใหม่ (Warehouse C)","desc":"Warehouse C, 888/90, TIP 5, Bang Pla, Bang Phli, Samut Prakan 10540\nผู้ติดต่อ: K.Tik (ติ๊ก) +66-870744273\nLocation: https://maps.app.goo.gl/KeX8ncJuEwcmmexm8","id":"item_b7jc5pyq","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196776866,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782196776866,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"cat_129pbvny","title":"ที่อยู่จัดส่ง: คืนสินค้า Return","desc":"66 Soi Srinagarindra 24, Suan Luang, Bangkok 10250\nแจ้งว่านำสินค้า Reject + Return มารวมตามที่คุณณัฐยุทธแจ้ง\nhttps://maps.app.goo.gl/3tzNMVvXaVuUR1WSA","id":"item_jkc0aseq","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196768515,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782196768515,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"cat_129pbvny","title":"ที่อยู่จัดส่ง: คืนสินค้า DOA","desc":"888/2 สุขาลำเจียก, Nawamin, Bueng Kum, Bangkok 10230\nแจ้งว่านำสินค้า DOA มาส่งตามที่คุณณัฐยุทธแจ้ง\nhttps://maps.app.goo.gl/gFd29CTaV1DQ9MLg8","id":"item_wxynlbe3","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196012363,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782196012363,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"people","title":"Follow Technician","desc":"กรอกข้อมูลผลงานช่างที่ไปติดตั้ง ต้องออก survey 1 งานต่อสัปดาห์","url":"https://djpbgqcjqnmn.jp.larksuite.com/wiki/Qbv6wmBhzif4rskE01OjC0xRpGh?sheet=bafa97","id":"item_2x4e3qds","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"people","title":"List Staff","desc":"ใส่ชื่อพนักงานใหม่ที่เข้ามา เพื่อประสานงาน Xiaomi นำชื่อเข้าระบบ XMS","url":"https://mi-p.feishu.cn/sheets/WVOMssKRZhYbSgtGX76c651Bn0g?sheet=1yIwAW","id":"item_471r1y1o","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"people","title":"Attendance","desc":"ตารางเข้าทำงานพนักงาน ขาด/ลา/มาสาย/หยุด เช็คชื่อกระดาษช่วงเช้าแล้วกรอกส่งทุกวันก่อน 10.00 น.","url":"https://vos0v8xbhh.sg.larksuite.com/wiki/VUI4wghaZiIdDJkO7Pll7gGpgfg","id":"item_4awu2hbj","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"logi","title":"XMS","desc":"ระบบตรวจสอบงาน order ที่เข้ามาในระบบ และนำไปใส่ในไฟล์ Order Schedules","url":"https://sg.asp.mi.com/workbench/index#@workbench/dashboard-no-monitor?title=%E9%A6%96%E9%A1%B5&","id":"item_hm0jl69j","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cat_t5icn0z4","title":"ข้อมูล Easy Pass","desc":"เว็บไซต์เช็ค Easy Pass ของรถแต่ละคัน นำข้อมูลไปใส่ในไฟล์ PCT Installation List TH","url":"https://member-thaieasypass.exat.co.th/eservice/easypasscardlist","cred":"ID: limiteb123@gmail.com / Password: Precision888!","id":"item_6pnhvi41","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782197314531,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782197314531,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}]},{"category":"logi","title":"Area Bangkok CS","desc":"ตารางตรวจสอบพื้นที่งาน เพื่อเช็คว่างานจากระบบ XMS อยู่ในพื้นที่ติดตั้งหรือไม่ ถ้าไม่ ต้องประสาน CS โอนเคสไปศูนย์บริการที่ใกล้ที่สุด","url":"https://vos0v8xbhh.sg.larksuite.com/wiki/B9JZwUaLHiXvFNkW0QslavI1gGc","id":"item_7rksricg","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cat_t5icn0z4","title":"ทะเบียนรถของศูนย์บริการ","desc":"รายการทะเบียนรถ — บันทึกการเช็คตามระยะ (เริ่มที่ 1,000 และ 10,000 กม. ไปเรื่อยๆ)\n4ฒฌ3421, \n4ฒฌ3422, \n4ฒฌ3423, \n4ฒฌ3425, \n4ฒฌ3426, \n4ฒฌ3429, \n4ฒฌ3430, \n4ฒฌ3433, \n4ฒญ4172, \n4ฒญ4173, \n4ฒญ4174","id":"item_4rptysoi","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198030921,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782197324534,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782198030921,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"claims","title":"TH-PCS Daily Installation Monitor","desc":"ลิงก์ทำ Report ส่งทุกวันตอน 16.00 น.","url":"https://mi.feishu.cn/sheets/TgMdsVOJBhj6z5tQDvncirbnn3f?sheet=5f6d62","id":"item_z1v2h7eu","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"people","title":"แจ้งเข้า-ออกพนักงาน (ประกัน Tokio Marine)","desc":"ส่งชื่อพนักงานให้ประกัน ต้องส่งทุกครั้งที่มีพนักงานใหม่เข้ามา","url":"https://docs.google.com/spreadsheets/d/1mp_28P9fRm3VB0VlJvX7Kw2KnR36_RjD/edit?gid=1519250756#gid=1519250756","id":"item_g27tb6w7","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782197828536,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782197828536,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""}],"layout":{"ops":[{"label":"","ids":["item_g2f2zimm","item_lyvmy1vf","item_9xx075sw","item_nfk2tu0h"]}],"cust":[{"label":"Template AC","ids":["item_va0342il","item_5vit48ce","item_dwuijdc6","item_ha4n7rql","item_w2hsrmy3","item_s5w52ew7"]},{"label":"Template WM","ids":["item_29x8q7bh","item_n2tjk8zk","item_peymqs17"]},{"label":"NSS ประเมินการบริการ","ids":["item_18r6iv0o","item_uuy4x8b7"]}],"claims":[{"label":"","ids":["item_z1v2h7eu","item_7rzc7nuf"]}],"logi":[{"label":"","ids":["item_hm0jl69j","item_7rksricg"]}],"people":[{"label":"","ids":["item_4awu2hbj","item_2x4e3qds","item_471r1y1o","item_g27tb6w7"]}],"cat_129pbvny":[{"label":"","ids":["item_w73ghed7","item_40vx7eep","item_b7jc5pyq","item_jkc0aseq","item_wxynlbe3"]}],"cat_w4u74o7a":[{"label":"","ids":["item_n5hgi7rz","item_lt1ecvcw","item_52f92o2h","item_118uxquy"]}],"cat_t5icn0z4":[{"label":"","ids":["item_6pnhvi41","item_4rptysoi"]}],"cat_1ysw82rn":[{"label":"","ids":["item_7byy97w3"]}]},"editors":["Thada konklang"]};
+const DEFAULT_PAYLOAD = {"categories":[{"id":"logi","name":"XMS system","icon":"🧰","color":"#0d9488","bgColor":null},{"id":"ops","name":"Operations \u0026 Scheduling","icon":"📅","color":"#3b82f6"},{"id":"cust","name":"Customer \u0026 Service Templates","icon":"💬","color":"#16a34a"},{"id":"cat_68od6fap","name":"NSS Customer service","icon":"📞","color":"#ff6900","bgColor":null},{"id":"people","name":"Staff Management","icon":"👥","color":"#9333ea","bgColor":null},{"id":"claims","name":"Report","icon":"📊","color":"#d97706","bgColor":null},{"id":"cat_129pbvny","name":"Warehouse/Return order","icon":"🚚","color":"#0d9488","bgColor":null},{"id":"cat_t5icn0z4","name":"Cars/Easy pass","icon":"🚗","color":"#6c8ff9","bgColor":null},{"id":"cat_1ysw82rn","name":"Knowledged","icon":"📖","color":"#ff6900","bgColor":null},{"id":"cat_w4u74o7a","name":"KOL order","icon":"📌","color":"#ef4444","bgColor":null}],"items":[{"category":"ops","title":"PCT Installation List TH","desc":"ใช้ตรวจสอบเคสก่อนใส่ใน Appointment Mi Work ใช้เป็นหลักในการลงข้อมูล","url":"https://mi-p.feishu.cn/sheets/ByETsEvWuhIPVRtSu7McB3TWnTg?sheet=837dc7","id":"item_lyvmy1vf","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782230026487,"history":[{"ts":1782230026487,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cat_129pbvny","title":"Cancel list / Warehouse","desc":"สำหรับกรณียกเลิก ใส่ข้อมูลทำคืนส่วนกลาง","url":"https://mi-p.feishu.cn/sheets/Q3UJsezB8hvNNwtUqbbc7CnSnkh?sheet=ad7e68","id":"item_40vx7eep","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782195727417,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195727417,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""},{"category":"cat_129pbvny","title":"Sino Warehouse","desc":"กรอกสินค้าที่จะเข้ารับจาก warehouse โดยตรวจสอบจากระบบ XMS และ Order Schedules","url":"https://accounts.feishu.cn/accounts/page/login?app_id=2\u0026no_trap=1\u0026query_scope=all\u0026redirect_uri=https%3A%2F%2Fmi-p.feishu.cn%2Fsheets%2FCPxcsVFVyhlyU7tGDUqckp9xnMg%3Ffrom%3Dfrom_copylink%26login_redirect_times%3D1","id":"item_w73ghed7","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782195761928,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195761928,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""},{"category":"ops","title":"Appointment Area","desc":"นำที่อยู่ลูกค้ามากรอกผ่าน Excel เพื่ออัปโหลด จัดเส้นทางแต่ละทีมให้เดินทางน้อยที่สุดและใกล้กันที่สุด","url":"https://www.google.com/maps/d/u/0/edit?mid=1QUd0t0wi9J74ccujhN81j3h6P_4z0IQ\u0026usp=sharing","id":"item_nfk2tu0h","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cat_w4u74o7a","title":"Appointment Youtuber Xiaomi V3","desc":"ข้อมูลลูกค้า KOL ที่ Xiaomi ต้องการให้เข้าติดตั้ง — ไฟล์นี้จะมีส่งมาเรื่อยๆ แยกหมวดหมู่ไว้เผื่ออนาคต","url":"https://mi.feishu.cn/wiki/NqnFwCzkHiPHw0kjAfBcIk8Pnag?sheet=78J2Iu","id":"item_n5hgi7rz","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196738180,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195665882,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782196738180,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"}],"cred":""},{"category":"cat_w4u74o7a","title":"Appointment Youtuber Xiaomi V1","desc":"ลิงก์เก่าที่เกี่ยวข้องและยังใช้งานอยู่","url":"https://mi.feishu.cn/wiki/Hha9w9tb2iMU3kkYQTVcn9KLnPp?sheet=LRuIp5","id":"item_52f92o2h","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196751024,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195678205,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782196751024,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"}],"cred":""},{"category":"cat_w4u74o7a","title":"Appointment Youtuber — Invoice เรียกเก็บเงิน","desc":"ลิงก์สำหรับ invoice เรียกเก็บเงินงาน Youtuber","url":"https://accounts.feishu.cn/accounts/page/login?app_id=2\u0026no_trap=1\u0026query_scope=all\u0026redirect_uri=https%3A%2F%2Fmi-p.feishu.cn%2Fsheets%2FTdMasXRPIhHrIGtyqc5cOl3onih%3Flogin_redirect_times%3D1%26sheet%3D0fvFXt","id":"item_118uxquy","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782195691307,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195691307,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""},{"category":"cat_w4u74o7a","title":"Appointment Youtuber Xiaomi V2","desc":"ไฟล์ Appointment Youtuber เวอร์ชันใหม่","url":"https://j1zplfh5yg.feishu.cn/sheets/WSKnsPsEThoOL4tyT0QcoJifnjd?sheet=0ca4f2","id":"item_lt1ecvcw","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196744406,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782195684785,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782196744406,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"}],"cred":""},{"category":"cat_68od6fap","title":"NSS — แบบประเมินบริการ","desc":"ไฟล์ติดต่อลูกค้าหลังติดตั้งเพื่อเก็บคะแนนการบริการ","url":"https://mi-p.feishu.cn/sheets/WBYEswTOzhOux7tDcBQcE152nLd","id":"item_18r6iv0o","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1784191238869,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1784191238869,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""},{"category":"cat_68od6fap","title":"Template สอบถามคะแนน (Line, ลูกค้าไม่รับสาย)","desc":"เรียนคุณ ......\nService order : \nทางเราขอขอบคุณที่คุณลูกค้าเลือกผลิตภัณฑ์ของทางเรา Xiaomi\nรบกวนประเมินบริการ:\n1) ภาพรวมบริการของศูนย์ (1-8 ไม่พึงพอใจ / 9-10 พึงพอใจ) — ถ้า 1-8 รบกวนแจ้งปัญหา\n2) ช่างมาตรงเวลาหรือไม่\n3) มีค่าใช้จ่ายเพิ่มเติมหน้างานหรือไม่ ถ้ามีเท่าไหร่\n4) พึงพอใจบริการทีมช่างหรือไม่ (แนะนำ Mi Home + ทำความสะอาดหลังติดตั้ง)","id":"item_uuy4x8b7","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1784191249639,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1784191249639,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"cust","title":"Air Conditioner Installation SOP (แอร์ — Template ติดต่อนัดหมาย)","desc":"Service Order :\nCustomer : \nContact :\nSecondary Contact : -\nLine ID : \nAddress : \nExpected Time : \nType : \n\n\nNoted : (หากลูกค้ามีการเปลี่ยนวันติดตั้งให้ใส่ลงด้วย)\n\nรายการสอบถาม\n1.มีแอร์เครื่องเก่าหรือไม่ (ขนาดกี่ BTU)(ใช้สารทำความเย็น R32 หรือไม่ )(เป็นท่อฝังหรือไม่)\n**หากเป็นจุดติดตั้งใหม่ ให้ลูกค้าเตรียมเมนไฟไว้**\n\n2.จุดติดตั้งคอยล์ร้อนและคอยล์เย็นอยู่ชั้นไหน\n\n- คอยล์ร้อนห่างจากพื้นกี่เมตร (หากความสูงเกิน 6 เมตร เราไม่สามารถติดตั้งได้)\n\n- คอยล์เย็นห่างจากฝ้ากี่เมตร (สำหรับรูท่อแอร์ที่มีอยู่แล้ว) (พื้นที่ว่างรวมประมาณ 50 เซนติเมตร)\n\n3.มีเซอร์กิตเบรกเกอร์ (Circuit Breaker) ที่สามารถใช้งานได้ทันทีหรือไม่\n\n4.จำเป็นต้องเจาะรูหรือไม่(รูเดิมเป็นของขนาดกี่ BTU)(หากใช้รูเดิมไม่ได้อาจจะต้องเจาะใหม่)(ความหนาของกำแพง)\n\n5.จำเป็นต้องเดินสายไฟ/ท่อร้อยสายเพิ่มเติมหรือไม่ (กรุณาบันทึกวิดีโอเพื่อยืนยัน)\n\n6.ระยะทางจาก เบรคเกอร์ ถึงตำแหน่งติดตั้งเครื่องปรับอากาศภายใน เท่าไร (ช่างจะเตรียมสายไฟไว้)\n\n7.สายไฟจำเป็นต้องเดินเข้าฝ้าเพดานหรือไม่ (บางบ้านเป็นตึกไม่มีฝ้า)\n\n8.จำเป็นต้องใช้รางครอบท่อ (Casing) หรือไม่ \n\n9.มีข้อจำกัดจากนิติบุคคลหรือไม่ เวลาในการใช้เสียงได้กี่โมงถึงกี่โมง ติดตั้งวันเสาร์ได้ไหม (ที่จอดรถ / การขออนุญาตใช้ลิฟต์)(หากต้องมีการยืนยันที่ก่อนเข้า ให้แจ้งชื่อช่าง ป้ายทะเบียนรถกับลูกค้า )(มีสายไฟหรือขอบที่ประมาณ 3.5 เมตรหรือไม่)\n\n10.คุณลูกค้าอยู่ที่หน้างานวันติดตั้งหรือไม่ (หากไม่อยู่แจ้งว่าทางช่างจะมีการติดตั้งที่หน้างานและวีดีโอคอลช่วงก่อนติดตั้งและหลังติดตั้งเพื่อให้ลูกค้าตรวจสอบ)\n\nห้ามเลื่อนนัด \nหมายเหตุ : หากพบปัญหาที่ไม่เป็นไปตามขั้นตอนการทำงาน หรือปัญหาใดๆรบกวนติดต่อเข้ามายัง Fleet/Manager เพื่อรับทราบและแก้ไขปัญหาโดยเร็วที่สุด\"\n**หากมีการยกเลิกสินค้าให้นำสินค้าของลูกค้ากลับมาด้วยทุกเคส**","id":"item_va0342il","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198193681,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198193681,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cust","title":"แอร์ — Template ส่งแจ้งลูกค้าทาง Line@","desc":"เรียนคุณ\nService Order : \nModel : \nทางเราขอขอบคุณที่คุณลูกค้าเลือกผลิตภัณฑ์ของทางเรา Xiaomi\n\nรบกวนขอข้อมูลวีดีโอมุมกว้างเพิ่มเติมดังนี้สำหรับตรวจสอบหน้างานติดตั้ง\n-วีดีโอจุดติดตั้งคอยล์ร้อนและคอยล์เย็น\n-วีดีโอจุดติดตั้งสายไฟ เบรคเกอร์ และจุดท่อน้ำทิ้ง\n-ลิ้งค์ Google map\n\n*หากมีแอร์เก่า ทางเราขอข้อมูลเพิ่มเติมดังนี้\n-วีดีโอแอร์เก่าพร้อมทั้งลักษณะรูท่อ\n-รูปภาพชนิดแอร์ โดยถ่ายที่สติ๊กเกอร์บนคอยล์ร้อยและคอยล์เย็น\n\nหมายเหตุ 1: หากเป็นจุดติดตั้งใหม่ รบกวนจัดเตรียมเมนไฟสำหรับจุดติดตั้ง\nหมายเหตุ 2: หากไม่สามารถเข้าติดตั้งได้ตามเวลาที่กำหนดทางช่างจำเป็นจะต้องเดินทางไปยังพื้นที่ถัดไปเพื่อติดตั้งตามกำหนดเวลา และรบกวนเก็บสิ่งของเตรียมพื้นที่สำหรับติดตั้งให้เรียบร้อย ขอบคุณครับ\n\nเพื่อการใช้งานอย่างเต็มประสิทธิภาพ แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่อกับอุปกรณ์\n\n**หากมีค่าใช้จ่ายการติดตั้งเพิ่มเติมหน้างานจะต้อง Scan ผ่าน QR code บัญชีของทางบริษัทเท่านั้น**","id":"item_5vit48ce","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198212464,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198212464,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cust","title":"แอร์ — Template ขอข้อมูลแบบเต็มทาง Line@","desc":"เรียนคุณ\nService Order : \nModel :\nทางเราขอขอบคุณที่คุณลูกค้าเลือกผลิตภัณฑ์ของทางเรา Xiaomi\n\n **หากเป็นจุดติดตั้งใหม่รบกวนเดินเมนไฟมายังจุดติดตั้งแอร์ด้วยนะครับ**\n\nขออนุญาติแจ้งรายละเอียดคำถามนะครับ\n1.มีแอร์เครื่องเก่าหรือไม่ (หากมีขนาดกี่ BTU ใช้สารทำความเย็น R32 หรือไม่ )\n2.จุดติดตั้งคอยล์ร้อนและคอยล์เย็นอยู่ชั้นไหน\n- คอยล์ร้อนห่างจากพื้นกี่เมตร ลักษณะพื้นที่ติดตั้ง (มีพื้นที่ให้ช่างยืนทำงานหรือไม่)\n- คอยล์เย็นห่างจากฝ้ากี่เซนติเมตร (แนะนำ 50 เซนติเมตร )\n3.มีเซอร์กิตเบรกเกอร์พร้อมใช้งานกับแอร์หรือไม่\n4.จำเป็นต้องเจาะรูท่อแอร์ใหม่หรือไม่(ความหนาของกำแพง)\n5.จำเป็นต้องเดินสายไฟใหม่หรือไม่\n6.ระยะทางจาก เบรคเกอร์ ถึงตำแหน่งติดตั้งเครื่องปรับอากาศภายใน เท่าไร\n7.สายไฟจำเป็นต้องเดินเข้าฝ้าเพดานหรือไม่\n8.จำเป็นต้องใช้รางครอบแอร์หรือไม่(ค่าใช้จ่ายแยก)\n9.มีนิติบุคคล/แลกบัตรหรือไม่ เวลาในการใช้เสียงได้ถึงกี่โมง ติดตั้งวันเสาร์ได้หรือไม่ \n(รถของทางศูนย์บริการสูง 3 เมตร)\n\n---------------------------------------------------------------------------------\n\nขอข้อมูลวีดีโอมุมกว้างเพิ่มเติมดังนี้สำหรับตรวจสอบหน้างานติดตั้ง\n-วีดีโอจุดติดตั้งคอยล์ร้อนและคอยล์เย็น\n-วีดีโอจุดติดตั้งสายไฟและเบรคเกอร์\n-วีดีโอจุดท่อน้ำทิ้ง\n-ลิ้งค์ Google map\n\n*หากมีแอร์เก่า ทางเราขอข้อมูลเพิ่มเติมดังนี้\n-วีดีโอแอร์เก่าพร้อมทั้งลักษณะรูท่อ\n-รูปภาพชนิดแอร์ โดยถ่ายที่สติ๊กเกอร์บนคอยล์ร้อยและคอยล์เย็น\n\nหมายเหตุ 1:  หากเป็นจุดติดตั้งใหม่ รบกวนจัดเตรียมเมนไฟสำหรับจุดติดตั้ง\nหมายเหตุ 2: หากไม่สามารถเข้าติดตั้งได้ตามเวลาที่กำหนดทางช่างจำเป็นจะต้องเดินทางไปยังพื้นที่ถัดไปเพื่อติดตั้งตามกำหนดเวลา และรบกวนเตรียมพื้นที่สำหรับติดตั้งให้เรียบร้อย ขอบคุณครับ\n\n**หากมีค่าใช้จ่ายการติดตั้งเพิ่มเติมหน้างานจะต้อง Scan ผ่าน QR code บัญชีของทางบริษัทเท่านั้น**","id":"item_dwuijdc6","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198224707,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198224707,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cat_1ysw82rn","title":"Mi Home — วิธีเชื่อมต่อ","desc":"1) เปิดแอป Mi Home  2) กด + เพิ่มอุปกรณ์  3) เลือกเครื่องปรับอากาศ  4) เลือกรุ่น  5) เชื่อมต่อตามขั้นตอน\nMi ID ต้องตรงภูมิภาคกับอุปกรณ์ (1 ID ต่อ 1 ภูมิภาค)\nตรวจสอบภูมิภาค: โปรไฟล์ \u003e การตั้งค่าเพิ่มเติม \u003e ภูมิภาค \u003e เลือก ไทย แล้วเชื่อมต่อใหม่","id":"item_7byy97w3","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782197944092,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782197944092,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"cust","title":"แอร์ — Template สอบถามงานซ่อม","desc":"Service Order :\nCustomer : \nContact :\nSecondary Contact : -\nLine ID : \nAddress : \nExpected Time : \nType : \n\n\nNoted : (หากลูกค้ามีการเปลี่ยนวันติดตั้งให้ใส่ลงด้วย)\n\nรายการสอบถาม\n1.อาการของเครื่อง\n\n2.มีข้อจำกัดจากนิติบุคคลหรือไม่ เวลาในการใช้เสียงได้กี่โมงถึงกี่โมง ติดตั้งวันเสาร์ได้ไหม (ที่จอดรถ / การขออนุญาตใช้ลิฟต์)(หากต้องมีการยืนยันที่ก่อนเข้า ให้แจ้งชื่อช่าง ป้ายทะเบียนรถกับลูกค้า )(มีสายไฟหรือขอบที่ประมาณ 3.5 เมตรหรือไม่)\n\nห้ามเลื่อนนัด \nหมายเหตุ : หากพบปัญหาที่ไม่เป็นไปตามขั้นตอนการทำงาน หรือปัญหาใดๆรบกวนติดต่อเข้ามายัง Fleet/Manager เพื่อรับทราบและแก้ไขปัญหาโดยเร็วที่สุด","id":"item_w2hsrmy3","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198259316,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198259316,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cust","title":"เกณฑ์เลือก Class ความยากงาน","desc":"Class I: เงื่อนไขผ่านน้อยกว่า 2 ข้อ\nClass II: เท่ากับ 2 ข้อ\nClass III: มากกว่า 2 ข้อ\nเงื่อนไข: 1.ติดตั้งผ่านรูเดิม 2.ไม่ต้องต่อท่อเพิ่ม 3.ไม่ต้องดัดแปลงเบรกเกอร์ 4.ไม่ต้องเจาะผนัง 5.เดินสายไฟง่าย 6.ไม่ต้องทำงานที่สูง 7.ไม่ต้องเปิดฝ้าเพดาน","id":"item_s5w52ew7","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"เครื่องซักผ้า — Template ติดต่อนัดหมาย","desc":"Service Order / Customer / Contact / Line ID / Address / Expected Time / Type / Noted\n1) มีปลั๊กที่ใช้งานได้ มีสายกราวด์หรือไม่\n2) มีก๊อกน้ำใช้งานได้หรือต้องต่อท่อใหม่\n3) มีจุดน้ำทิ้งหรือไม่\n4) ติดต่อนิติก่อนเข้า\n5) ลูกค้าอยู่หน้างานหรือไม่\nหมายเหตุ: ติดตั้งระบบน้ำ/ไฟ ให้ถ่ายรูปลงกลุ่มทุกเคส","id":"item_29x8q7bh","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"เครื่องซักผ้า — Template ส่งแจ้งลูกค้าทาง Line@","desc":"เรียนคุณ.. Service Order / Model\nขอวิดีโอ: จุดติดตั้งเครื่องซักผ้า, จุดท่อน้ำทิ้ง, ลิงก์ Google Map\nหมายเหตุเรื่องเวลาและเตรียมพื้นที่ก่อนช่างเข้าทำงาน","id":"item_n2tjk8zk","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"เครื่องซักผ้า — Template ขอข้อมูลแบบเต็มทาง Line@","desc":"เรียนคุณ.. Service Order / Model\n1) ปลั๊กใช้กับเครื่องซักผ้าได้หรือไม่\n2) ก๊อกน้ำใช้ได้หรือต้องต่อใหม่\n3) มีจุดน้ำทิ้งหรือไม่\n4) ข้อจำกัดนิติบุคคล/เวลา/วันเสาร์\nขอวิดีโอจุดติดตั้ง + จุดน้ำทิ้ง + ลิงก์ Google Map","id":"item_peymqs17","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cust","title":"Template แจ้ง/ขอข้อมูลคืนเงิน","desc":"ทางเราต้องขออภัยในความไม่สะดวกที่เกิดขึ้น ทั้งนี้รบกวนแนบเอกสารสำหรับประสานงานคืนเงินดังนี้\n1.บัตรประชาชนพร้อมเซ็นสำเนาถูกต้อง\n2.หน้าบัญชีธนาคารพร้อมเซ็นเอกสารสำเนาถูกต้อง\n3.รายละเอียดคำสั่งซื้อที่แสดงยอดชำระเงิน\n\nทั้งนี้หากส่งเอกสารและทางส่วนกลางรับเรื่องแล้วจะใช้เวลาประมาณ 40-45 วันทำการไม่รวมเสาร์อาทิตย์\nต้องขออภัยในความล่าช้าของกระบวนการดังกล่าว ทั้งนี้ทางเราจะอัปเดตหลังทางส่วนกลางรับทราบเอกสารเรียบร้อยแล้วนะครับ","id":"item_ha4n7rql","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198240197,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782198240197,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"cat_129pbvny","title":"ที่อยู่จัดส่ง: รับสินค้าใหม่ (Warehouse C)","desc":"Warehouse C, 888/90, TIP 5, Bang Pla, Bang Phli, Samut Prakan 10540\nผู้ติดต่อ: K.Tik (ติ๊ก) +66-870744273\nLocation: https://maps.app.goo.gl/KeX8ncJuEwcmmexm8","id":"item_b7jc5pyq","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196776866,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782196776866,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"cat_129pbvny","title":"ที่อยู่จัดส่ง: คืนสินค้า Return","desc":"66 Soi Srinagarindra 24, Suan Luang, Bangkok 10250\nแจ้งว่านำสินค้า Reject + Return มารวมตามที่คุณณัฐยุทธแจ้ง\nhttps://maps.app.goo.gl/3tzNMVvXaVuUR1WSA","id":"item_jkc0aseq","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196768515,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782196768515,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"cat_129pbvny","title":"ที่อยู่จัดส่ง: คืนสินค้า DOA","desc":"888/2 สุขาลำเจียก, Nawamin, Bueng Kum, Bangkok 10230\nแจ้งว่านำสินค้า DOA มาส่งตามที่คุณณัฐยุทธแจ้ง\nhttps://maps.app.goo.gl/gFd29CTaV1DQ9MLg8","id":"item_wxynlbe3","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782196012363,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782196012363,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"url":"","cred":""},{"category":"people","title":"Follow Technician","desc":"กรอกข้อมูลผลงานช่างที่ไปติดตั้ง ต้องออก survey 1 งานต่อสัปดาห์","url":"https://djpbgqcjqnmn.jp.larksuite.com/wiki/Qbv6wmBhzif4rskE01OjC0xRpGh?sheet=bafa97","id":"item_2x4e3qds","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"people","title":"List Staff","desc":"ใส่ชื่อพนักงานใหม่ที่เข้ามา เพื่อประสานงาน Xiaomi นำชื่อเข้าระบบ XMS","url":"https://mi-p.feishu.cn/sheets/WVOMssKRZhYbSgtGX76c651Bn0g?sheet=1yIwAW","id":"item_471r1y1o","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"people","title":"Attendance","desc":"ตารางเข้าทำงานพนักงาน ขาด/ลา/มาสาย/หยุด เช็คชื่อกระดาษช่วงเช้าแล้วกรอกส่งทุกวันก่อน 10.00 น.","url":"https://vos0v8xbhh.sg.larksuite.com/wiki/VUI4wghaZiIdDJkO7Pll7gGpgfg","id":"item_4awu2hbj","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"logi","title":"XMS","desc":"ระบบตรวจสอบงาน order ที่เข้ามาในระบบ และนำไปใส่ในไฟล์ Order Schedules","url":"https://sg.asp.mi.com/workbench/index#@workbench/dashboard-no-monitor?title=%E9%A6%96%E9%A1%B5\u0026","id":"item_hm0jl69j","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cat_t5icn0z4","title":"ข้อมูล Easy Pass","desc":"เว็บไซต์เช็ค Easy Pass ของรถแต่ละคัน นำข้อมูลไปใส่ในไฟล์ PCT Installation List TH","url":"https://member-thaieasypass.exat.co.th/eservice/easypasscardlist","cred":"ID: limiteb123@gmail.com / Password: Precision888!","id":"item_6pnhvi41","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782197314531,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782197314531,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}]},{"category":"logi","title":"Area Bangkok CS","desc":"ตารางตรวจสอบพื้นที่งาน เพื่อเช็คว่างานจากระบบ XMS อยู่ในพื้นที่ติดตั้งหรือไม่ ถ้าไม่ ต้องประสาน CS โอนเคสไปศูนย์บริการที่ใกล้ที่สุด","url":"https://vos0v8xbhh.sg.larksuite.com/wiki/B9JZwUaLHiXvFNkW0QslavI1gGc","id":"item_7rksricg","color":null,"bgColor":null,"lastEditor":"ระบบ","lastEditedAt":1782195611047,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"}]},{"category":"cat_t5icn0z4","title":"ทะเบียนรถของศูนย์บริการ","desc":"รายการทะเบียนรถ — บันทึกการเช็คตามระยะ (เริ่มที่ 1,000 และ 10,000 กม. ไปเรื่อยๆ)\n4ฒฌ3421, \n4ฒฌ3422, \n4ฒฌ3423, \n4ฒฌ3425, \n4ฒฌ3426, \n4ฒฌ3429, \n4ฒฌ3430, \n4ฒฌ3433, \n4ฒญ4172, \n4ฒญ4173, \n4ฒญ4174","id":"item_4rptysoi","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782198030921,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782197324534,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"},{"ts":1782198030921,"editor":"Thada konklang","summary":"แก้ไข: คำอธิบาย"}],"url":"","cred":""},{"category":"people","title":"แจ้งเข้า-ออกพนักงาน (ประกัน Tokio Marine)","desc":"ส่งชื่อพนักงานให้ประกัน ต้องส่งทุกครั้งที่มีพนักงานใหม่เข้ามา","url":"https://docs.google.com/spreadsheets/d/1mp_28P9fRm3VB0VlJvX7Kw2KnR36_RjD/edit?gid=1519250756#gid=1519250756","id":"item_g27tb6w7","color":null,"bgColor":null,"lastEditor":"Thada konklang","lastEditedAt":1782197828536,"history":[{"ts":1782195611047,"editor":"ระบบ","summary":"สร้างข้อมูลเริ่มต้นของระบบ"},{"ts":1782197828536,"editor":"Thada konklang","summary":"แก้ไข: หมวดหมู่"}],"cred":""},{"category":"cat_68od6fap","title":"Line OA Link","desc":"ใช้กด Link  Line OA ของบริษัท","url":"https://chat.line.biz/U18e03434b4673b21e6f92533db2742d4","cred":"","color":null,"bgColor":null,"id":"item_fcty15y0","lastEditor":"Thada konklang","lastEditedAt":1784191357941,"history":[{"ts":1784191357941,"editor":"Thada konklang","summary":"สร้างรายการนี้"}]},{"category":"cat_w4u74o7a","title":"Appointment Youtuber Xiaomi V4","desc":"","url":"https://mi.feishu.cn/sheets/KK3gsDtSGhf5HttS2QtcQM4jnRh","cred":"","color":null,"bgColor":null,"id":"item_pdy3lsdl","lastEditor":"Thada konklang","lastEditedAt":1784798341323,"history":[{"ts":1784798317990,"editor":"Thada konklang","summary":"สร้างรายการนี้"},{"ts":1784798335127,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"},{"ts":1784798341323,"editor":"Thada konklang","summary":"แก้ไข: ชื่อหัวข้อ"}]},{"category":"ops","title":"Order Schedule Google sheet","desc":"ใช้บันทึกข้อมูลเข้า Google sheet","url":"https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1795528665#gid=1795528665","cred":"","color":null,"bgColor":null,"id":"item_6hn6xpfl","lastEditor":"Thada konklang","lastEditedAt":1785358150003,"history":[{"ts":1785357855897,"editor":"Thada konklang","summary":"สร้างรายการนี้"},{"ts":1785358150003,"editor":"Thada konklang","summary":"แก้ไข: ลิงก์"}]}],"layout":{"ops":[{"label":"","ids":["item_lyvmy1vf","item_6hn6xpfl","item_nfk2tu0h"]}],"cust":[{"label":"Template AC","ids":["item_va0342il","item_5vit48ce","item_dwuijdc6","item_ha4n7rql","item_w2hsrmy3","item_s5w52ew7"]},{"label":"Template WM","ids":["item_29x8q7bh","item_n2tjk8zk","item_peymqs17"]},{"label":"NSS ประเมินการบริการ","ids":[]}],"claims":[{"label":"","ids":[]}],"logi":[{"label":"","ids":["item_hm0jl69j","item_7rksricg"]}],"people":[{"label":"","ids":["item_4awu2hbj","item_2x4e3qds","item_471r1y1o","item_g27tb6w7"]}],"cat_129pbvny":[{"label":"","ids":["item_w73ghed7","item_40vx7eep","item_b7jc5pyq","item_jkc0aseq","item_wxynlbe3"]}],"cat_w4u74o7a":[{"label":"","ids":["item_pdy3lsdl","item_n5hgi7rz","item_lt1ecvcw","item_52f92o2h","item_118uxquy"]}],"cat_t5icn0z4":[{"label":"","ids":["item_6pnhvi41","item_4rptysoi"]}],"cat_1ysw82rn":[{"label":"","ids":["item_7byy97w3"]}],"cat_68od6fap":[{"label":"","ids":["item_18r6iv0o","item_fcty15y0","item_uuy4x8b7"]},{"label":"","ids":[]}]},"editors":["Thada konklang"]};
 const LS_KEY = 'pctFleetHubData_v1';
 let CATS = [];
 let DATA = [];
@@ -666,11 +677,15 @@ DATA = parsed.items;
 } else {
 DATA = JSON.parse(JSON.stringify(DEFAULT_PAYLOAD.items));
 }
+// รายการ Report รุ่นเก่าถูกยกเลิกตาม workflow ใหม่ แต่การ์ดหมวดอื่นคงไว้ทั้งหมด
+const removedReportIds = new Set(['item_z1v2h7eu','item_7rzc7nuf']);
+DATA = DATA.filter(item=>!removedReportIds.has(item.id));
 if(parsed && parsed.layout){
 LAYOUT = parsed.layout;
 } else {
 LAYOUT = JSON.parse(JSON.stringify(DEFAULT_PAYLOAD.layout || {}));
 }
+if(Array.isArray(LAYOUT.claims)) LAYOUT.claims.forEach(row=>{ row.ids = (row.ids||[]).filter(id=>!removedReportIds.has(id)); });
 if(parsed && Array.isArray(parsed.editors)){
 EDITORS = parsed.editors;
 } else {
@@ -926,7 +941,6 @@ showToast('รวมบรรทัดแล้ว — ลากแบ่งใ�
 if(totalCount===0){
 main.innerHTML += '<div class="empty">ยังไม่มีรายการในหมวดหมู่นี้ — กด "+ เพิ่มหัวข้อ" เพื่อเริ่มต้น</div>';
 if(cat.id === 'logi'){ renderSOPanel(main); renderQRPanel(main); }
-if(cat.id === 'claims'){ renderDailyEveningReport(main); renderReportDashboard(main); }
 return;
 }
 let anyVisible = false;
@@ -1016,18 +1030,6 @@ divider3.className = 'crm-divider';
 divider3.innerHTML = `<span class="line"></span><span>เครื่องมือสร้าง QR / Barcode</span><span class="line"></span>`;
 main.appendChild(divider3);
 renderQRPanel(main);
-}
-if(cat.id === 'claims'){
-const divider4 = document.createElement('div');
-divider4.className = 'crm-divider';
-divider4.innerHTML = `<span class="line"></span><span>📝 รายงานส่งผู้บริหารประจำวัน (ช่วงเย็น)</span><span class="line"></span>`;
-main.appendChild(divider4);
-renderDailyEveningReport(main);
-const divider5 = document.createElement('div');
-divider5.className = 'crm-divider';
-divider5.innerHTML = `<span class="line"></span><span>Dashboard สรุปข้อมูลเคส (จากระบบ CRM)</span><span class="line"></span>`;
-main.appendChild(divider5);
-renderReportDashboard(main);
 }
 requestAnimationFrame(detectCardOverflow);
 }
@@ -1574,27 +1576,23 @@ MULTI-PRODUCT SMART CRM (Air & Washing Machine) — embedded in Customer & Servi
 const CRM_SURVEY_QUESTIONS_AIR = [
 'มีแอร์เครื่องเก่าหรือไม่ (ขนาดกี่ BTU)(ใช้สารทำความเย็น R32 หรือไม่ )(เป็นท่อฝังหรือไม่) **หากเป็นจุดติดตั้งใหม่ ให้ลูกค้าเตรียมเมนไฟไว้**',
 'จุดติดตั้งคอยล์ร้อนและคอยล์เย็นอยู่ชั้นไหน | คอยล์ร้อนห่างจากพื้นกี่เมตร (หากความสูงเกิน 6 เมตร เราไม่สามารถติดตั้งได้) | คอยล์เย็นห่างจากฝ้ากี่เมตร (สำหรับรูท่อแอร์ที่มีอยู่แล้ว) (พื้นที่ว่างรวมประมาณ 50 เซนติเมตร)',
-'มีเซอร์กิตเบรกเกอร์ (Circuit Breaker) ที่สามารถใช้งานได้ทันทีหรือไม่',
+'เซอร์กิตเบรกเกอร์ (Circuit Breaker)',
 'จำเป็นต้องเจาะรูหรือไม่(รูเดิมเป็นของขนาดกี่ BTU)(หากใช้รูเดิมไม่ได้อาจจะต้องเจาะใหม่)(ความหนาของกำแพง)',
-'จำเป็นต้องเดินสายไฟ/ท่อร้อยสายเพิ่มเติมหรือไม่ (กรุณาบันทึกวิดีโอเพื่อยืนยัน)',
+'สายไฟสำหรับจุดติดตั้ง',
 'ระยะทางจาก เบรคเกอร์ ถึงตำแหน่งติดตั้งเครื่องปรับอากาศภายใน เท่าไร (ช่างจะเตรียมสายไฟไว้)',
 'สายไฟจำเป็นต้องเดินเข้าฝ้าเพดานหรือไม่ (บางบ้านเป็นตึกไม่มีฝ้า)',
-'จำเป็นต้องใช้รางครอบท่อ (Casing) หรือไม่',
+'รางครอบท่อ (Casing)',
 'มีข้อจำกัดจากนิติบุคคลหรือไม่ เวลาในการใช้เสียงได้กี่โมงถึงกี่โมง ติดตั้งวันเสาร์ได้ไหม (ที่จอดรถ / การขออนุญาตใช้ลิฟต์)',
-'คุณลูกค้าอยู่ที่หน้างานวันติดตั้งหรือไม่ (หากไม่อยู่แจ้งว่าทางช่างจะมีการติดตั้งที่หน้างานและวีดีโอคอลช่วงก่อนติดตั้งและหลังติดตั้งเพื่อให้ลูกค้าตรวจสอบ)'
+'ข้อมูลการอยู่หน้างานของลูกค้า / ผู้ประสานงาน และรายละเอียดเพิ่มเติม'
 ];
-// Indices of Air survey questions rendered as Yes/No toggle (0-based). Index 5 = short text. Rest = textarea.
-const AIR_YESNO_INDICES = new Set([2, 4, 6, 7, 9]);
+// คำถาม Air ที่มีคำตอบแบบเลือกชัดเจน (เลข index เริ่มจาก 0)
+const AIR_YESNO_INDICES = new Set([6]);
 const AIR_SHORTTEXT_INDICES = new Set([5]);
-// Survey quick presets for Air — fills common answer patterns in one click
-const CRM_SURVEY_PRESETS_AIR = [
-{ key:'condo', name:'🏙️ คอนโด / อาคาร',
-answers:{2:'ใช่', 4:'ใช่', 5:'', 6:'ใช่', 7:'ใช่',
-8:'มีนิติบุคคล — กรุณากรอกรายละเอียดเพิ่มเติม (เวลา/เสาร์/ลิฟต์)', 9:'ใช่'} },
-{ key:'house', name:'🏠 บ้านเดี่ยว / ทาวน์เฮ้าส์',
-answers:{2:'ใช่', 4:'ไม่ใช่', 5:'', 6:'ไม่ใช่', 7:'ไม่ใช่',
-8:'ไม่มีนิติบุคคล', 9:'ใช่'} }
-];
+const AIR_CHOICE_OPTIONS = {
+2:['มีของเดิม','ไม่มี ต้องติดตั้งใหม่'],
+4:['มีสายเดิม','ต้องเดินสายใหม่'],
+7:['มีของเดิม','เตรียมไปด้วย','ไม่ต้องการใช้']
+};
 // Drafted to mirror the Air question set's depth — wording can be adjusted any time.
 // Reduced to 5 essential questions per spec (kept original items 1,2,3,9,10).
 const CRM_SURVEY_QUESTIONS_WASHER = [
@@ -1753,13 +1751,7 @@ customerType: crmCustomerTypeLabel(c), // VIP / KOL / '' — column right after 
 transactionType: c.transactionType||'', // Installation only / Delivery and installation / Repair / Installation only Fee / Return of goods
 difficulty: c.cls||'', // Class I/II/III — "Difficulty for the installation" column
 columnOContent: crmBuildColumnO(c),
-noted2: c.noted2||'',
-// Explicit column aliases keep Apps Script deployments compatible.
-columnM: crmCustomerTypeLabel(c),
-columnN: c.transactionType||'',
-columnO: c.cls||'',
-columnP: crmBuildColumnO(c),
-columnQ: c.noted2||''
+noted2: c.noted2||''
 };
 }
 async function crmSendToWebApp(c){
@@ -1777,22 +1769,13 @@ const res = await fetch(SHEET_CONFIG.webAppUrl, {
 method: 'POST',
 body: JSON.stringify(crmBuildWebhookPayload(c))
 });
-if(!res.ok){
+if(res.ok){
+showToast('ส่งเข้า Google Sheet (แท็บ order) สำเร็จ ✓');
+return true;
+} else {
 showToast('ส่งข้อมูลไม่สำเร็จ (HTTP ' + res.status + ') — ตรวจสอบการ Deploy ของ Web App URL');
 return false;
 }
-let result = null;
-try { result = await res.json(); } catch(parseError) {}
-if(result && result.ok === false){
-showToast(result.message || 'Apps Script รับข้อมูลแล้ว แต่บันทึกลง Google Sheet ไม่สำเร็จ');
-return false;
-}
-if(result && result.mqVerified === false){
-showToast('บันทึกแล้ว แต่ตรวจสอบคอลัมน์ M-Q ไม่ผ่าน');
-return false;
-}
-showToast('ส่งเข้า Google Sheet (แท็บ order) สำเร็จ ✓');
-return true;
 }catch(e){
 showToast('เชื่อมต่อ Web App ไม่สำเร็จ — ตรวจสอบ URL หรือดูคำแนะนำการ Deploy ด้านล่างของกล่องตั้งค่า');
 return false;
@@ -1800,6 +1783,8 @@ return false;
 }
 /* ---- CRM panel render ---- */
 let crmMode = 'new'; // 'new' | 'paste'
+let crmCasePage = 1;
+const CRM_CASE_PAGE_SIZE = 10;
 function renderAirCRM(main){
 if(crmMode === 'paste'){ renderColumnOPatcher(main); return; }
 const panel = document.createElement('div');
@@ -1828,14 +1813,6 @@ panel.innerHTML = `
 <option value="repair" ${c.productType==='repair'?'selected':''}>🔧 ซ่อม (Repair AC&WM)</option>
 </select>
 </div>
-<div class="field" style="max-width:150px;">
-<label>ประเภทลูกค้า</label>
-<select id="crmCustomerType" class="crm-dropdown-btn">
-<option value="general" ${c.customerType==='general'?'selected':''}>ทั่วไป (General)</option>
-<option value="vip" ${c.customerType==='vip'?'selected':''}>VIP</option>
-<option value="kol" ${c.customerType==='kol'?'selected':''}>KOL</option>
-</select>
-</div>
 </div>
 <div class="crm-toprow">
 <div class="field" style="flex:2.2;">
@@ -1849,10 +1826,13 @@ panel.innerHTML = `
 <option value="transfer_case" ${c.status==='transfer_case'?'selected':''}>⚫ Transfer case</option>
 </select>
 </div>
-<div class="field">
-<label>ผู้บันทึกข้อมูล (จำเป็น)</label>
-<select id="crmEditorSelect"></select>
-<input type="text" id="crmEditorNew" placeholder="หรือพิมพ์ชื่อใหม่" style="margin-top:6px;">
+<div class="field crm-customer-type-prominent">
+<label>ประเภทลูกค้า</label>
+<select id="crmCustomerType" class="crm-dropdown-btn">
+<option value="general" ${c.customerType==='general'?'selected':''}>ทั่วไป (General)</option>
+<option value="vip" ${c.customerType==='vip'?'selected':''}>VIP</option>
+<option value="kol" ${c.customerType==='kol'?'selected':''}>KOL</option>
+</select>
 </div>
 <div class="field" style="max-width:160px;">
 <label>Type</label>
@@ -1894,7 +1874,6 @@ ${CRM_TRANSACTION_TYPES.map(t=>`<option value="${escapeAttr(t)}" ${c.transaction
 <div class="full"><label>Noted 2 (คอลัมน์ P)</label><input type="text" id="crmNoted2" value="${escapeAttr(c.noted2)}"></div>
 </div>
 <div class="crm-section-title" id="crmSurveyTitle">📋 แผงคำถามสำรวจหน้างาน</div>
-<div id="crmPresetBar" class="crm-preset-bar"></div>
 <div class="crm-survey" id="crmSurveyBox"></div>
 <div class="crm-section-title">⚙️ ข้อความมัดรวม (จะถูกบันทึกลงคอลัมน์ O โดยอัตโนมัติ)</div>
 <div class="crm-o-preview" id="crmOPreview"></div>
@@ -1904,6 +1883,7 @@ ${CRM_TRANSACTION_TYPES.map(t=>`<option value="${escapeAttr(t)}" ${c.transaction
 <button class="btn secondary" id="crmCopyRowBtn">📋 คัดลอกแถวสำหรับ Google Sheet</button>
 </div>
 <div class="crm-section-title">💬 ข้อความส่งต่อ Line@ (ขอรูปภาพ/วิดีโอ Auto-Fill + แนบหมายเหตุเตือนความจำ)</div>
+<div class="crm-line-import"><label>วางเนื้อหาแบบเต็มเพื่อดึงข้อมูลอัตโนมัติ</label><textarea id="crmLineImport" placeholder="วางข้อความที่มี Customer, Service Order และ Model ที่นี่..."></textarea><small>ระบบจะตรวจ Customer → ชื่อลูกค้า, Service Order → SO และ Model → รุ่นสินค้า โดยไม่เปลี่ยนเนื้อหาส่วนอื่นของข้อความ</small></div>
 <div class="crm-line-box" id="crmLineBox"></div>
 <button class="btn secondary" id="crmCopyLineBtn">📋 คัดลอกข้อความทักไลน์</button>
 <div class="crm-section-title">🔗 ส่งข้อมูลเข้า Google Sheet แบบไม่ต้องล็อกอิน (ยังไม่จำเป็นต้องตั้งค่าตอนนี้)</div>
@@ -1945,9 +1925,6 @@ showToast('ล้างฟอร์มแล้ว — พร้อมรับ�
 };
 panel.querySelector('#crmModeNewBtn').onclick = ()=>{ crmMode='new'; render(); };
 panel.querySelector('#crmModePasteBtn').onclick = ()=>{ crmMode='paste'; render(); };
-// editor select
-const editorSel = panel.querySelector('#crmEditorSelect');
-editorSel.innerHTML = '<option value="">— เลือกชื่อผู้บันทึก —</option>' + EDITORS.map(n=>`<option value="${escapeAttr(n)}" ${c.editor===n?'selected':''}>${escapeHtml(n)}</option>`).join('');
 // bind text fields -> draft, live update preview
 const bind = (id, key, evt)=>{
 const el = panel.querySelector('#'+id);
@@ -1972,28 +1949,6 @@ box.style.display = box.style.display==='none' ? 'grid' : 'none';
 const qCount = crmQuestionsFor(c.productType).length;
 const ptLabel = c.productType==='washer' ? 'เครื่องซักผ้า' : (c.productType==='repair' ? 'งานซ่อม Repair AC&WM' : 'เครื่องปรับอากาศ');
 panel.querySelector('#crmSurveyTitle').textContent = `📋 แผงคำถามสำรวจหน้างาน ${qCount} ข้อ (${ptLabel})`;
-// Preset buttons (Air only)
-const presetBar = panel.querySelector('#crmPresetBar');
-presetBar.innerHTML = '';
-if(c.productType === 'air'){
-CRM_SURVEY_PRESETS_AIR.forEach(preset=>{
-const btn = document.createElement('button');
-btn.className = 'btn secondary small';
-btn.style.marginRight = '6px';
-btn.textContent = preset.name;
-btn.onclick = ()=>{
-Object.entries(preset.answers).forEach(([idx, val])=>{ crmDraft.answers[Number(idx)] = val; });
-render();
-showToast(`เติม Preset "${preset.name}" แล้ว — แก้ไขเพิ่มเติมได้ตามต้องการ`);
-};
-presetBar.appendChild(btn);
-});
-const clearBtn = document.createElement('button');
-clearBtn.className = 'btn ghost small';
-clearBtn.textContent = '🗑 ล้างคำตอบทั้งหมด';
-clearBtn.onclick = ()=>{ crmDraft.answers = new Array(10).fill(''); crmDraft.airFloor=''; crmDraft.airOutdoor=''; crmDraft.airIndoor=''; render(); };
-presetBar.appendChild(clearBtn);
-}
 const surveyBox = panel.querySelector('#crmSurveyBox');
 crmQuestionsFor(c.productType).forEach((q,i)=>{
 const item = document.createElement('div');
@@ -2009,6 +1964,17 @@ surveyBox.appendChild(item);
 item.querySelector('#crmAirFloor').addEventListener('input', (e)=>{ crmDraft.airFloor = e.target.value; crmRefreshPreviews(); });
 item.querySelector('#crmAirOutdoor').addEventListener('input', (e)=>{ crmDraft.airOutdoor = e.target.value; crmRefreshPreviews(); });
 item.querySelector('#crmAirIndoor').addEventListener('input', (e)=>{ crmDraft.airIndoor = e.target.value; crmRefreshPreviews(); });
+} else if(c.productType==='air' && AIR_CHOICE_OPTIONS[i]){
+const cur = crmDraft.answers[i] || '';
+item.innerHTML = `<div class="qtext">${i+1}. ${escapeHtml(q)}</div><div class="survey-choice-group">${AIR_CHOICE_OPTIONS[i].map(value=>`<button type="button" class="survey-choice-btn${cur===value?' active':''}" data-val="${escapeAttr(value)}">${escapeHtml(value)}</button>`).join('')}</div>`;
+item.querySelectorAll('.survey-choice-btn').forEach(btn=>{
+btn.onclick = ()=>{
+crmDraft.answers[i] = btn.dataset.val;
+item.querySelectorAll('.survey-choice-btn').forEach(choice=>choice.classList.toggle('active', choice===btn));
+crmRefreshPreviews();
+};
+});
+surveyBox.appendChild(item);
 } else if(c.productType==='air' && AIR_YESNO_INDICES.has(i)){
 // Yes/No toggle buttons
 const cur = crmDraft.answers[i] || '';
@@ -2045,15 +2011,37 @@ panel.querySelector('#crmSaveSendBtn').onclick = crmSaveAndSend;
 panel.querySelector('#crmCopyOBtn').onclick = (e)=>copyText(crmBuildColumnO(crmDraft), e.target);
 panel.querySelector('#crmCopyRowBtn').onclick = ()=>crmCopyRowForSheet(crmDraft);
 panel.querySelector('#crmCopyLineBtn').onclick = (e)=>copyText(crmBuildLineMessage(crmDraft), e.target);
+panel.querySelector('#crmLineImport').addEventListener('input', (event)=>{
+window.clearTimeout(panel._lineImportTimer);
+panel._lineImportTimer = window.setTimeout(()=>crmImportLineIdentity(event.target.value, panel), 120);
+});
 panel.querySelector('#crmCaseSearch').value = crmCaseSearchQ;
 panel.querySelector('#crmCaseSearch').addEventListener('input', (e)=>{
 crmCaseSearchQ = e.target.value;
+crmCasePage = 1;
 renderCrmCaseTable(panel.querySelector('#crmCaseTableWrap'));
 });
 crmRefreshPreviewsIn(panel);
 renderCrmCaseTable(panel.querySelector('#crmCaseTableWrap'));
 }
 function renderAirCRMRefresh(){ render(); }
+function crmImportLineIdentity(text, panel){
+text = String(text||'');
+const pick = (patterns)=>{
+for(const pattern of patterns){
+const match = text.match(pattern);
+if(match && match[1]) return match[1].trim();
+}
+return '';
+};
+const customer = pick([/^Customer\s*:\s*(.+)$/im,/^ชื่อลูกค้า\s*:\s*(.+)$/im]);
+const serviceOrder = pick([/^Service\s*Order\s*:\s*(.+)$/im,/^Service\s*Order\s+(.+)$/im,/^SO\s*:\s*(.+)$/im]);
+const model = pick([/^Model\s*:\s*(.+)$/im,/^Type\s*:\s*(.+)$/im]);
+if(customer){ crmDraft.customerName = customer.replace(/^คุณ\s*/, '').trim(); panel.querySelector('#crmName').value = crmDraft.customerName; }
+if(serviceOrder){ crmDraft.so = serviceOrder.split(/\s+/)[0]; panel.querySelector('#crmSo').value = crmDraft.so; }
+if(model){ crmDraft.model = model; panel.querySelector('#crmModel').value = crmDraft.model; }
+crmRefreshPreviewsIn(panel);
+}
 function crmRefreshPreviewsIn(panel){
 panel.querySelector('#crmOPreview').textContent = crmBuildColumnO(crmDraft);
 panel.querySelector('#crmLineBox').textContent = crmBuildLineMessage(crmDraft);
@@ -2062,30 +2050,21 @@ function crmRefreshPreviews(){
 const panel = document.querySelector('.crm-panel');
 if(panel) crmRefreshPreviewsIn(panel);
 }
-function crmResolveEditorName(){
-const panel = document.querySelector('.crm-panel');
-const sel = panel.querySelector('#crmEditorSelect').value;
-const typed = panel.querySelector('#crmEditorNew').value.trim();
-return typed || sel || '';
-}
 function crmSaveCase(){
-const editorName = crmResolveEditorName();
-if(!editorName){ showToast('กรุณาเลือกหรือกรอกชื่อผู้บันทึกก่อนบันทึกเคส'); return false; }
 if(!crmDraft.so && !crmDraft.customerName){ showToast('กรุณากรอก Service Order ID หรือชื่อลูกค้าอย่างน้อย 1 ช่อง'); return false; }
-if(!EDITORS.includes(editorName)) EDITORS.push(editorName);
 const now = Date.now();
-crmDraft.editor = editorName;
+crmDraft.editor = '';
 crmDraft.lastEditedAt = now;
 if(crmEditingId){
 const idx = CASES.findIndex(x=>x.id===crmEditingId);
 if(idx>-1){
-crmDraft.history = (CASES[idx].history||[]).concat([{ts:now, editor:editorName, summary:'แก้ไขข้อมูลเคส'}]);
+crmDraft.history = (CASES[idx].history||[]).concat([{ts:now, editor:'', summary:'แก้ไขข้อมูลเคส'}]);
 crmDraft.id = crmEditingId;
 CASES[idx] = JSON.parse(JSON.stringify(crmDraft));
 }
 } else {
 crmDraft.id = uid('case');
-crmDraft.history = [{ts:now, editor:editorName, summary:'สร้างเคสใหม่'}];
+crmDraft.history = [{ts:now, editor:'', summary:'สร้างเคสใหม่'}];
 CASES.push(JSON.parse(JSON.stringify(crmDraft)));
 crmEditingId = crmDraft.id;
 }
@@ -2162,18 +2141,22 @@ if(rows.length===0){
 wrap.innerHTML = '<div class="empty">ยังไม่มีเคสในระบบ — กรอกฟอร์มด้านบนแล้วกด "บันทึกเคสและส่งเข้า Google Sheet"</div>';
 return;
 }
-const selCount = rows.filter(r=>selectedCaseIds.has(r.id)).length;
+const totalRows = rows.length;
+const totalPages = Math.max(1, Math.ceil(totalRows / CRM_CASE_PAGE_SIZE));
+crmCasePage = Math.min(Math.max(1, crmCasePage), totalPages);
+const pageRows = rows.slice((crmCasePage-1)*CRM_CASE_PAGE_SIZE, crmCasePage*CRM_CASE_PAGE_SIZE);
+const selCount = pageRows.filter(r=>selectedCaseIds.has(r.id)).length;
 const ptIcon = {air:'🌬️', washer:'🧼', repair:'🔧'};
 let html = `
 <div class="bulk-toolbar">
-<label class="bulk-selectall"><input type="checkbox" id="crmSelectAll" ${selCount===rows.length&&rows.length>0?'checked':''}> เลือกทั้งหมด (${rows.length})</label>
+<label class="bulk-selectall"><input type="checkbox" id="crmSelectAll" ${selCount===pageRows.length&&pageRows.length>0?'checked':''}> เลือกหน้านี้ (${pageRows.length})</label>
 <button class="btn${selCount>0?'':' secondary'}" id="crmBulkCopyBtn" ${selCount===0?'disabled':''}>📋 Copy ${selCount>0?selCount:''}${selCount>0?' เคส':'เลือกก่อน'} → Feishu Sheet</button>
 ${selCount>0?`<button class="btn ghost small" id="crmClearSelBtn">ยกเลิกเลือก</button>`:''}
 </div>
 <table class="case-table"><thead><tr>
-<th style="width:32px;"></th><th>วันรับ</th><th>ประเภท</th><th>SO</th><th>ลูกค้า</th><th>สถานะ</th><th>ผู้บันทึก</th><th></th>
+<th style="width:32px;"></th><th>วันรับ</th><th>ประเภท</th><th>SO</th><th>ลูกค้า</th><th>สถานะ</th><th></th>
 </tr></thead><tbody>`;
-rows.forEach(c=>{
+pageRows.forEach(c=>{
 const checked = selectedCaseIds.has(c.id);
 html += `<tr class="${checked?'row-selected':''}">
 <td><input type="checkbox" class="case-chk" data-id="${c.id}" ${checked?'checked':''}></td>
@@ -2182,7 +2165,6 @@ html += `<tr class="${checked?'row-selected':''}">
 <td><b>${escapeHtml(c.so||'-')}</b></td>
 <td>${escapeHtml(c.customerName||'-')}</td>
 <td><span class="case-badge ${c.status}">${CRM_STATUS_LABELS[c.status]||c.status}</span></td>
-<td>${escapeHtml(c.editor||'-')}</td>
 <td><div class="case-actions-cell">
 <button class="iconbtn" onclick="crmLoadCase('${c.id}')" title="แก้ไข">✎</button>
 <button class="iconbtn" onclick="crmOpenHistory('${c.id}')" title="ประวัติ">🕒</button>
@@ -2190,7 +2172,7 @@ html += `<tr class="${checked?'row-selected':''}">
 </div></td>
 </tr>`;
 });
-html += '</tbody></table>';
+html += '</tbody></table><div class="case-pagination"><button class="btn secondary small" id="crmCasePrev" '+(crmCasePage<=1?'disabled':'')+'>← ย้อนกลับ</button><span>หน้า '+crmCasePage+' / '+totalPages+' · ทั้งหมด '+totalRows+' เคส</span><button class="btn secondary small" id="crmCaseNext" '+(crmCasePage>=totalPages?'disabled':'')+'>ถัดไป →</button></div>';
 wrap.innerHTML = html;
 // wire checkboxes
 wrap.querySelectorAll('.case-chk').forEach(chk=>{
@@ -2202,223 +2184,18 @@ renderCrmCaseTable(wrap);
 });
 const selAll = wrap.querySelector('#crmSelectAll');
 if(selAll) selAll.onchange = ()=>{
-if(selAll.checked) rows.forEach(r=>selectedCaseIds.add(r.id));
-else rows.forEach(r=>selectedCaseIds.delete(r.id));
+if(selAll.checked) pageRows.forEach(r=>selectedCaseIds.add(r.id));
+else pageRows.forEach(r=>selectedCaseIds.delete(r.id));
 renderCrmCaseTable(wrap);
 };
 const bulkBtn = wrap.querySelector('#crmBulkCopyBtn');
 if(bulkBtn) bulkBtn.onclick = crmCopyBulkRows;
 const clearBtn = wrap.querySelector('#crmClearSelBtn');
 if(clearBtn) clearBtn.onclick = ()=>{ selectedCaseIds.clear(); renderCrmCaseTable(wrap); };
-}
-/* =========================================================
-REPORT DASHBOARD (embedded in Report category) — summarizes CASES from the CRM
-========================================================= */
-let rptDateFrom = '';
-let rptDateTo = '';
-function rptFilteredCases(){
-return CASES.filter(c=>{
-if(!c.caseReceivedDate) return true;
-if(rptDateFrom && c.caseReceivedDate < rptDateFrom) return false;
-if(rptDateTo && c.caseReceivedDate > rptDateTo) return false;
-return true;
-});
-}
-function rptCountBy(list, key, labelMap){
-const counts = {};
-list.forEach(c=>{
-const v = c[key] || '-';
-const label = labelMap ? (labelMap[v] || v) : v;
-counts[label] = (counts[label]||0) + 1;
-});
-return Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-}
-function der_blank(){
-return {finishAC:0, finishWM:0, cancelCount:0, rescheduleCount:0, newOrderCount:0, repairOutCount:0, repairACCount:0, repairWMCount:0, link: DAILY_REPORT_LINK_DEFAULT};
-}
-function derBuildText(d){
-const totalFinish = (Number(d.finishAC)||0) + (Number(d.finishWM)||0);
-const cancelLine = (Number(d.cancelCount)||0) > 0 ? `Cancel ${d.cancelCount} order` : 'No Cancel order';
-const rescheduleLine = (Number(d.rescheduleCount)||0) > 0 ? `Reschedule ${d.rescheduleCount} order` : 'No Reschedule order';
-return [
-'Report',
-'',
-d.link || '',
-'',
-`Finish ${totalFinish} orders `,
-`${d.finishAC||0} AC install`,
-`${d.finishWM||0} WM install`,
-'',
-cancelLine,
-rescheduleLine,
-`${d.newOrderCount||0} New order today `,
-`${d.repairOutCount||0} Repair out system`,
-`${d.repairACCount||0} AC repair in system`,
-`${d.repairWMCount||0} WM repair in system`
-].join('\n');
-}
-function renderDailyEveningReport(main){
-const panel = document.createElement('div');
-panel.className = 'crm-panel';
-const dateStr = dailyReportSelectedDate;
-const d = DAILY_REPORTS[dateStr] ? {...der_blank(), ...DAILY_REPORTS[dateStr]} : der_blank();
-panel.innerHTML = `
-<div class="crm-panel-head">
-<div><h3>📝 รายงานส่งผู้บริหารประจำวัน</h3><div class="crm-sub">กรอกตัวเลขวันนี้ แล้วได้ข้อความพร้อมส่งทันที ไม่ต้องพิมพ์เอง</div></div>
-</div>
-<div class="att-datebar" style="margin-bottom:14px;">
-<div class="field"><label>วันที่ของรายงาน</label><input type="date" id="derDate" value="${escapeAttr(dateStr)}"></div>
-</div>
-<div class="der-grid">
-<div class="field"><label>🌬️ AC install (สำเร็จวันนี้)</label><input type="number" id="derAC" min="0" value="${d.finishAC}"></div>
-<div class="field"><label>🧼 WM install (สำเร็จวันนี้)</label><input type="number" id="derWM" min="0" value="${d.finishWM}"></div>
-<div class="field"><label>⚫ Cancel order</label><input type="number" id="derCancel" min="0" value="${d.cancelCount}"></div>
-<div class="field"><label>🔁 Reschedule order</label><input type="number" id="derReschedule" min="0" value="${d.rescheduleCount}"></div>
-<div class="field"><label>🆕 New order today</label><input type="number" id="derNew" min="0" value="${d.newOrderCount}"></div>
-<div class="field"><label>🔧 Repair out system</label><input type="number" id="derRepair" min="0" value="${d.repairOutCount}"></div>
-<div class="field"><label>🌬️🔧 AC repair in system</label><input type="number" id="derRepairAC" min="0" value="${d.repairACCount||0}"></div>
-<div class="field"><label>🧼🔧 WM repair in system</label><input type="number" id="derRepairWM" min="0" value="${d.repairWMCount||0}"></div>
-<div class="field" style="grid-column:1/-1;"><label>ลิงก์รายงาน (Report link)</label><input type="text" id="derLink" value="${escapeAttr(d.link)}"></div>
-</div>
-<div class="crm-section-title">📋 ข้อความพร้อมส่ง</div>
-<div class="der-preview" id="derPreview"></div>
-<div class="crm-actions-row">
-<button class="btn" id="derSaveBtn">💾 บันทึก</button>
-<button class="btn secondary" id="derCopyBtn">📋 คัดลอกข้อความ</button>
-</div>
-<div class="crm-section-title">📈 แนวโน้มยอดติดตั้ง 7 วันล่าสุด</div>
-<div class="der-trend-legend">
-<span><span class="dot" style="background:var(--orange);"></span> AC</span>
-<span><span class="dot" style="background:#0ea5e9;"></span> WM</span>
-</div>
-<div class="der-trend" id="derTrend"></div>
-`;
-main.appendChild(panel);
-function refreshPreview(){
-const cur = {
-finishAC: panel.querySelector('#derAC').value,
-finishWM: panel.querySelector('#derWM').value,
-cancelCount: panel.querySelector('#derCancel').value,
-rescheduleCount: panel.querySelector('#derReschedule').value,
-newOrderCount: panel.querySelector('#derNew').value,
-repairOutCount: panel.querySelector('#derRepair').value,
-repairACCount: panel.querySelector('#derRepairAC').value,
-repairWMCount: panel.querySelector('#derRepairWM').value,
-link: panel.querySelector('#derLink').value
-};
-panel.querySelector('#derPreview').textContent = derBuildText(cur);
-return cur;
-}
-panel.querySelectorAll('.der-grid input').forEach(el=>el.addEventListener('input', refreshPreview));
-panel.querySelector('#derDate').addEventListener('change', (e)=>{ dailyReportSelectedDate = e.target.value; render(); });
-panel.querySelector('#derSaveBtn').onclick = ()=>{
-DAILY_REPORTS[dateStr] = refreshPreview();
-saveAll();
-showToast('บันทึกรายงานวันนี้แล้ว');
-render();
-};
-panel.querySelector('#derCopyBtn').onclick = (e)=>{
-const cur = refreshPreview();
-DAILY_REPORTS[dateStr] = cur; saveAll();
-copyText(derBuildText(cur), e.target);
-};
-refreshPreview();
-// 7-day trend (ending on the selected date)
-const trendWrap = panel.querySelector('#derTrend');
-const days = [];
-for(let i=6;i>=0;i--){ days.push(attDateMinus(dateStr, i)); }
-const maxVal = Math.max(1, ...days.map(ds=>{
-const r = DAILY_REPORTS[ds] || {finishAC:0,finishWM:0};
-return (Number(r.finishAC)||0) + (Number(r.finishWM)||0);
-}));
-trendWrap.innerHTML = days.map(ds=>{
-const r = DAILY_REPORTS[ds] || {finishAC:0,finishWM:0};
-const ac = Number(r.finishAC)||0, wm = Number(r.finishWM)||0;
-const acH = Math.round(ac/maxVal*70), wmH = Math.round(wm/maxVal*70);
-const dd = new Date(ds+'T00:00:00');
-const lbl = dd.toLocaleDateString('th-TH', {day:'numeric', month:'short'});
-return `<div class="der-trend-col">
-<div style="display:flex;gap:2px;align-items:flex-end;height:70px;width:100%;">
-<div class="der-trend-bar" style="height:${acH}px;flex:1;"></div>
-<div class="der-trend-bar wm" style="height:${wmH}px;flex:1;"></div>
-</div>
-<div class="der-trend-lbl">${lbl}</div>
-</div>`;
-}).join('');
-}
-function renderReportDashboard(main){
-const panel = document.createElement('div');
-panel.className = 'crm-panel';
-const total = list.length;
-const confirmed = list.filter(c=>c.status==='confirm').length;
-const cancelled = list.filter(c=>c.status==='cancel').length;
-const pending = list.filter(c=>c.status==='waiting_confirm_date').length;
-const vipKol = list.filter(c=>c.customerType && c.customerType!=='general').length;
-const byStatus = rptCountBy(list, 'status', CRM_STATUS_LABELS);
-const byProduct = rptCountBy(list, 'productType', {air:'🌬️ Air', washer:'🧼 Washing Machine', repair:'🔧 Repair'});
-const byType = rptCountBy(list, 'transactionType');
-const byDifficulty = rptCountBy(list, 'cls', {'Class I':'Class I', 'Class II':'Class II', 'Class III':'Class III', 'classI':'Class I', 'classII':'Class II', 'classIII':'Class III', '':'ไม่ระบุ'});
-function buildBars(rows){
-const max = rows.length ? Math.max(...rows.map(r=>r[1])) : 1;
-return rows.map(([label,count])=>`
-<div class="rpt-bar-row">
-<span class="lbl">${escapeHtml(label)}</span>
-<span class="rpt-bar-track"><span class="rpt-bar-fill" style="width:${Math.round(count/max*100)}%"></span></span>
-<span class="cnt">${count}</span>
-</div>`).join('') || '<div class="empty" style="padding:20px;">ยังไม่มีข้อมูล</div>';
-}
-panel.innerHTML = `
-<div class="crm-panel-head">
-<div><h3>📊 Report Dashboard</h3><div class="crm-sub">สรุปข้อมูลเคสทั้งหมดจากระบบ Multi-Product Smart CRM แบบเรียลไทม์</div></div>
-</div>
-<div class="rpt-daterange">
-<div class="field"><label>ตั้งแต่วันที่ (วันที่รับเคส)</label><input type="date" id="rptFrom" value="${escapeAttr(rptDateFrom)}"></div>
-<div class="field"><label>ถึงวันที่</label><input type="date" id="rptTo" value="${escapeAttr(rptDateTo)}"></div>
-<button class="btn secondary" id="rptClearRange">ล้างช่วงวันที่ (ดูทั้งหมด)</button>
-</div>
-<div class="rpt-stats-grid">
-<div class="rpt-stat-card"><div class="num">${total}</div><div class="lbl">เคสทั้งหมด</div></div>
-<div class="rpt-stat-card"><div class="num">${confirmed}</div><div class="lbl">Confirm</div></div>
-<div class="rpt-stat-card"><div class="num">${pending}</div><div class="lbl">รอยืนยันวันที่</div></div>
-<div class="rpt-stat-card"><div class="num">${cancelled}</div><div class="lbl">Cancel</div></div>
-<div class="rpt-stat-card"><div class="num">${vipKol}</div><div class="lbl">VIP / KOL</div></div>
-</div>
-<div class="rpt-breakdown">
-<div class="rpt-bd-box"><h4>สถานะการโทร/ดำเนินงาน</h4>${buildBars(byStatus)}</div>
-<div class="rpt-bd-box"><h4>ประเภทสินค้า</h4>${buildBars(byProduct)}</div>
-<div class="rpt-bd-box"><h4>Type (ลักษณะงาน)</h4>${buildBars(byType)}</div>
-<div class="rpt-bd-box"><h4>Difficulty for the installation</h4>${buildBars(byDifficulty)}</div>
-</div>
-<div class="crm-section-title">🗂️ เคสล่าสุด (10 รายการ)</div>
-<div class="case-table-wrap" id="rptRecentTable"></div>
-`;
-main.appendChild(panel);
-panel.querySelector('#rptFrom').addEventListener('change', (e)=>{ rptDateFrom = e.target.value; render(); });
-panel.querySelector('#rptTo').addEventListener('change', (e)=>{ rptDateTo = e.target.value; render(); });
-panel.querySelector('#rptClearRange').onclick = ()=>{ rptDateFrom=''; rptDateTo=''; render(); };
-const recentWrap = panel.querySelector('#rptRecentTable');
-const recent = list.slice().sort((a,b)=>(b.lastEditedAt||0)-(a.lastEditedAt||0)).slice(0,10);
-if(recent.length===0){
-recentWrap.innerHTML = '<div class="empty">ยังไม่มีเคสในระบบ</div>';
-} else {
-let html = `<table class="case-table"><thead><tr>
-<th>วันที่รับเคส</th><th>SO</th><th>ลูกค้า</th><th>สถานะ</th><th>ประเภท</th><th>Type</th><th>ผู้บันทึก</th>
-</tr></thead><tbody>`;
-recent.forEach(c=>{
-const ptIcon = {air:'🌬️', washer:'🧼', repair:'🔧'};
-html += `<tr>
-<td>${toDMY(c.caseReceivedDate)||'-'}</td>
-<td>${escapeHtml(c.so||'-')}</td>
-<td>${escapeHtml(c.customerName||'-')}</td>
-<td><span class="case-badge ${c.status}">${CRM_STATUS_LABELS[c.status]||c.status}</span></td>
-<td>${ptIcon[c.productType]||''} ${escapeHtml(c.productType||'-')}</td>
-<td>${escapeHtml(c.transactionType||'-')}</td>
-<td>${escapeHtml(c.editor||'-')}</td>
-</tr>`;
-});
-html += '</tbody></table>';
-recentWrap.innerHTML = html;
-}
+const prevBtn = wrap.querySelector('#crmCasePrev');
+if(prevBtn) prevBtn.onclick = ()=>{ if(crmCasePage>1){ crmCasePage--; renderCrmCaseTable(wrap); } };
+const nextBtn = wrap.querySelector('#crmCaseNext');
+if(nextBtn) nextBtn.onclick = ()=>{ if(crmCasePage<totalPages){ crmCasePage++; renderCrmCaseTable(wrap); } };
 }
 /* =========================================================
 QR / BARCODE GENERATOR (embedded in XMS system)
@@ -3602,6 +3379,7 @@ mnavSync();</script>
   let dashboardActive = false;
   let renderTimer = 0;
   let reportServerReady = false;
+  let reportPerformanceDays = 14;
   const dashboardState = {
     tab: 'orders',
     page: 1,
@@ -3610,14 +3388,15 @@ mnavSync();</script>
     orders: null,
     problems: null,
     services: null,
-    orderFilters: { q: '', dateFrom: '', dateTo: '', status: '', difficulty: '', dateField: 'appointment' },
+    orderFilters: { q: '', dateFrom: '', dateTo: '', status: '', difficulty: '', dateField: 'coming' },
     problemFilters: { q: '', date: '' },
     acFilters: { q: '', date: '', month: '' },
     searchTimer: 0,
+    orderRequestSeq: 0,
     liveTimer: 0,
     appointmentDate: '',
     appointmentFilterActive: true,
-    dateField: 'appointment'
+    dateField: 'coming'
   };
 
   function clean(value) {
@@ -3788,8 +3567,8 @@ mnavSync();</script>
     return '<header class="pct-native-head">' +
       '<div class="pct-native-head-copy"><div class="pct-native-kicker">Google Sheets · Live Operations</div>' +
       '<h2>Order Operations Dashboard</h2>' +
-      '<p>ภาพรวมงานประจำวันจาก Orders, Problem Case และ AC Service ในพื้นที่ทำงานเดียว</p>' +
-      '<div class="pct-native-head-chips"><span>Orders</span><span>Problem Case</span><span>AC Service</span></div></div>' +
+      '<p>ตรวจสอบ Orders รายวัน ค้นหาได้ทันที และติดตามงาน Confirm ที่ยังไม่ได้ Fill on File</p>' +
+      '<div class="pct-native-head-chips"><span>Orders</span><span>Confirm</span><span>Pending Fill on File</span></div></div>' +
       '<div class="pct-native-head-actions">' +
       '<span class="pct-native-status offline" id="pctNativeStatus"><i></i>กำลังเชื่อมต่อ</span>' +
       '<button class="pct-native-button" id="pctNativeRefresh">↻ รีเฟรช</button>' +
@@ -3799,9 +3578,9 @@ mnavSync();</script>
 
   function dashboardStatsHtml() {
     return '<section class="pct-native-stats">' +
-      '<article class="pct-native-stat" style="--ns-color:#ff6900;--ns-tint:#fff1e6"><div class="pct-native-stat-top"><i>▦</i><span>Orders</span></div><strong id="pctNsOrders">—</strong><small>รายการทั้งหมด</small></article>' +
-      '<article class="pct-native-stat" style="--ns-color:#27a86f;--ns-tint:#eaf8f1"><div class="pct-native-stat-top"><i>✓</i><span>Confirm</span></div><strong id="pctNsConfirm">—</strong><small>ยืนยันแล้ว</small></article>' +
-      '<article class="pct-native-stat" style="--ns-color:#df5353;--ns-tint:#fdeeee"><div class="pct-native-stat-top"><i>×</i><span>Cancel</span></div><strong id="pctNsCancel">—</strong><small>ยกเลิก</small></article>' +
+      '<article class="pct-native-stat" style="--ns-color:#ff6900;--ns-tint:#fff1e6"><div class="pct-native-stat-top"><i>▦</i><span>Orders</span></div><strong id="pctNsOrders">—</strong><small>Orders ของวันที่เลือก</small></article>' +
+      '<article class="pct-native-stat" style="--ns-color:#27a86f;--ns-tint:#eaf8f1"><div class="pct-native-stat-top"><i>✓</i><span>Confirm</span></div><strong id="pctNsConfirm">—</strong><small>Confirm ของวันที่เลือก</small></article>' +
+      '<article class="pct-native-stat" style="--ns-color:#e68718;--ns-tint:#fff7e8"><div class="pct-native-stat-top"><i>!</i><span>Pending Fill on File</span></div><strong id="pctNsPendingFill">—</strong><small>Confirm และ Fill on File = No</small></article>' +
       '</section>';
   }
 
@@ -3825,9 +3604,9 @@ mnavSync();</script>
     const selected = dashboardState.appointmentDate || dashboardTodayIso();
     dashboardState.appointmentDate = selected;
     return '<section class="pct-appointment-panel">' +
-      '<div class="pct-appointment-head"><div><div class="pct-native-kicker">เลือกประเภทวันที่</div><h3 id="pctDatePanelTitle">วันนัดติดตั้ง · Date appointment</h3><p id="pctDatePanelDescription">เลือกวันเพื่อดูเฉพาะเคสที่มีนัดติดตั้งในวันนั้น</p></div>' +
+      '<div class="pct-appointment-head"><div><div class="pct-native-kicker">เลือกประเภทวันที่</div><h3 id="pctDatePanelTitle">วันที่รับ Order · Date (Column A)</h3><p id="pctDatePanelDescription">เปิดครั้งแรกจะแสดง Orders ของวันปัจจุบันจากคอลัมน์ A</p></div>' +
       '<div class="pct-appointment-controls"><span id="pctAppointmentUpdated">กำลังอัปเดต</span>' +
-      '<div class="pct-date-mode"><button type="button" id="pctDateModeComing">Date coming</button><button type="button" id="pctDateModeAppointment">Date appointment</button></div>' +
+      '<div class="pct-date-mode"><button type="button" id="pctDateModeComing">Date · Column A</button><button type="button" id="pctDateModeAppointment">Date Appointment · Column J</button></div>' +
       '<div class="pct-appointment-date-nav"><button type="button" id="pctAppointmentPrev" aria-label="วันก่อนหน้า">‹</button><input type="date" id="pctAppointmentDate" value="' + selected + '" aria-label="เลือกวันที่นัดหมาย"><button type="button" id="pctAppointmentNext" aria-label="วันถัดไป">›</button></div>' +
       '<div class="pct-appointment-quick"><button class="pct-native-button" id="pctAppointmentToday">วันนี้</button><button class="pct-native-button" id="pctAppointmentTomorrow">พรุ่งนี้</button><button class="pct-native-button" id="pctAppointmentAll">ดูทุกวัน</button></div></div></div>' +
       '<div class="pct-appointment-summary"><div><span>วันที่เลือก</span><strong id="pctAppointmentSelectedDate">—</strong></div><div class="pct-appointment-count"><strong id="pctAppointmentSelectedCount">—</strong><span>เคส</span></div><div class="pct-appointment-filter-state" id="pctAppointmentFilterState">กำลังแสดงเฉพาะวันที่เลือก</div></div>' +
@@ -3864,10 +3643,10 @@ mnavSync();</script>
     if (allButton) allButton.classList.toggle('active', !dashboardState.appointmentFilterActive);
     if (comingButton) comingButton.classList.toggle('active', dashboardState.dateField === 'coming');
     if (appointmentButton) appointmentButton.classList.toggle('active', dashboardState.dateField !== 'coming');
-    if (panelTitle) panelTitle.textContent = dashboardState.dateField === 'coming' ? 'วันที่งานเข้า · Date coming' : 'วันนัดติดตั้ง · Date appointment';
+    if (panelTitle) panelTitle.textContent = dashboardState.dateField === 'coming' ? 'วันที่รับ Order · Date (Column A)' : 'วันนัดติดตั้ง · Date Appointment (Column J)';
     if (panelDescription) panelDescription.textContent = dashboardState.dateField === 'coming'
-      ? 'เลือกวันเพื่อดูเฉพาะ Orders ที่เข้าระบบในวันนั้น'
-      : 'เลือกวันเพื่อดูเฉพาะเคสที่มีนัดติดตั้งในวันนั้น';
+      ? 'เลือกวันเพื่อตรวจสอบ Orders จากคอลัมน์ A'
+      : 'เลือกวันเพื่อตรวจสอบวันนัดติดตั้งจากคอลัมน์ J';
 
     const days = [];
     for (let offset = -1; offset <= 5; offset++) days.push(dashboardAddDays(selected, offset));
@@ -3967,7 +3746,7 @@ mnavSync();</script>
     };
     set('pctNsOrders', summary.total);
     set('pctNsConfirm', summary.confirm);
-    set('pctNsCancel', summary.cancel);
+    set('pctNsPendingFill', summary.pendingFillOnFile);
   }
 
   function orderFilterParams() {
@@ -3991,6 +3770,9 @@ mnavSync();</script>
   }
 
   function renderNativeOrders(data) {
+    const previousSearch = document.getElementById('pctOrderQ');
+    const restoreSearchFocus = previousSearch && document.activeElement === previousSearch;
+    const restoreCursor = restoreSearchFocus ? previousSearch.selectionStart : 0;
     dashboardState.orders = data;
     dashboardState.page = data.page || 1;
     dashboardState.totalPages = data.totalPages || 1;
@@ -4003,14 +3785,12 @@ mnavSync();</script>
       const activeDayCount = document.querySelector('[data-appointment-date="' + dashboardState.appointmentDate + '"] small');
       if (activeDayCount) activeDayCount.textContent = reportNumber(data.total).toLocaleString() + ' เคส';
     }
-    content.innerHTML = '<div class="pct-native-toolbar">' +
-      '<input id="pctOrderQ" type="search" placeholder="ค้นหา SO, ชื่อ, เบอร์โทร หรือที่อยู่">' +
-      '<input id="pctOrderFrom" type="date" title="ตั้งแต่วันที่">' +
-      '<input id="pctOrderTo" type="date" title="ถึงวันที่">' +
+    content.innerHTML = '<div class="pct-native-toolbar pct-order-searchbar">' +
+      '<input id="pctOrderQ" type="search" autocomplete="off" placeholder="ค้นหาทุกข้อมูล เช่น SO, ชื่อลูกค้า, เบอร์โทร, ที่อยู่, Model หรือหมายเหตุ...">' +
       '<select id="pctOrderStatus"><option value="">ทุกสถานะ</option><option>Confirm</option><option>Cancel</option></select>' +
       '<select id="pctOrderClass"><option value="">ทุก Class</option><option>Class I</option><option>Class II</option><option>Class III</option></select>' +
       '</div><div class="pct-native-table-wrap"><table class="pct-native-table"><thead><tr>' +
-      '<th>SO / Delivery Order</th><th>ลูกค้า</th><th>สถานะ</th><th>Date coming</th><th>Date appointment</th><th>Class</th><th>Type / Model</th><th>ที่อยู่</th><th></th>' +
+      '<th>A · Date</th><th>B · Service Order</th><th>C · Delivery Order</th><th>D · Customer</th><th>E · Phone</th><th>F · Address</th><th>G · Postcode</th><th>H · Status</th><th>I · Fill on File</th><th>J · Date Appointment</th><th>K · Time</th><th>L · Model</th><th>M · VIP/KOL</th><th>N · Type</th><th></th>' +
       '</tr></thead><tbody id="pctNativeOrdersBody"></tbody></table></div>' +
       '<div class="pct-native-footer"><span>พบ ' + reportNumber(data.total).toLocaleString() + ' รายการ · หน้า ' + dashboardState.page + '/' + dashboardState.totalPages + '</span>' +
       '<button class="pct-native-button" id="pctOrderPrev">ก่อนหน้า</button><button class="pct-native-button" id="pctOrderNext">ถัดไป</button></div>';
@@ -4018,31 +3798,40 @@ mnavSync();</script>
     const body = document.getElementById('pctNativeOrdersBody');
     body.innerHTML = data.items && data.items.length ? data.items.map(function (order) {
       const statusClass = clean(order.status).toLowerCase();
-      const className = clean(order.difficulty).toLowerCase().replace(/\s/g, '-');
-      return '<tr><td><span class="pct-native-so">' + reportEscape(order.so) + '</span><span class="pct-native-sub">' + reportEscape(order.deliveryOrder) + '</span></td>' +
-        '<td><b>' + reportEscape(order.name || '-') + '</b><span class="pct-native-sub">' + reportEscape(order.phone) + '</span></td>' +
+      const fillClass = clean(order.fillOnFile).toLowerCase() === 'no' ? 'pending-fill' : 'done';
+      return '<tr><td><b>' + reportEscape(order.date || '-') + '</b></td>' +
+        '<td><span class="pct-native-so">' + reportEscape(order.so || '-') + '</span></td>' +
+        '<td>' + reportEscape(order.deliveryOrder || '-') + '</td>' +
+        '<td><b>' + reportEscape(order.name || '-') + '</b></td>' +
+        '<td>' + reportEscape(order.phone || '-') + '</td>' +
+        '<td><span class="pct-native-clip wide" title="' + reportEscape(order.address) + '">' + reportEscape(order.address || '-') + '</span></td>' +
+        '<td>' + reportEscape(order.postCode || '-') + '</td>' +
         '<td><span class="pct-native-pill ' + reportEscape(statusClass) + '">' + reportEscape(order.status || '-') + '</span></td>' +
-        '<td><b>' + reportEscape(order.date || '-') + '</b><span class="pct-native-sub">Date coming</span></td>' +
-        '<td><b>' + reportEscape(order.appointmentDate || '-') + '</b><span class="pct-native-sub">' + reportEscape(order.appointmentTime) + '</span></td>' +
-        '<td><span class="pct-native-pill ' + reportEscape(className) + '">' + reportEscape(order.difficulty || '-') + '</span></td>' +
-        '<td>' + reportEscape(order.type || '-') + '<span class="pct-native-sub">' + reportEscape(order.model) + '</span></td>' +
-        '<td><span class="pct-native-clip" title="' + reportEscape(order.address) + '">' + reportEscape(order.address || '-') + '</span></td>' +
-        '<td><button class="pct-native-button" data-edit-so="' + reportEscape(order.so) + '">แก้ J/K/P</button></td></tr>';
-    }).join('') : nativeEmptyRow(9, 'ไม่พบ Orders ตามเงื่อนไขที่เลือก');
+        '<td><span class="pct-native-pill ' + fillClass + '">' + reportEscape(order.fillOnFile || '-') + '</span></td>' +
+        '<td><b>' + reportEscape(order.appointmentDate || '-') + '</b></td>' +
+        '<td>' + reportEscape(order.appointmentTime || '-') + '</td>' +
+        '<td>' + reportEscape(order.model || '-') + '</td>' +
+        '<td>' + reportEscape(order.vip || '-') + '</td>' +
+        '<td>' + reportEscape(order.type || '-') + '</td>' +
+        '<td><button class="pct-native-button primary" data-edit-so="' + reportEscape(order.so) + '">แก้ไข A–P</button></td></tr>';
+    }).join('') : nativeEmptyRow(15, 'ไม่พบ Orders ตามเงื่อนไขที่เลือก');
     document.getElementById('pctOrderQ').value = dashboardState.orderFilters.q || '';
-    document.getElementById('pctOrderFrom').value = dashboardState.orderFilters.dateFrom || '';
-    document.getElementById('pctOrderTo').value = dashboardState.orderFilters.dateTo || '';
     document.getElementById('pctOrderStatus').value = dashboardState.orderFilters.status || '';
     document.getElementById('pctOrderClass').value = dashboardState.orderFilters.difficulty || '';
+    if (restoreSearchFocus) {
+      const nextSearch = document.getElementById('pctOrderQ');
+      nextSearch.focus();
+      nextSearch.setSelectionRange(restoreCursor, restoreCursor);
+    }
 
     const schedule = function () {
       window.clearTimeout(dashboardState.searchTimer);
       dashboardState.searchTimer = window.setTimeout(function () {
         dashboardState.page = 1;
         loadNativeOrders();
-      }, 300);
+      }, 220);
     };
-    ['pctOrderQ', 'pctOrderFrom', 'pctOrderTo', 'pctOrderStatus', 'pctOrderClass'].forEach(function (id) {
+    ['pctOrderQ', 'pctOrderStatus', 'pctOrderClass'].forEach(function (id) {
       const element = document.getElementById(id);
       element.addEventListener(id === 'pctOrderQ' ? 'input' : 'change', schedule);
     });
@@ -4060,12 +3849,17 @@ mnavSync();</script>
   }
 
   async function loadNativeOrders() {
+    const requestId = ++dashboardState.orderRequestSeq;
     const content = document.getElementById('pctNativeContent');
-    if (content) content.innerHTML = dashboardLoadingHtml('กำลังอ่าน Orders');
+    if (content && !document.getElementById('pctOrderQ')) content.innerHTML = dashboardLoadingHtml('กำลังอ่าน Orders');
+    setDashboardStatus(true, 'กำลังค้นหา Orders…');
     try {
       const payload = await dashboardGet('getOrders', orderFilterParams());
+      if (requestId !== dashboardState.orderRequestSeq) return;
       renderNativeOrders(payload.orders);
+      setDashboardStatus(true, 'Google Sheet connected');
     } catch (error) {
+      if (requestId !== dashboardState.orderRequestSeq) return;
       showNativeDashboardError(error);
     }
   }
@@ -4192,11 +3986,25 @@ mnavSync();</script>
     try {
       const payload = await dashboardGet('getEditableOrderCase', { so: so });
       const item = payload.data;
-      const ui = nativeModal('แก้ไขข้อมูลเคส — เฉพาะ J, K, P',
-        '<div class="pct-native-form-grid"><div class="pct-native-field full"><label>Service Order</label><input name="so" value="' + reportEscape(item.so) + '" readonly></div>' +
-        '<div class="pct-native-field"><label>Date appointment (J)</label><input type="date" name="dateAppointment" value="' + reportEscape(reportDate(item.dateAppointment)) + '"></div>' +
-        '<div class="pct-native-field"><label>Time (K)</label><input type="time" name="time" value="' + reportEscape(clean(item.time).slice(0, 5)) + '"></div>' +
-        '<div class="pct-native-field full"><label>Noted (P)</label><textarea name="noted">' + reportEscape(item.noted) + '</textarea></div></div>', 'บันทึก J, K, P');
+      const ui = nativeModal('แก้ไขข้อมูล Orders — คอลัมน์ A ถึง P',
+        '<input type="hidden" name="originalSo" value="' + reportEscape(item.so) + '">' +
+        '<div class="pct-native-form-grid pct-order-edit-grid">' +
+        '<div class="pct-native-field"><label>A · Date</label><input type="date" name="date" value="' + reportEscape(reportDate(item.date)) + '"></div>' +
+        '<div class="pct-native-field"><label>B · Service Order</label><input name="so" value="' + reportEscape(item.so) + '" required></div>' +
+        '<div class="pct-native-field"><label>C · Delivery Order</label><input name="deliveryOrder" value="' + reportEscape(item.deliveryOrder) + '"></div>' +
+        '<div class="pct-native-field"><label>D · Customer</label><input name="name" value="' + reportEscape(item.name) + '"></div>' +
+        '<div class="pct-native-field"><label>E · Phone</label><input name="phone" value="' + reportEscape(item.phone) + '"></div>' +
+        '<div class="pct-native-field full"><label>F · Address</label><textarea name="address">' + reportEscape(item.address) + '</textarea></div>' +
+        '<div class="pct-native-field"><label>G · Postcode</label><input name="postCode" value="' + reportEscape(item.postCode) + '"></div>' +
+        '<div class="pct-native-field"><label>H · Status</label><input name="status" value="' + reportEscape(item.status) + '"></div>' +
+        '<div class="pct-native-field"><label>I · Fill on File</label><select name="fillOnFile"><option value="No"' + (clean(item.fillOnFile).toLowerCase()==='no'?' selected':'') + '>No</option><option value="Yes"' + (clean(item.fillOnFile).toLowerCase()==='yes'?' selected':'') + '>Yes</option></select></div>' +
+        '<div class="pct-native-field"><label>J · Date Appointment</label><input type="date" name="appointmentDate" value="' + reportEscape(reportDate(item.appointmentDate)) + '"></div>' +
+        '<div class="pct-native-field"><label>K · Time</label><input type="time" name="appointmentTime" value="' + reportEscape(clean(item.appointmentTime).slice(0, 5)) + '"></div>' +
+        '<div class="pct-native-field"><label>L · Model</label><input name="model" value="' + reportEscape(item.model) + '"></div>' +
+        '<div class="pct-native-field"><label>M · VIP / KOL</label><input name="vip" value="' + reportEscape(item.vip) + '"></div>' +
+        '<div class="pct-native-field"><label>N · Type</label><input name="type" value="' + reportEscape(item.type) + '"></div>' +
+        '<div class="pct-native-field"><label>O · Difficulty</label><input name="difficulty" value="' + reportEscape(item.difficulty) + '"></div>' +
+        '<div class="pct-native-field full pct-order-noted"><label>P · Noted</label><textarea name="noted" placeholder="รายละเอียดทั้งหมดของเคส">' + reportEscape(item.noted) + '</textarea></div></div>', 'บันทึกข้อมูล A–P');
       ui.form.onsubmit = async function (event) {
         event.preventDefault();
         const data = Object.fromEntries(new FormData(ui.form).entries());
@@ -4466,11 +4274,22 @@ mnavSync();</script>
     let year = Number(match[3]);
     if (year < 100) year += 2000;
     if (year > 2400) year -= 543;
-    const first = Number(match[1]);
-    const second = Number(match[2]);
-    const month = first > 12 ? second : first;
-    const day = first > 12 ? first : second;
+    const day = Number(match[1]);
+    const month = Number(match[2]);
     return year + '-' + String(month).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+  }
+
+  function reportDateDMY(value) {
+    const iso = reportDate(value);
+    if (!iso) return clean(value) || '-';
+    const parts = iso.split('-');
+    return parts[2] + '/' + parts[1] + '/' + parts[0];
+  }
+
+  function reportEntryCount(value) {
+    const text = clean(value);
+    if (!text) return 0;
+    return text.split(/\n+/).map(function (line) { return line.trim(); }).filter(Boolean).length;
   }
 
   function readLocalReports() {
@@ -4536,6 +4355,8 @@ mnavSync();</script>
   function fillReportForm(form, record) {
     Object.keys(record).forEach(function (key) { reportFormValue(form, key, record[key]); });
     reportFormValue(form, 'date', reportDate(record.date));
+    const readable = document.getElementById('pctReportDateReadable');
+    if (readable) readable.textContent = reportDateDMY(record.date);
     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -4562,29 +4383,16 @@ mnavSync();</script>
       '</section>';
   }
 
-  function reportQuickLinksHtml() {
-    const monitorUrl = 'https://mi.feishu.cn/sheets/TgMdsVOJBhj6z5tQDvncirbnn3f?sheet=5f6d62';
-    const cancelUrl = 'https://mi-p.feishu.cn/sheets/RAKbsbADUhtINGtYulIcihxvnbC';
-    return '<section class="pct-report-links">' +
-      '<article class="pct-report-link-card" style="--link-color:#ff6900"><h3>TH-PCS Daily Installation Monitor</h3>' +
-      '<p>ลิงก์ทำ Report ส่งทุกวันตอน 16.00 น.</p><span class="pct-report-link-url">' + reportEscape(monitorUrl) + '</span>' +
-      '<div class="pct-report-link-actions"><span class="pct-report-link-badge">Daily monitor</span><a class="pct-report-link-open" href="' + reportEscape(monitorUrl) + '" target="_blank" rel="noopener">เปิดลิงก์ ↗</a></div></article>' +
-      '<article class="pct-report-link-card" style="--link-color:#d65454"><h3>Cancel/Reschedule Order Lists</h3>' +
-      '<p>รายการ Order ที่ยกเลิกหรือเปลี่ยนเวลา สำหรับสรุป Report ประจำวัน</p><span class="pct-report-link-url">' + reportEscape(cancelUrl) + '</span>' +
-      '<div class="pct-report-link-actions"><span class="pct-report-link-badge">Cancel & reschedule</span><a class="pct-report-link-open" href="' + reportEscape(cancelUrl) + '" target="_blank" rel="noopener">เปิดลิงก์ ↗</a></div></article>' +
-      '</section>';
-  }
-
   function reportFormHtml() {
     const today = new Date();
     const iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
     return '<section class="pct-report-card">' +
-      '<div class="pct-report-card-head"><div><h3>Daily Report Entry</h3><small>กรอกข้อมูลประจำวัน ระบบจะอัปเดตรายการของวันที่เดิมแทนการสร้างข้อมูลซ้ำ</small></div></div>' +
+      '<div class="pct-report-card-head"><div><h3>Daily report</h3><small>วันที่ซ้ำจะบันทึกทับแถวเดิมโดยไม่สร้างรายการซ้ำ</small></div></div>' +
       '<form class="pct-report-form" id="pctReportForm">' +
       '<div class="pct-report-auto-note"><b>ข้อมูลอัตโนมัติจาก Google Sheet</b><span>Service Provider · Closed by Today (system) · Current Total Pending</span><small>หน้าเว็บจะแสดงผลลัพธ์ แต่จะไม่เขียนทับสูตรในชีต</small></div>' +
       '<div class="pct-report-section-title"><span>1</span><div><b>ข้อมูลสรุปประจำวัน</b><small>จำนวนงานและทีมที่ปฏิบัติงาน</small></div></div>' +
       '<div class="pct-report-form-grid pct-report-form-grid-core">' +
-      '<div class="pct-report-field"><label>Date</label><input type="date" name="date" value="' + iso + '" required></div>' +
+      '<div class="pct-report-field"><label>Date · วัน/เดือน/ปี</label><input type="date" name="date" value="' + iso + '" required><small class="pct-report-date-readable" id="pctReportDateReadable"></small></div>' +
       '<div class="pct-report-field"><label>Team Number</label><input type="number" min="0" name="teamNumber" value="0"></div>' +
       '<div class="pct-report-field"><label>New Order</label><input type="number" min="0" name="newOrder" value="0"></div>' +
       '<div class="pct-report-field"><label>AC Install / Repair</label><input type="number" min="0" name="acWork" value="0"></div>' +
@@ -4618,33 +4426,47 @@ mnavSync();</script>
     status.classList.toggle('online', reportServerReady);
     status.innerHTML = '<i></i>' + (reportServerReady ? 'Google Sheet connected' : 'Local mode · Deploy Report API');
 
-    const trendRows = rows.slice(-14);
+    const trendRows = rows.slice(-reportPerformanceDays);
     const trend = document.getElementById('pctReportTrend');
+    const series = [
+      { key:'teamNumber', label:'Team', color:'#8d67d5', value:function(row){return reportNumber(row.teamNumber);} },
+      { key:'newOrder', label:'New', color:'#4d7de5', value:function(row){return reportNumber(row.newOrder);} },
+      { key:'acWork', label:'AC', color:'#0ea5e9', value:function(row){return reportNumber(row.acWork);} },
+      { key:'wmWork', label:'WM', color:'#14b8a6', value:function(row){return reportNumber(row.wmWork);} },
+      { key:'closedToday', label:'Closed', color:'#23a66f', value:function(row){return reportNumber(row.closedToday);} },
+      { key:'cancelOrder', label:'Cancel', color:'#d34d4d', value:function(row){return reportNumber(row.cancelOrder);} },
+      { key:'currentPending', label:'Pending', color:'#ff6900', value:function(row){return reportNumber(row.currentPending);} },
+      { key:'reschedule', label:'Reschedule', color:'#f59e0b', value:function(row){return reportEntryCount(row.reschedule);} },
+      { key:'cancelDetail', label:'Cancel detail', color:'#ef4444', value:function(row){return reportEntryCount(row.cancelDetail);} },
+      { key:'outOfSystem', label:'Out system', color:'#64748b', value:function(row){return reportEntryCount(row.outOfSystem);} },
+      { key:'remarks', label:'Remarks', color:'#ec4899', value:function(row){return clean(row.remarks)?1:0;} }
+    ];
+    const legend = document.getElementById('pctPerformanceLegend');
+    if (legend) legend.innerHTML = series.map(function(item){return '<span><i style="background:'+item.color+'"></i>'+item.label+'</span>';}).join('');
     if (!trendRows.length) {
       trend.innerHTML = '<div class="pct-report-empty">ยังไม่มีข้อมูลสำหรับแสดงแนวโน้ม</div>';
     } else {
       const maximum = Math.max(1, ...trendRows.map(function (row) {
-        return Math.max(reportNumber(row.closedToday), reportNumber(row.currentPending));
+        return Math.max.apply(null, series.map(function(item){return item.value(row);}));
       }));
       trend.innerHTML = trendRows.map(function (row) {
-        const closedHeight = Math.max(2, Math.round(reportNumber(row.closedToday) / maximum * 100));
-        const pendingHeight = Math.max(2, Math.round(reportNumber(row.currentPending) / maximum * 100));
-        return '<div class="pct-trend-col"><div class="pct-trend-bars">' +
-          '<i class="pct-trend-bar pending" title="Pending ' + reportNumber(row.currentPending) + '" style="height:' + pendingHeight + '%"></i>' +
-          '<i class="pct-trend-bar" title="Closed ' + reportNumber(row.closedToday) + '" style="height:' + closedHeight + '%"></i>' +
-          '</div><span class="pct-trend-label">' + reportEscape(reportDate(row.date).slice(5)) + '</span></div>';
+        return '<div class="pct-performance-day"><div class="pct-performance-bars">' + series.map(function(item){
+          const value = item.value(row);
+          const height = value ? Math.max(2, Math.round(value / maximum * 100)) : 1;
+          return '<i title="'+reportEscape(item.label)+' '+value+'" style="height:'+height+'%;background:'+item.color+'"></i>';
+        }).join('') + '</div><small>' + reportEscape(reportDateDMY(row.date).slice(0,5)) + '</small></div>';
       }).join('');
     }
 
     const filter = document.getElementById('pctReportDateFilter');
     const selectedDate = filter ? filter.value : '';
-    const visibleRows = rows.slice().reverse().filter(function (row) {
+    const visibleRows = rows.slice(-14).reverse().filter(function (row) {
       return !selectedDate || reportDate(row.date) === selectedDate;
     });
     const body = document.getElementById('pctReportTableBody');
     body.innerHTML = visibleRows.length ? visibleRows.map(function (row) {
       return '<tr>' +
-        '<td><b>' + reportEscape(reportDate(row.date)) + '</b></td>' +
+        '<td><b>' + reportEscape(reportDateDMY(row.date)) + '</b></td>' +
         '<td>' + reportEscape(row.serviceProvider || '-') + '</td>' +
         '<td>' + reportNumber(row.teamNumber) + '</td><td>' + reportNumber(row.newOrder) + '</td>' +
         '<td>' + reportNumber(row.acWork) + '</td><td>' + reportNumber(row.wmWork) + '</td>' +
@@ -4682,13 +4504,11 @@ mnavSync();</script>
       '<div class="left"><div class="badge">' + reportEscape(reportIcon) + '</div><div><h2>' + reportEscape(reportName) + '</h2><div class="sub">Daily Operations Report · ' + customReportItems.length + ' หัวข้อเพิ่มเติม</div></div></div>' +
       '<div class="right-actions"><div class="pct-report-status" id="pctReportStatus"><i></i>กำลังตรวจการเชื่อมต่อ</div>' +
       '<button class="btn secondary" id="pctReportEditCategory">✎ แก้ไขหมวดหมู่</button><button class="btn" id="pctReportAddTopic">＋ เพิ่มหัวข้อ</button></div></section>' +
-      reportQuickLinksHtml() +
-      '<section class="pct-report-resources"><div class="pct-report-resources-head"><div><h3>หัวข้อและลิงก์เพิ่มเติม</h3><p>กด “＋ เพิ่มหัวข้อ” ด้านบนเพื่อเพิ่มการ์ดในหมวด Report</p></div><span>' + customReportItems.length + ' รายการ</span></div>' +
-      '<div class="row-flex" id="pctReportCustomCards"></div></section>' +
+      '<section class="pct-report-resources"><div class="row-flex" id="pctReportCustomCards"></div></section>' +
       reportStatsHtml() +
       '<section class="pct-report-grid">' + reportFormHtml() +
-      '<section class="pct-report-card"><div class="pct-report-card-head"><div><h3>14-Day Performance</h3><small>สีส้ม = Closed · สีเทา = Pending</small></div></div><div class="pct-trend" id="pctReportTrend"></div></section></section>' +
-      '<section class="pct-report-card pct-report-table-card"><div class="pct-report-card-head"><div><h3>Report History</h3><small>ข้อมูลล่าสุดจากแท็บ Report</small></div><div class="pct-report-toolbar"><input type="date" id="pctReportDateFilter"><button class="pct-report-action" id="pctReportReload">↻ รีเฟรช</button></div></div>' +
+      '<section class="pct-report-card"><div class="pct-report-card-head"><div><h3>Performance Comparison</h3><small>เปรียบเทียบทุกตัวเลขสำคัญของ Report</small></div><div class="pct-performance-toolbar" id="pctPerformanceRange"><button data-days="7">7 วัน</button><button data-days="14" class="active">14 วัน</button><button data-days="30">30 วัน</button><button data-days="365">1 ปี</button></div></div><div class="pct-performance-legend" id="pctPerformanceLegend"></div><div class="pct-performance-chart" id="pctReportTrend"></div></section></section>' +
+      '<section class="pct-report-card pct-report-table-card"><div class="pct-report-card-head"><div><h3>Report History</h3><small>แสดงเฉพาะ 14 วันล่าสุด</small></div><div class="pct-report-toolbar"><input type="date" id="pctReportDateFilter"><button class="pct-report-action" id="pctReportReload">↻ รีเฟรช</button></div></div>' +
       '<div class="pct-report-table-wrap"><table class="pct-report-table"><thead><tr><th>Date</th><th>Provider</th><th>Team</th><th>New</th><th>AC</th><th>WM</th><th>Closed</th><th>Cancel</th><th>Pending</th><th>Reschedule</th><th>Cancel Detail</th><th>Out</th><th>Remarks</th><th></th></tr></thead><tbody id="pctReportTableBody"></tbody></table></div></section>' +
       '</section>';
 
@@ -4704,7 +4524,7 @@ mnavSync();</script>
         ));
       });
     } else {
-      customCardsHost.innerHTML = '<div class="pct-report-empty">ยังไม่มีหัวข้อเพิ่มเติม</div>';
+      customCardsHost.innerHTML = '<div class="pct-report-empty">ยังไม่มีหัวข้อใน Report — กด “＋ เพิ่มหัวข้อ” เพื่อสร้างการ์ดใหม่</div>';
     }
 
     document.getElementById('pctReportEditCategory').onclick = function () {
@@ -4715,10 +4535,25 @@ mnavSync();</script>
     };
 
     const form = document.getElementById('pctReportForm');
+    const reportDateInput = form.elements.namedItem('date');
+    const updateReadableDate = function () {
+      const output = document.getElementById('pctReportDateReadable');
+      if (output) output.textContent = reportDateDMY(reportDateInput.value);
+    };
+    reportDateInput.addEventListener('change', updateReadableDate);
+    updateReadableDate();
+    document.querySelectorAll('#pctPerformanceRange [data-days]').forEach(function (button) {
+      button.onclick = function () {
+        reportPerformanceDays = Number(button.dataset.days) || 14;
+        document.querySelectorAll('#pctPerformanceRange [data-days]').forEach(function (item) { item.classList.toggle('active', item === button); });
+        renderReportData(readLocalReports());
+      };
+    });
     document.getElementById('pctReportClear').onclick = function () {
       form.reset();
       const now = new Date();
       reportFormValue(form, 'date', now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0'));
+      updateReadableDate();
     };
     form.onsubmit = async function (event) {
       event.preventDefault();
