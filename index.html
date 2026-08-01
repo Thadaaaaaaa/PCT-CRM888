@@ -1769,11 +1769,16 @@ const res = await fetch(SHEET_CONFIG.webAppUrl, {
 method: 'POST',
 body: JSON.stringify(crmBuildWebhookPayload(c))
 });
-if(res.ok){
-showToast('ส่งเข้า Google Sheet (แท็บ order) สำเร็จ ✓');
+let result = null;
+try { result = await res.json(); } catch (error) {}
+if(res.ok && result && result.ok === true){
+const fields = result.savedOperationFields || {};
+const savedTail = ['model','customerType','transactionType','difficulty','noted','noted2']
+  .filter(key => String(fields[key] || '').trim()).length;
+showToast('ส่งเข้า Google Sheet สำเร็จ ✓ · บันทึกข้อมูล L–Q ' + savedTail + '/6 ช่อง');
 return true;
 } else {
-showToast('ส่งข้อมูลไม่สำเร็จ (HTTP ' + res.status + ') — ตรวจสอบการ Deploy ของ Web App URL');
+showToast((result && result.message) || ('ส่งข้อมูลไม่สำเร็จ (HTTP ' + res.status + ') — ตรวจสอบการ Deploy ของ Web App URL'));
 return false;
 }
 }catch(e){
