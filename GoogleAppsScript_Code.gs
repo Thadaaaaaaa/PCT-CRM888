@@ -13,7 +13,8 @@ const CONFIG = Object.freeze({
     AC: 'AC service'
   }),
   ORDER_COLUMNS: 19,
-  CACHE_SECONDS: 300,
+  // Short cache keeps the dashboard responsive while reflecting sheet edits within one minute.
+  CACHE_SECONDS: 60,
   DEFAULT_PAGE_SIZE: 30,
   MAX_PAGE_SIZE: 100
 });
@@ -52,6 +53,9 @@ function doGet(e) {
   if (action === 'getOrders') {
     return jsonOutput_({ ok: true, dashboardApi: true, orders: getOrders(requestParams_(e)) });
   }
+  if (action === 'getPendingCases') {
+    return jsonOutput_({ ok: true, dashboardApi: true, pendingCases: getPendingCases(requestParams_(e)) });
+  }
   if (action === 'getProblemCases') {
     return jsonOutput_({ ok: true, dashboardApi: true, problems: getProblemCases(requestParams_(e)) });
   }
@@ -64,6 +68,9 @@ function doGet(e) {
       dashboardApi: true,
       data: getEditableOrderCase(e.parameter.so)
     });
+  }
+  if (action === 'getCRMOrderBySO') {
+    return jsonOutput_({ ok: true, dashboardApi: true, data: getCRMOrderBySO_(e.parameter.so) });
   }
   return HtmlService.createTemplateFromFile('Index')
     .evaluate()
@@ -242,6 +249,13 @@ function saveCRMOrderFromWebhook_(payload) {
   try {
     const existingRow = findRowByValue_(sheet, 2, payload.so);
     const rowNumber = existingRow || Math.max(2, sheet.getLastRow() + 1);
+    // setValues changes only cell values; existing data validation/dropdowns in H and L remain intact.
+    // For a new row, copy the validation and format from the preceding data row first.
+    if (!existingRow && rowNumber > 2) {
+      const source = sheet.getRange(rowNumber - 1, 1, 1, 17);
+      source.copyTo(sheet.getRange(rowNumber, 1, 1, 17), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      sheet.getRange(rowNumber, 1, 1, 17).setDataValidations(source.getDataValidations());
+    }
     sheet.getRange(rowNumber, 1, 1, 17).setValues([[
       toSheetDate_(payload.columnA),
       clean_(payload.so),
@@ -311,6 +325,29 @@ function getOrders(params) {
   return filterOrders_(getOrderRows_(), params || {});
 }
 
+function getPendingCases(params) {
+  params = params || {};
+  const q = normalize_(params.q);
+  const page = Math.max(1, Number(params.page) || 1);
+  const pageSize = Math.min(CONFIG.MAX_PAGE_SIZE, Math.max(10, Number(params.pageSize) || CONFIG.DEFAULT_PAGE_SIZE));
+  const rows = getOrderRows_().filter(function (order) {
+    const status = normalize_(order.status);
+    return (status === 'no answer' || status === 'waiting confirm date') && (!q || order.searchText.includes(q));
+  }).sort(function (a, b) {
+    return dateSortValue_(b.date, '') - dateSortValue_(a.date, '');
+  });
+  const start = (page - 1) * pageSize;
+  return {
+    items: rows.slice(start, start + pageSize).map(stripSearchText_),
+    total: rows.length,
+    noAnswer: rows.filter(function (o) { return normalize_(o.status) === 'no answer'; }).length,
+    waitingConfirmDate: rows.filter(function (o) { return normalize_(o.status) === 'waiting confirm date'; }).length,
+    page: page,
+    pageSize: pageSize,
+    totalPages: Math.max(1, Math.ceil(rows.length / pageSize))
+  };
+}
+
 function getDashboardSummary() {
   return makeSummary_(getOrderRows_());
 }
@@ -322,6 +359,44 @@ function getEditableOrderCase(so) {
   const found = findOrderBySO_(so);
   if (!found) throw new Error('ไม่พบเลข SO ในหน้า Orders');
   return stripSearchText_(found.data);
+}
+
+/** Customer Case Workspace: read an existing Orders row into the CRM form. */
+function getCRMOrderBySO_(so) {
+  const found = findOrderBySO_(so);
+  if (!found) throw new Error('ไม่พบเลข SO ในแท็บ Orders');
+  const o = found.data;
+  return {
+    rowNumber: found.rowNumber,
+    caseReceivedDate: normalizeDateString_(o.date),
+    so: o.so,
+    doNumber: o.deliveryOrder,
+    customerName: o.name,
+    phone: o.phone,
+    address: o.address,
+    postcode: o.postCode,
+    status: crmStatusKey_(o.status),
+    fillOnFile: o.fillOnFile,
+    apptDate: normalizeDateString_(o.appointmentDate),
+    apptTime: o.appointmentTime,
+    model: o.model,
+    customerType: normalize_(o.vip) || 'general',
+    transactionType: o.type || 'Installation only',
+    cls: o.difficulty,
+    columnOContent: o.noted,
+    noted2: o.noted2,
+    productType: /washer|washing/i.test([o.model, o.type].join(' ')) ? 'washer' : /repair|service/i.test(o.type) ? 'repair' : 'air'
+  };
+}
+
+function crmStatusKey_(value) {
+  const text = normalize_(value);
+  if (text === 'no answer') return 'no_answer';
+  if (text === 'waiting confirm date') return 'waiting_confirm_date';
+  if (text === 'reschedule') return 'reschedule';
+  if (text === 'cancel') return 'cancel';
+  if (text === 'transfer case') return 'transfer';
+  return 'confirm';
 }
 
 /**
@@ -631,6 +706,7 @@ function makeSummary_(rows) {
   const summary = {
     total: rows.length,
     confirm: 0,
+    pendingCases: 0,
     pendingFillOnFile: 0,
     withAppointment: 0,
     classI: 0,
@@ -642,6 +718,7 @@ function makeSummary_(rows) {
     const status = normalize_(o.status);
     const difficulty = normalize_(o.difficulty).replace(/\s/g, '');
     if (status === 'confirm') summary.confirm++;
+    if (status === 'no answer' || status === 'waiting confirm date') summary.pendingCases++;
     if (status === 'confirm' && normalize_(o.fillOnFile) === 'no') summary.pendingFillOnFile++;
     if (o.appointmentDate) {
       summary.withAppointment++;

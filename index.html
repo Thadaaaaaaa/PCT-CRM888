@@ -1781,6 +1781,24 @@ showToast('เชื่อมต่อ Web App ไม่สำเร็จ — �
 return false;
 }
 }
+
+async function crmLoadOrderFromSheet(so){
+const query = String(so||'').trim();
+if(!query){ showToast('กรุณากรอกเลข SO'); return; }
+if(!SHEET_CONFIG.webAppUrl){ showToast('ยังไม่ได้ตั้งค่า Google Apps Script Web App URL'); return; }
+try{
+const separator = SHEET_CONFIG.webAppUrl.includes('?') ? '&' : '?';
+const response = await fetch(SHEET_CONFIG.webAppUrl + separator + 'action=getCRMOrderBySO&so=' + encodeURIComponent(query) + '&_=' + Date.now(), {method:'GET',cache:'no-store'});
+const payload = await response.json();
+if(!response.ok || !payload || payload.ok!==true || !payload.data){ throw new Error((payload&&payload.message)||'ไม่พบ SO ในแท็บ Orders'); }
+const row = payload.data;
+crmDraft = Object.assign({}, crmDraft, row, {answers: Array.isArray(crmDraft.answers)?crmDraft.answers:new Array(10).fill('')});
+if(!Array.isArray(crmDraft.answers) || crmDraft.answers.length!==10) crmDraft.answers = new Array(10).fill('');
+crmEditingId = null;
+render();
+showToast('โหลด SO ' + row.so + ' แล้ว — บันทึกเพื่ออัปเดตแถวเดิม');
+}catch(error){ showToast(error.message||'ค้นหา SO ไม่สำเร็จ'); }
+}
 /* ---- CRM panel render ---- */
 let crmMode = 'new'; // 'new' | 'paste'
 let crmCasePage = 1;
@@ -1795,6 +1813,7 @@ panel.innerHTML = `
 <div><h3>🌬️🧼 Multi-Product Smart CRM</h3><div class="crm-sub">${crmEditingId ? 'กำลังแก้ไขเคสที่บันทึกไว้' : 'บันทึกเคสใหม่ — ข้อมูลจะสร้างคอลัมน์ O ให้อัตโนมัติ'}</div></div>
 <button class="crm-reset-btn" id="crmResetBtn">🔄 ล้างข้อมูล / ติดต่อลูกค้าใหม่</button>
 </div>
+<div class="crm-controlbar" style="margin-bottom:14px"><div class="crm-toprow"><div class="field" style="margin:0;min-width:260px"><label>ค้นหา SO จาก Google Sheet</label><input type="text" id="crmOrderLookupSo" placeholder="กรอก Service Order เช่น ASTH..."></div><button class="btn secondary" type="button" id="crmOrderLookupBtn">ค้นหาและโหลดข้อมูล</button><div class="hint" style="align-self:center;max-width:460px">หากพบ SO เดิม ระบบจะโหลดข้อมูลมาแก้ไข และเมื่อบันทึกจะอัปเดตแถวเดิมใน Orders</div></div></div>
 <div class="crm-mode-toggle">
 <button class="crm-mode-btn active" id="crmModeNewBtn">🆕 เคสใหม่</button>
 <button class="crm-mode-btn" id="crmModePasteBtn">📋 วางข้อมูลเดิม (เติมส่วนที่ขาด)</button>
@@ -2006,6 +2025,10 @@ surveyBox.appendChild(item);
 });
 // sheet sync config (no-auth webhook)
 panel.querySelector('#crmWebAppUrl').addEventListener('change', (e)=>{ SHEET_CONFIG.webAppUrl = e.target.value.trim(); saveAll(); });
+panel.querySelector('#crmOrderLookupBtn').onclick = ()=>crmLoadOrderFromSheet(panel.querySelector('#crmOrderLookupSo').value);
+panel.querySelector('#crmOrderLookupSo').addEventListener('keydown', (event)=>{
+if(event.key==='Enter'){ event.preventDefault(); crmLoadOrderFromSheet(event.currentTarget.value); }
+});
 // action buttons
 panel.querySelector('#crmSaveSendBtn').onclick = crmSaveAndSend;
 panel.querySelector('#crmCopyOBtn').onclick = (e)=>copyText(crmBuildColumnO(crmDraft), e.target);
@@ -3581,6 +3604,7 @@ mnavSync();</script>
       '<article class="pct-native-stat" style="--ns-color:#ff6900;--ns-tint:#fff1e6"><div class="pct-native-stat-top"><i>▦</i><span>Orders</span></div><strong id="pctNsOrders">—</strong><small>Orders ของวันที่เลือก</small></article>' +
       '<article class="pct-native-stat" style="--ns-color:#27a86f;--ns-tint:#eaf8f1"><div class="pct-native-stat-top"><i>✓</i><span>Confirm</span></div><strong id="pctNsConfirm">—</strong><small>Confirm ของวันที่เลือก</small></article>' +
       '<article class="pct-native-stat" style="--ns-color:#e68718;--ns-tint:#fff7e8"><div class="pct-native-stat-top"><i>!</i><span>Pending Fill on File</span></div><strong id="pctNsPendingFill">—</strong><small>Confirm และ Fill on File = No</small></article>' +
+      '<article class="pct-native-stat" style="--ns-color:#d9465f;--ns-tint:#fff0f2"><div class="pct-native-stat-top"><i>!</i><span>Pending Case</span></div><strong id="pctNsPendingCases">—</strong><small>No answer + Waiting confirm date</small></article>' +
       '</section>';
   }
 
@@ -3720,6 +3744,7 @@ mnavSync();</script>
   function dashboardTabsHtml() {
     return '<div class="pct-native-tabs">' +
       '<button class="pct-native-tab active" style="--tab-color:#ff6900" data-native-tab="orders">Orders</button>' +
+      '<button class="pct-native-tab" style="--tab-color:#d9465f" data-native-tab="pending">Pending Case</button>' +
       '<button class="pct-native-tab" style="--tab-color:#8d67d5" data-native-tab="problems">Problem Case</button>' +
       '<button class="pct-native-tab" style="--tab-color:#3984df" data-native-tab="ac">AC Service</button>' +
       '</div><div id="pctNativeContent">' + dashboardLoadingHtml() + '</div>';
@@ -3747,6 +3772,7 @@ mnavSync();</script>
     set('pctNsOrders', summary.total);
     set('pctNsConfirm', summary.confirm);
     set('pctNsPendingFill', summary.pendingFillOnFile);
+    set('pctNsPendingCases', summary.pendingCases);
   }
 
   function orderFilterParams() {
@@ -3787,7 +3813,7 @@ mnavSync();</script>
     }
     content.innerHTML = '<div class="pct-native-toolbar pct-order-searchbar">' +
       '<input id="pctOrderQ" type="search" autocomplete="off" placeholder="ค้นหาทุกข้อมูล เช่น SO, ชื่อลูกค้า, เบอร์โทร, ที่อยู่, Model หรือหมายเหตุ...">' +
-      '<select id="pctOrderStatus"><option value="">ทุกสถานะ</option><option>Confirm</option><option>Cancel</option></select>' +
+      '<select id="pctOrderStatus"><option value="">ทุกสถานะ</option><option>Confirm</option><option>Reschedule</option><option>Cancel</option><option>No answer</option><option>Waiting confirm date</option><option>Transfer case</option></select>' +
       '<select id="pctOrderClass"><option value="">ทุก Class</option><option>Class I</option><option>Class II</option><option>Class III</option></select>' +
       '</div><div class="pct-native-table-wrap"><table class="pct-native-table"><thead><tr>' +
       '<th>A · Date</th><th>B · Service Order</th><th>C · Delivery Order</th><th>D · Customer</th><th>E · Phone</th><th>F · Address</th><th>G · Postcode</th><th>H · Status</th><th>I · Fill on File</th><th>J · Date Appointment</th><th>K · Time</th><th>L · Model</th><th>M · VIP/KOL</th><th>N · Type</th><th></th>' +
@@ -3862,6 +3888,55 @@ mnavSync();</script>
       if (requestId !== dashboardState.orderRequestSeq) return;
       showNativeDashboardError(error);
     }
+  }
+
+  function renderNativePending(data) {
+    dashboardState.pendingCases = data;
+    const content = document.getElementById('pctNativeContent');
+    if (!content) return;
+    content.innerHTML = '<div class="pct-native-toolbar pct-order-searchbar">' +
+      '<input id="pctPendingQ" type="search" autocomplete="off" placeholder="ค้นหา SO, ชื่อลูกค้า, เบอร์โทร, Model หรือหมายเหตุ...">' +
+      '<span class="pct-native-pill" style="color:#b4233a;background:#fff0f2">No answer ' + reportNumber(data.noAnswer).toLocaleString() + '</span>' +
+      '<span class="pct-native-pill" style="color:#9b6800;background:#fff7e8">Waiting confirm date ' + reportNumber(data.waitingConfirmDate).toLocaleString() + '</span>' +
+      '</div><div class="pct-native-table-wrap"><table class="pct-native-table"><thead><tr>' +
+      '<th>SO / ลูกค้า</th><th>เบอร์โทร</th><th>วันที่รับเคส</th><th>สถานะค้าง</th><th>วันนัด</th><th>Model / Type</th><th>หมายเหตุ</th><th></th>' +
+      '</tr></thead><tbody id="pctNativePendingBody"></tbody></table></div>' +
+      '<div class="pct-native-footer"><span>พบ Pending ' + reportNumber(data.total).toLocaleString() + ' เคส · หน้า ' + reportNumber(data.page) + '/' + reportNumber(data.totalPages) + '</span>' +
+      '<button class="pct-native-button" id="pctPendingPrev">ก่อนหน้า</button><button class="pct-native-button" id="pctPendingNext">ถัดไป</button></div>';
+    const body = document.getElementById('pctNativePendingBody');
+    body.innerHTML = data.items && data.items.length ? data.items.map(function (item) {
+      const statusClass = clean(item.status).toLowerCase() === 'no answer' ? 'cancel' : 'pending-fill';
+      return '<tr><td><span class="pct-native-so">' + reportEscape(item.so) + '</span><span class="pct-native-sub">' + reportEscape(item.name) + '</span></td>' +
+        '<td>' + reportEscape(item.phone || '-') + '</td><td>' + reportEscape(item.date || '-') + '</td>' +
+        '<td><span class="pct-native-pill ' + statusClass + '">' + reportEscape(item.status) + '</span></td>' +
+        '<td>' + reportEscape(item.appointmentDate || '-') + '<span class="pct-native-sub">' + reportEscape(item.appointmentTime || '') + '</span></td>' +
+        '<td>' + reportEscape(item.model || '-') + '<span class="pct-native-sub">' + reportEscape(item.type || '-') + '</span></td>' +
+        '<td><span class="pct-native-clip" title="' + reportEscape(item.noted) + '">' + reportEscape(item.noted || '-') + '</span></td>' +
+        '<td><button class="pct-native-button primary" data-edit-so="' + reportEscape(item.so) + '">แก้ไข</button></td></tr>';
+    }).join('') : nativeEmptyRow(8, 'ไม่พบ Pending Case');
+    document.getElementById('pctPendingQ').value = dashboardState.pendingQuery || '';
+    document.getElementById('pctPendingQ').addEventListener('input', function () {
+      window.clearTimeout(dashboardState.searchTimer);
+      dashboardState.searchTimer = window.setTimeout(function () { dashboardState.pendingPage = 1; loadNativePending(); }, 220);
+    });
+    document.getElementById('pctPendingPrev').disabled = (data.page || 1) <= 1;
+    document.getElementById('pctPendingNext').disabled = (data.page || 1) >= (data.totalPages || 1);
+    document.getElementById('pctPendingPrev').onclick = function () { if ((dashboardState.pendingPage || 1) > 1) { dashboardState.pendingPage--; loadNativePending(); } };
+    document.getElementById('pctPendingNext').onclick = function () { if ((dashboardState.pendingPage || 1) < (data.totalPages || 1)) { dashboardState.pendingPage++; loadNativePending(); } };
+    body.querySelectorAll('[data-edit-so]').forEach(function (button) { button.onclick = function () { openOrderCaseModal(button.dataset.editSo); }; });
+  }
+
+  async function loadNativePending() {
+    const content = document.getElementById('pctNativeContent');
+    const q = clean(document.getElementById('pctPendingQ') ? document.getElementById('pctPendingQ').value : dashboardState.pendingQuery);
+    dashboardState.pendingQuery = q;
+    dashboardState.pendingPage = dashboardState.pendingPage || 1;
+    if (content && !document.getElementById('pctPendingQ')) content.innerHTML = dashboardLoadingHtml('กำลังอ่าน Pending Case');
+    try {
+      const payload = await dashboardGet('getPendingCases', { q: q, page: dashboardState.pendingPage, pageSize: 30 });
+      renderNativePending(payload.pendingCases);
+      setDashboardStatus(true, 'Google Sheet connected');
+    } catch (error) { showNativeDashboardError(error); }
   }
 
   function renderNativeProblems(data) {
@@ -3962,6 +4037,7 @@ mnavSync();</script>
       button.classList.toggle('active', button.dataset.nativeTab === tab);
     });
     if (tab === 'orders') loadNativeOrders();
+    if (tab === 'pending') loadNativePending();
     if (tab === 'problems') loadNativeProblems();
     if (tab === 'ac') loadNativeAC();
   }
@@ -3996,7 +4072,9 @@ mnavSync();</script>
         '<div class="pct-native-field"><label>E · Phone</label><input name="phone" value="' + reportEscape(item.phone) + '"></div>' +
         '<div class="pct-native-field full"><label>F · Address</label><textarea name="address">' + reportEscape(item.address) + '</textarea></div>' +
         '<div class="pct-native-field"><label>G · Postcode</label><input name="postCode" value="' + reportEscape(item.postCode) + '"></div>' +
-        '<div class="pct-native-field"><label>H · Status</label><input name="status" value="' + reportEscape(item.status) + '"></div>' +
+        '<div class="pct-native-field"><label>H · Status</label><select name="status">' +
+        ['Confirm','Reschedule','Cancel','No answer','Waiting confirm date','Transfer case'].map(function (value) { return '<option' + (clean(item.status) === value ? ' selected' : '') + '>' + value + '</option>'; }).join('') +
+        '</select></div>' +
         '<div class="pct-native-field"><label>I · Fill on File</label><select name="fillOnFile"><option value="No"' + (clean(item.fillOnFile).toLowerCase()==='no'?' selected':'') + '>No</option><option value="Yes"' + (clean(item.fillOnFile).toLowerCase()==='yes'?' selected':'') + '>Yes</option></select></div>' +
         '<div class="pct-native-field"><label>J · Date Appointment</label><input type="date" name="appointmentDate" value="' + reportEscape(reportDate(item.appointmentDate)) + '"></div>' +
         '<div class="pct-native-field"><label>K · Time</label><input type="time" name="appointmentTime" value="' + reportEscape(clean(item.appointmentTime).slice(0, 5)) + '"></div>' +
@@ -4108,6 +4186,7 @@ mnavSync();</script>
     });
     main.querySelector('#pctNativeRefresh').onclick = function () {
       if (dashboardState.tab === 'orders') loadNativeDashboardBootstrap();
+      if (dashboardState.tab === 'pending') loadNativePending();
       if (dashboardState.tab === 'problems') loadNativeProblems();
       if (dashboardState.tab === 'ac') loadNativeAC();
     };
