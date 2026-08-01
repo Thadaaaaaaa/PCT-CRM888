@@ -462,6 +462,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
 .case-pagination{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px}.case-pagination span{font-size:12px;color:var(--muted)}
 .pct-performance-toolbar{display:flex;gap:8px;flex-wrap:wrap}.pct-performance-toolbar button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 11px;font-weight:700;color:var(--muted);cursor:pointer}.pct-performance-toolbar button.active{background:var(--orange);border-color:var(--orange);color:#fff}.pct-performance-legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pct-performance-legend span{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}.pct-performance-legend i{width:9px;height:9px;border-radius:3px}.pct-performance-chart{display:flex;align-items:flex-end;gap:7px;height:260px;overflow-x:auto;padding:16px 4px 4px}.pct-performance-day{min-width:44px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}.pct-performance-bars{height:215px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px}.pct-performance-bars i{width:5px;min-height:2px;border-radius:4px 4px 0 0}.pct-performance-day small{font-size:9px;color:var(--muted);white-space:nowrap}.pct-report-date-readable{color:var(--orange-dark);font-size:11px;font-weight:700;margin-top:5px;display:block}
 @media(max-width:900px){.pct-order-searchbar{grid-template-columns:1fr;position:static}.pct-native-modal-card{width:96vw}.pct-order-edit-grid{grid-template-columns:1fr}.pct-order-edit-grid .full{grid-column:auto}}
+.pct-performance-compare{padding:15px 17px 18px}.pct-performance-picker{display:grid;grid-template-columns:1fr 36px 1fr;gap:9px;align-items:end;margin-bottom:15px}.pct-performance-picker label{display:grid;gap:5px;color:#666;font-size:10.5px;font-weight:800}.pct-performance-picker input{height:38px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font:inherit}.pct-performance-picker b{display:grid;place-items:center;height:38px;color:var(--orange);font-size:20px}.pct-performance-dates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.pct-performance-date{padding:11px 12px;border-radius:12px;background:#f8fafc}.pct-performance-date.primary{background:#fff4eb;border:1px solid #ffd3b5}.pct-performance-date span{display:block;color:#8a8a8a;font-size:9.5px;font-weight:800;text-transform:uppercase}.pct-performance-date strong{display:block;margin-top:4px;color:#1f2a44;font-size:16px}.pct-performance-rows{display:grid;gap:7px}.pct-performance-row{display:grid;grid-template-columns:minmax(90px,1fr) 72px 70px 86px;align-items:center;gap:9px;padding:10px 11px;border:1px solid #eee9e5;border-radius:11px;background:#fff;font-size:11px}.pct-performance-row:nth-child(even){background:#fffaf6}.pct-performance-row b{font-size:15px;text-align:right}.pct-performance-row small{color:#777;text-align:right}.pct-performance-delta{font-weight:850;text-align:right}.pct-performance-delta.up{color:#147b4f}.pct-performance-delta.down{color:#c23b4a}.pct-performance-delta.same{color:#777}@media(max-width:620px){.pct-performance-picker{grid-template-columns:1fr}.pct-performance-picker b{display:none}.pct-performance-row{grid-template-columns:1fr 58px 58px 68px}.pct-performance-row b{font-size:13px}.pct-performance-dates{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -3408,6 +3409,7 @@ mnavSync();</script>
   let renderTimer = 0;
   let reportServerReady = false;
   let reportPerformanceDays = 14;
+  let reportComparison = { primaryDate: '', compareDate: '' };
   const dashboardState = {
     tab: 'orders',
     page: 1,
@@ -3770,18 +3772,20 @@ mnavSync();</script>
 
   function renderDashboardStatusCards(summary) {
     summary = summary || {};
-    // Pending Case is an operations backlog: keep it scoped to every row in
-    // Orders, even while the other cards are narrowed to a selected day.
-    const pendingCases = dashboardState.summary && dashboardState.summary.pendingCases != null
-      ? dashboardState.summary.pendingCases
-      : summary.pendingCases;
+    // Backlog cards must be calculated from all Orders, even while the table is
+    // narrowed to a selected appointment date.
+    const allOrdersSummary = dashboardState.summary || {};
+    const pendingCases = allOrdersSummary.pendingCases != null
+      ? allOrdersSummary.pendingCases : summary.pendingCases;
+    const pendingFillOnFile = allOrdersSummary.pendingFillOnFile != null
+      ? allOrdersSummary.pendingFillOnFile : summary.pendingFillOnFile;
     const set = function (id, value) {
       const element = document.getElementById(id);
       if (element) element.textContent = reportNumber(value).toLocaleString();
     };
     set('pctNsOrders', summary.total);
     set('pctNsConfirm', summary.confirm);
-    set('pctNsPendingFill', summary.pendingFillOnFile);
+    set('pctNsPendingFill', pendingFillOnFile);
     set('pctNsPendingCases', pendingCases);
   }
 
@@ -4390,7 +4394,7 @@ mnavSync();</script>
   }
 
   function storeLocalReports(rows) {
-    localStorage.setItem(REPORT_CACHE_KEY, JSON.stringify(rows.slice(-365)));
+    localStorage.setItem(REPORT_CACHE_KEY, JSON.stringify(rows.slice(-2000)));
   }
 
   function upsertLocalReport(record) {
@@ -4407,7 +4411,7 @@ mnavSync();</script>
 
   async function fetchReportRows() {
     const baseUrl = getDashboardUrl();
-    const url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'action=getReports&limit=365&_=' + Date.now();
+    const url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'action=getReports&limit=2000&_=' + Date.now();
     try {
       const response = await fetch(url, { method: 'GET', cache: 'no-store' });
       const payload = await response.json();
@@ -4576,6 +4580,101 @@ mnavSync();</script>
         const record = rows.find(function (row) {
           return reportDate(row.date) === button.dataset.date;
         });
+        if (record) fillReportForm(document.getElementById('pctReportForm'), record);
+      };
+    });
+  }
+
+  // Clear, date-to-date comparison. This declaration intentionally replaces
+  // the earlier compact bar-chart renderer so the report remains readable on
+  // a notebook screen and on mobile.
+  function renderReportData(rows) {
+    const shell = document.getElementById('pctReportShell');
+    if (!shell) return;
+    rows = Array.isArray(rows) ? rows.slice() : [];
+    rows.sort(function (a, b) { return reportDate(a.date).localeCompare(reportDate(b.date)); });
+
+    const latest = rows[rows.length - 1] || {};
+    const setStat = function (id, value) {
+      const node = document.getElementById(id);
+      if (node) node.textContent = reportNumber(value).toLocaleString();
+    };
+    setStat('pctRptPending', latest.currentPending);
+    setStat('pctRptClosed', latest.closedToday);
+    setStat('pctRptNew', latest.newOrder);
+    setStat('pctRptCancel', latest.cancelOrder);
+    setStat('pctRptTeams', latest.teamNumber);
+
+    const status = document.getElementById('pctReportStatus');
+    if (status) {
+      status.classList.toggle('online', reportServerReady);
+      status.innerHTML = '<i></i>' + (reportServerReady ? 'Google Sheet connected' : 'Local mode');
+    }
+
+    const today = dashboardTodayIso();
+    if (!reportComparison.primaryDate) reportComparison.primaryDate = today;
+    if (!reportComparison.compareDate) {
+      const primaryIndex = rows.findIndex(function (row) { return reportDate(row.date) === reportComparison.primaryDate; });
+      reportComparison.compareDate = primaryIndex > 0 ? reportDate(rows[primaryIndex - 1].date) : dashboardAddDays(reportComparison.primaryDate, -1);
+    }
+    const primary = rows.find(function (row) { return reportDate(row.date) === reportComparison.primaryDate; }) || {};
+    const compared = rows.find(function (row) { return reportDate(row.date) === reportComparison.compareDate; }) || {};
+    const metrics = [
+      ['New Order', 'newOrder'], ['AC Work', 'acWork'], ['WM Work', 'wmWork'],
+      ['Closed', 'closedToday'], ['Cancel', 'cancelOrder'], ['Pending', 'currentPending'], ['Team', 'teamNumber']
+    ];
+    const range = document.getElementById('pctPerformanceRange');
+    if (range) range.innerHTML = '<span style="font-size:10px;color:#777;font-weight:800">เปรียบเทียบ 2 วันที่เลือก</span>';
+    const legend = document.getElementById('pctPerformanceLegend');
+    if (legend) legend.innerHTML = '';
+    const trend = document.getElementById('pctReportTrend');
+    if (trend) {
+      trend.className = 'pct-performance-compare';
+      trend.innerHTML = '<div class="pct-performance-picker">' +
+        '<label>วันหลัก<input type="date" id="pctPerformancePrimary" value="' + escapeAttr(reportComparison.primaryDate) + '"></label>' +
+        '<b>↔</b><label>เปรียบเทียบกับ<input type="date" id="pctPerformanceCompare" value="' + escapeAttr(reportComparison.compareDate) + '"></label></div>' +
+        '<div class="pct-performance-dates"><div class="pct-performance-date primary"><span>วันหลัก</span><strong>' + reportEscape(reportDateDMY(reportComparison.primaryDate)) + '</strong></div>' +
+        '<div class="pct-performance-date"><span>วันเปรียบเทียบ</span><strong>' + reportEscape(reportDateDMY(reportComparison.compareDate)) + '</strong></div></div>' +
+        '<div class="pct-performance-rows">' + metrics.map(function (metric) {
+          const primaryValue = reportNumber(primary[metric[1]]);
+          const comparedValue = reportNumber(compared[metric[1]]);
+          const delta = primaryValue - comparedValue;
+          const direction = delta > 0 ? 'up' : delta < 0 ? 'down' : 'same';
+          const deltaText = delta > 0 ? '▲ +' + delta : delta < 0 ? '▼ ' + delta : '— 0';
+          return '<div class="pct-performance-row"><span>' + metric[0] + '</span><b>' + primaryValue.toLocaleString() + '</b><small>' + comparedValue.toLocaleString() + '</small><span class="pct-performance-delta ' + direction + '">' + deltaText + '</span></div>';
+        }).join('') + '</div>';
+      ['pctPerformancePrimary', 'pctPerformanceCompare'].forEach(function (id) {
+        const input = document.getElementById(id);
+        if (input) input.onchange = function () {
+          reportComparison[id === 'pctPerformancePrimary' ? 'primaryDate' : 'compareDate'] = input.value || today;
+          renderReportData(rows);
+        };
+      });
+    }
+
+    const filter = document.getElementById('pctReportDateFilter');
+    const selectedDate = filter ? filter.value : '';
+    // Keep the default list focused on 14 recent days. A selected date searches
+    // through every Report row currently returned from Google Sheets.
+    const visibleRows = selectedDate
+      ? rows.filter(function (row) { return reportDate(row.date) === selectedDate; }).reverse()
+      : rows.slice(-14).reverse();
+    const body = document.getElementById('pctReportTableBody');
+    if (!body) return;
+    body.innerHTML = visibleRows.length ? visibleRows.map(function (row) {
+      return '<tr><td><b>' + reportEscape(reportDateDMY(row.date)) + '</b></td>' +
+        '<td>' + reportEscape(row.serviceProvider || '-') + '</td><td>' + reportNumber(row.teamNumber) + '</td>' +
+        '<td>' + reportNumber(row.newOrder) + '</td><td>' + reportNumber(row.acWork) + '</td><td>' + reportNumber(row.wmWork) + '</td>' +
+        '<td>' + reportNumber(row.closedToday) + '</td><td>' + reportNumber(row.cancelOrder) + '</td>' +
+        '<td><b>' + reportNumber(row.currentPending) + '</b></td><td class="pct-report-table-note" title="' + reportEscape(row.reschedule) + '">' + reportEscape(row.reschedule || '-') + '</td>' +
+        '<td class="pct-report-table-note" title="' + reportEscape(row.cancelDetail) + '">' + reportEscape(row.cancelDetail || '-') + '</td>' +
+        '<td class="pct-report-table-note" title="' + reportEscape(row.outOfSystem) + '">' + reportEscape(row.outOfSystem || '-') + '</td>' +
+        '<td class="pct-report-table-note" title="' + reportEscape(row.remarks) + '">' + reportEscape(row.remarks || '-') + '</td>' +
+        '<td><button class="pct-report-edit" data-date="' + reportEscape(reportDate(row.date)) + '">แก้ไข</button></td></tr>';
+    }).join('') : '<tr><td colspan="14"><div class="pct-report-empty">ไม่พบข้อมูล Report</div></td></tr>';
+    body.querySelectorAll('.pct-report-edit').forEach(function (button) {
+      button.onclick = function () {
+        const record = rows.find(function (row) { return reportDate(row.date) === button.dataset.date; });
         if (record) fillReportForm(document.getElementById('pctReportForm'), record);
       };
     });
