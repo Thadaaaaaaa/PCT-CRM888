@@ -3765,6 +3765,11 @@ mnavSync();</script>
 
   function renderDashboardStatusCards(summary) {
     summary = summary || {};
+    // Pending Case is an operations backlog: keep it scoped to every row in
+    // Orders, even while the other cards are narrowed to a selected day.
+    const pendingCases = dashboardState.summary && dashboardState.summary.pendingCases != null
+      ? dashboardState.summary.pendingCases
+      : summary.pendingCases;
     const set = function (id, value) {
       const element = document.getElementById(id);
       if (element) element.textContent = reportNumber(value).toLocaleString();
@@ -3772,7 +3777,7 @@ mnavSync();</script>
     set('pctNsOrders', summary.total);
     set('pctNsConfirm', summary.confirm);
     set('pctNsPendingFill', summary.pendingFillOnFile);
-    set('pctNsPendingCases', summary.pendingCases);
+    set('pctNsPendingCases', pendingCases);
   }
 
   function orderFilterParams() {
