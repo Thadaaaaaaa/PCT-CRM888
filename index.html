@@ -4481,19 +4481,22 @@ mnavSync();</script>
   async function fetchReportRows() {
     const baseUrl = getDashboardUrl();
     const url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'action=getReports&limit=5000&_=' + Date.now();
-    try {
-      const response = await fetch(url, { method: 'GET', cache: 'no-store' });
-      const payload = await response.json();
-      if (!response.ok || !payload || payload.reportApi !== true || !Array.isArray(payload.items)) {
-        throw new Error('Report API is not ready');
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await fetch(url, { method: 'GET', cache: 'no-store' });
+        const payload = safeParse(await response.text(), null);
+        if (!response.ok || !payload || payload.reportApi !== true || !Array.isArray(payload.items)) {
+          throw new Error('Report API is not ready');
+        }
+        reportServerReady = true;
+        storeLocalReports(payload.items);
+        return payload.items;
+      } catch (error) {
+        reportServerReady = false;
+        if (attempt === 0) await new Promise(function (resolve) { setTimeout(resolve, 450); });
       }
-      reportServerReady = true;
-      storeLocalReports(payload.items);
-      return payload.items;
-    } catch (error) {
-      reportServerReady = false;
-      return readLocalReports();
     }
+    return readLocalReports();
   }
 
   function reportRecordFromForm(form) {
@@ -4526,14 +4529,20 @@ mnavSync();</script>
   }
 
   async function sendReportToSheet(record) {
-    if (!reportServerReady) return { localOnly: true };
+    if (!reportServerReady) await fetchReportRows();
+    if (!reportServerReady) throw new Error('Report API is unavailable');
     const response = await fetch(getDashboardUrl(), {
       method: 'POST',
+      cache: 'no-store',
       body: JSON.stringify({ action: 'saveReport', data: record })
     });
-    const payload = await response.json();
+    const payload = safeParse(await response.text(), null);
     if (!response.ok || !payload || payload.ok !== true) {
       throw new Error(payload && payload.message ? payload.message : 'บันทึก Report ไม่สำเร็จ');
+    }
+    const confirmedRows = await fetchReportRows();
+    if (!confirmedRows.some(function (row) { return reportDate(row.date) === record.date; })) {
+      throw new Error('Report write-back could not be verified');
     }
     return payload;
   }
