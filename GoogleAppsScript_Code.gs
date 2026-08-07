@@ -39,7 +39,7 @@ function doGet(e) {
     let dashboardOrders = filterOrders_(dashboardRows, dashboardParams);
     let initialDate = dashboardParams.dateFrom;
     if (dashboardParams.initial && dashboardOrders.total === 0) {
-      initialDate = latestOrderDate_(dashboardRows, dashboardParams.dateField);
+      initialDate = latestOrderDate_(dashboardRows, dashboardParams.dateField, dashboardParams.dateFrom);
       if (initialDate) {
         dashboardParams.dateFrom = initialDate;
         dashboardParams.dateTo = initialDate;
@@ -730,11 +730,11 @@ function filterOrders_(rows, params) {
   };
 }
 
-function latestOrderDate_(rows, dateField) {
+function latestOrderDate_(rows, dateField, notAfterDate) {
   let latest = '';
   rows.forEach(function (order) {
     const value = normalizeDateString_(dateField === 'coming' ? order.date : order.appointmentDate);
-    if (value && value > latest) latest = value;
+    if (value && (!notAfterDate || value <= notAfterDate) && value > latest) latest = value;
   });
   return latest;
 }
