@@ -37,9 +37,6 @@ function doGet(e) {
     const dashboardRows = getOrderRowsForParams_(dashboardParams);
     const dashboardOrders = filterOrders_(dashboardRows, dashboardParams);
     const dashboardSummary = makeSummary_(dashboardRows);
-    const appointmentSummary = getAppointmentLiveSummary_();
-    dashboardSummary.appointmentsByDate = appointmentSummary.appointmentsByDate;
-    dashboardSummary.withAppointment = appointmentSummary.withAppointment;
     return jsonOutput_({
       ok: true,
       dashboardApi: true,
