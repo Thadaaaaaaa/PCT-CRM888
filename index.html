@@ -2451,7 +2451,7 @@ return s;
 }
 function composePost(r){
 const L = [];
-if(r.car) L.push(r.car);
+if(r.car) L.push(/^team\b/i.test(r.car) ? r.car : `Team ${r.car}`);
 r.engineers.forEach(e=>{ if(e) L.push(e); });
 L.push('');
 if(r.serviceType) L.push(r.serviceType);
