@@ -1599,7 +1599,7 @@ showToast('รีเซ็ตข้อมูลแล้ว');
 MULTI-PRODUCT SMART CRM (Air & Washing Machine) — embedded in Customer & Service Templates
 ========================================================= */
 const CRM_SURVEY_QUESTIONS_AIR = [
-'มีแอร์เครื่องเก่าหรือไม่ (ขนาดกี่ BTU)(ใช้สารทำความเย็น R32 หรือไม่ )(เป็นท่อฝังหรือไม่) **หากเป็นจุดติดตั้งใหม่ ให้ลูกค้าเตรียมเมนไฟไว้**',
+'มีแอร์เครื่องเก่าหรือไม่ (ขนาดกี่ BTU)(ใช้สารทำความเย็น R32 หรือไม่) **หากเป็นจุดติดตั้งใหม่ ให้ลูกค้าเตรียมเมนไฟไว้**',
 'จุดติดตั้งคอยล์ร้อนและคอยล์เย็นอยู่ชั้นไหน | คอยล์ร้อนห่างจากพื้นกี่เมตร (หากความสูงเกิน 6 เมตร เราไม่สามารถติดตั้งได้) | คอยล์เย็นห่างจากฝ้ากี่เมตร (สำหรับรูท่อแอร์ที่มีอยู่แล้ว) (พื้นที่ว่างรวมประมาณ 50 เซนติเมตร)',
 'เซอร์กิตเบรกเกอร์ (Circuit Breaker)',
 'จำเป็นต้องเจาะรูหรือไม่(รูเดิมเป็นของขนาดกี่ BTU)(หากใช้รูเดิมไม่ได้อาจจะต้องเจาะใหม่)(ความหนาของกำแพง)',
@@ -1667,7 +1667,7 @@ transactionType:'Installation only',
 caseReceivedDate: todayISO(),
 so:'', doNumber:'', customerName:'', phone:'', secondaryContact:'', lineId:'',
 address:'', postcode:'', apptDate:'', apptTime:'', model:'', unitCount:'1',
-customerRequest:'', noted:'', noted2:'',
+customerRequest:'', noted:'', noted2:'', conceal:'',
 airFloor:'', airOutdoor:'', airIndoor:'',
 answers: new Array(10).fill(''),
 editor:'', lastEditedAt:null, history:[]
@@ -1732,14 +1732,14 @@ if(!c.customerType || c.customerType==='general') return '';
 return c.customerType.toUpperCase(); // 'VIP' or 'KOL'
 }
 function crmRowValues(c){
-const o = crmBuildColumnO(c);
+const q = crmBuildColumnO(c);
 const statusLabel = CRM_STATUS_LABELS[c.status] || c.status;
 const fillOnFile = 'No'; // always No here — only changed to Yes when imported into the other downstream file
-// ...Model, KOL/VIP, Type, Difficulty for installation, Noted, Noted2 — matches the real sheet's column order.
+// A:R follows the live Orders sheet: P = Conceal, Q = combined text, R = Noted 2.
 return [
 toDMY(c.caseReceivedDate), c.so||'', c.doNumber||'', c.customerName||'', c.phone||'', c.address||'', c.postcode||'',
 statusLabel, fillOnFile, toDMY(c.apptDate), c.apptTime||'', c.model||'',
-crmCustomerTypeLabel(c), c.transactionType||'', c.cls||'', o, c.noted2||''
+crmCustomerTypeLabel(c), c.transactionType||'', c.cls||'', c.productType==='air' ? (c.conceal||'') : '', q, c.noted2||''
 ];
 }
 function tsvEscape(v){
@@ -1775,7 +1775,9 @@ model: c.model||'',
 customerType: crmCustomerTypeLabel(c), // VIP / KOL / '' — column right after Model
 transactionType: c.transactionType||'', // Installation only / Delivery and installation / Repair / Installation only Fee / Return of goods
 difficulty: c.cls||'', // Class I/II/III — "Difficulty for the installation" column
-columnOContent: crmBuildColumnO(c),
+productType: c.productType||'air',
+conceal: c.productType==='air' ? (c.conceal||'') : '', // P · Conceal applies only to Air
+columnQContent: crmBuildColumnO(c),
 noted2: c.noted2||''
 };
 }
@@ -1796,11 +1798,11 @@ body: JSON.stringify(crmBuildWebhookPayload(c))
 });
 let result = null;
 try { result = await res.json(); } catch (error) {}
-if(res.ok && result && result.ok === true){
+if(res.ok && result && result.ok === true && result.operationFieldsVerified === true){
 const fields = result.savedOperationFields || {};
-const savedTail = ['model','customerType','transactionType','difficulty','noted','noted2']
+const savedTail = ['model','customerType','transactionType','difficulty','conceal','noted','noted2']
   .filter(key => String(fields[key] || '').trim()).length;
-showToast('ส่งเข้า Google Sheet สำเร็จ ✓ · บันทึกข้อมูล L–Q ' + savedTail + '/6 ช่อง');
+showToast('ส่งเข้า Google Sheet สำเร็จ ✓ · ตรวจสอบข้อมูล L–R แล้ว ' + savedTail + '/7 ช่อง');
 return true;
 } else {
 showToast((result && result.message) || ('ส่งข้อมูลไม่สำเร็จ (HTTP ' + res.status + ') — ตรวจสอบการ Deploy ของ Web App URL'));
@@ -1840,7 +1842,7 @@ panel.className = 'crm-panel';
 const c = crmDraft;
 panel.innerHTML = `
 <div class="crm-panel-head">
-<div><h3>🌬️🧼 Multi-Product Smart CRM</h3><div class="crm-sub">${crmEditingId ? 'กำลังแก้ไขเคสที่บันทึกไว้' : 'บันทึกเคสใหม่ — ข้อมูลจะสร้างคอลัมน์ O ให้อัตโนมัติ'}</div></div>
+<div><h3>🌬️🧼 Multi-Product Smart CRM</h3><div class="crm-sub">${crmEditingId ? 'กำลังแก้ไขเคสที่บันทึกไว้' : 'บันทึกเคสใหม่ — ข้อมูลจะสร้างคอลัมน์ Q ให้อัตโนมัติ'}</div></div>
 <button class="crm-reset-btn" id="crmResetBtn">🔄 ล้างข้อมูล / ติดต่อลูกค้าใหม่</button>
 </div>
 <div class="crm-controlbar" style="margin-bottom:14px"><div class="crm-toprow"><div class="field" style="margin:0;min-width:260px"><label>ค้นหา SO จาก Google Sheet</label><input type="text" id="crmOrderLookupSo" placeholder="กรอก Service Order เช่น ASTH..."></div><button class="btn secondary" type="button" id="crmOrderLookupBtn">ค้นหาและโหลดข้อมูล</button><div class="hint" style="align-self:center;max-width:460px">หากพบ SO เดิม ระบบจะโหลดข้อมูลมาแก้ไข และเมื่อบันทึกจะอัปเดตแถวเดิมใน Orders</div></div></div>
@@ -1920,15 +1922,20 @@ ${CRM_TRANSACTION_TYPES.map(t=>`<option value="${escapeAttr(t)}" ${c.transaction
 <div><label>Unit Count</label><input type="number" id="crmUnitCount" value="${escapeAttr(c.unitCount)}" min="1"></div>
 <div><label>Customer request</label><input type="text" id="crmCustReq" value="${escapeAttr(c.customerRequest)}"></div>
 <div class="full"><label>Noted</label><input type="text" id="crmNoted" value="${escapeAttr(c.noted)}"></div>
-<div class="full"><label>Noted 2 (คอลัมน์ P)</label><input type="text" id="crmNoted2" value="${escapeAttr(c.noted2)}"></div>
+<div class="full"><label>Noted 2 (คอลัมน์ R)</label><input type="text" id="crmNoted2" value="${escapeAttr(c.noted2)}"></div>
 </div>
+${c.productType==='air' ? `<div class="crm-section-title">🏠 Conseal / Conceal (ท่อฝังหรือไม่) · คอลัมน์ P</div>
+<div class="survey-choice-group" id="crmConcealGroup">
+<button type="button" class="survey-choice-btn${c.conceal==='Yes'?' active':''}" data-val="Yes">Yes · ท่อฝัง</button>
+<button type="button" class="survey-choice-btn${c.conceal==='No'?' active':''}" data-val="No">No · ไม่ใช่ท่อฝัง</button>
+</div>` : ''}
 <div class="crm-section-title" id="crmSurveyTitle">📋 แผงคำถามสำรวจหน้างาน</div>
 <div class="crm-survey" id="crmSurveyBox"></div>
-<div class="crm-section-title">⚙️ ข้อความมัดรวม (จะถูกบันทึกลงคอลัมน์ O โดยอัตโนมัติ)</div>
+<div class="crm-section-title">⚙️ ข้อความมัดรวม (จะถูกบันทึกลงคอลัมน์ Q โดยอัตโนมัติ)</div>
 <div class="crm-o-preview" id="crmOPreview"></div>
 <div class="crm-actions-row">
 <button class="btn" id="crmSaveSendBtn">💾 บันทึกเคสและส่งเข้า Google Sheet</button>
-<button class="btn secondary" id="crmCopyOBtn">📋 คัดลอกข้อความคอลัมน์ O</button>
+<button class="btn secondary" id="crmCopyOBtn">📋 คัดลอกข้อความคอลัมน์ Q</button>
 <button class="btn secondary" id="crmCopyRowBtn">📋 คัดลอกแถวสำหรับ Google Sheet</button>
 </div>
 <div class="crm-section-title">💬 ข้อความส่งต่อ Line@ (ขอรูปภาพ/วิดีโอ Auto-Fill + แนบหมายเหตุเตือนความจำ)</div>
@@ -1956,6 +1963,7 @@ return;
 }
 crmDraft.productType = newType;
 crmDraft.answers = new Array(10).fill('');
+if(newType!=='air') crmDraft.conceal = '';
 crmDraft.airFloor = ''; crmDraft.airOutdoor = ''; crmDraft.airIndoor = '';
 renderAirCRMRefresh();
 };
@@ -1984,6 +1992,13 @@ bind('crmPhone','phone'); bind('crmAddress','address'); bind('crmPostcode','post
 bind('crmDate','apptDate'); bind('crmTime','apptTime'); bind('crmModel','model');
 bind('crmSecContact','secondaryContact'); bind('crmLineId','lineId'); bind('crmUnitCount','unitCount');
 bind('crmCustReq','customerRequest'); bind('crmNoted','noted'); bind('crmNoted2','noted2');
+panel.querySelectorAll('#crmConcealGroup .survey-choice-btn').forEach(btn=>{
+btn.onclick = ()=>{
+crmDraft.conceal = btn.dataset.val;
+panel.querySelectorAll('#crmConcealGroup .survey-choice-btn').forEach(choice=>choice.classList.toggle('active', choice===btn));
+crmRefreshPreviews();
+};
+});
 panel.querySelector('#crmAddress').addEventListener('blur', ()=>{
 if(!crmDraft.postcode){
 const pc = crmExtractPostcode(crmDraft.address);
@@ -3214,7 +3229,7 @@ if(qi) kbStartEditQA(parseInt(qi.dataset.idx), qi.dataset.prod);
 }
 });
 /* =========================================================
-COLUMN O PATCHER — paste an already-sent Column O block,
+COLUMN Q PATCHER — paste an already-sent Column Q block,
 fill in only what's missing, copy the completed text back.
 ========================================================= */
 let patchParsed = null; // {fields:{...}, questions:[{q,a}], clsLine, custTypeLine}
@@ -3318,7 +3333,7 @@ const panel = document.createElement('div');
 panel.className = 'crm-panel';
 panel.innerHTML = `
 <div class="crm-panel-head">
-<div><h3>📋 วางข้อมูลเดิม — เติมส่วนที่ขาด</h3><div class="crm-sub">สำหรับเคสที่ส่งออก Column O ไปแล้ว แต่ลูกค้าไม่รับสาย/ต้องขอข้อมูลเพิ่มทีหลัง</div></div>
+<div><h3>📋 วางข้อมูลเดิม — เติมส่วนที่ขาด</h3><div class="crm-sub">สำหรับเคสที่ส่งออก Column Q ไปแล้ว แต่ลูกค้าไม่รับสาย/ต้องขอข้อมูลเพิ่มทีหลัง</div></div>
 </div>
 <div class="crm-mode-toggle">
 <button class="crm-mode-btn" id="crmModeNewBtn2">🆕 เคสใหม่</button>
@@ -3336,7 +3351,7 @@ function patchRenderBody(body){
 if(!patchParsed){
 body.innerHTML = `
 <div class="patch-paste-zone">
-<label style="font-size:11px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;display:block;">วางข้อความ Column O ที่เคยส่งออกไปแล้ว</label>
+<label style="font-size:11px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;display:block;">วางข้อความ Column Q ที่เคยส่งออกไปแล้ว</label>
 <textarea id="patchRaw" placeholder="วางข้อความทั้งหมด (Service Order, Customer, ...รายการสอบถาม...) ที่นี่..."></textarea>
 </div>
 <button class="btn" id="patchParseBtn">🔍 แยกข้อมูล</button>
@@ -3392,7 +3407,7 @@ html += `
 <div class="crm-actions-row" style="margin-top:14px;">
 <button class="btn" id="patchGenBtn">✅ สร้างข้อความสมบูรณ์</button>
 </div>
-<div class="crm-section-title">📋 ข้อความ Column O ที่สมบูรณ์</div>
+<div class="crm-section-title">📋 ข้อความ Column Q ที่สมบูรณ์</div>
 <div class="der-preview" id="patchPreview">กด "สร้างข้อความสมบูรณ์" เพื่อดูตัวอย่าง</div>
 <button class="btn secondary" id="patchCopyBtn">📋 คัดลอกข้อความ</button>
 `;
@@ -3921,7 +3936,7 @@ mnavSync();</script>
         '<td>' + reportEscape(order.model || '-') + '</td>' +
         '<td>' + reportEscape(order.vip || '-') + '</td>' +
         '<td>' + reportEscape(order.type || '-') + '</td>' +
-        '<td><button class="pct-native-button primary" data-edit-so="' + reportEscape(order.so) + '">แก้ไข A–P</button></td></tr>';
+        '<td><button class="pct-native-button primary" data-edit-so="' + reportEscape(order.so) + '">แก้ไข A–Q</button></td></tr>';
     }).join('') : nativeEmptyRow(15, 'ไม่พบ Orders ตามเงื่อนไขที่เลือก');
     document.getElementById('pctOrderQ').value = dashboardState.orderFilters.q || '';
     document.getElementById('pctOrderStatus').value = dashboardState.orderFilters.status || '';
@@ -4144,7 +4159,7 @@ mnavSync();</script>
     try {
       const payload = await dashboardGet('getEditableOrderCase', { so: so });
       const item = payload.data;
-      const ui = nativeModal('แก้ไขข้อมูล Orders — คอลัมน์ A ถึง P',
+      const ui = nativeModal('แก้ไขข้อมูล Orders — คอลัมน์ A ถึง Q',
         '<input type="hidden" name="originalSo" value="' + reportEscape(item.so) + '">' +
         '<div class="pct-native-form-grid pct-order-edit-grid">' +
         '<div class="pct-native-field"><label>A · Date</label><input type="date" name="date" value="' + reportEscape(reportDate(item.date)) + '"></div>' +
@@ -4164,7 +4179,8 @@ mnavSync();</script>
         '<div class="pct-native-field"><label>M · VIP / KOL</label><input name="vip" value="' + reportEscape(item.vip) + '"></div>' +
         '<div class="pct-native-field"><label>N · Type</label><input name="type" value="' + reportEscape(item.type) + '"></div>' +
         '<div class="pct-native-field"><label>O · Difficulty</label><input name="difficulty" value="' + reportEscape(item.difficulty) + '"></div>' +
-        '<div class="pct-native-field full pct-order-noted"><label>P · Noted</label><textarea name="noted" placeholder="รายละเอียดทั้งหมดของเคส">' + reportEscape(item.noted) + '</textarea></div></div>', 'บันทึกข้อมูล A–P');
+        '<div class="pct-native-field"><label>P · Conceal</label><select name="conceal"><option value=""' + (!clean(item.conceal)?' selected':'') + '>-</option><option value="Yes"' + (clean(item.conceal).toLowerCase()==='yes'?' selected':'') + '>Yes</option><option value="No"' + (clean(item.conceal).toLowerCase()==='no'?' selected':'') + '>No</option></select></div>' +
+        '<div class="pct-native-field full pct-order-noted"><label>Q · Noted</label><textarea name="noted" placeholder="รายละเอียดทั้งหมดของเคส">' + reportEscape(item.noted) + '</textarea></div></div>', 'บันทึกข้อมูล A–Q');
       ui.form.onsubmit = async function (event) {
         event.preventDefault();
         const data = Object.fromEntries(new FormData(ui.form).entries());
@@ -4230,6 +4246,7 @@ mnavSync();</script>
     try {
       const selected = dashboardState.appointmentDate || dashboardTodayIso();
       const payload = await dashboardGet('dashboardBootstrap', {
+        initial: '1',
         page: 1,
         pageSize: 30,
         dateFrom: dashboardState.appointmentFilterActive ? selected : '',
@@ -4238,6 +4255,11 @@ mnavSync();</script>
         fresh: '1'
       });
       if (requestId !== dashboardState.orderRequestSeq || dashboardState.tab !== 'orders') return;
+      if (payload.initialDate && payload.initialDate !== selected) {
+        dashboardState.appointmentDate = payload.initialDate;
+        dashboardState.orderFilters.dateFrom = payload.initialDate;
+        dashboardState.orderFilters.dateTo = payload.initialDate;
+      }
       setDashboardStatus(true, 'Google Sheet connected');
       renderDashboardSummary(payload.summary);
       dashboardState.page = 1;

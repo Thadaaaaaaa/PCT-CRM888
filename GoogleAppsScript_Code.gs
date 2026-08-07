@@ -12,7 +12,7 @@ const CONFIG = Object.freeze({
     PROBLEMS: 'Problem case',
     AC: 'AC service'
   }),
-  ORDER_COLUMNS: 19,
+  ORDER_COLUMNS: 20,
   // Short cache keeps the dashboard responsive while reflecting sheet edits within one minute.
   CACHE_SECONDS: 60,
   DEFAULT_PAGE_SIZE: 30,
@@ -35,12 +35,24 @@ function doGet(e) {
   if (action === 'dashboardBootstrap') {
     const dashboardRows = getOrderRows_();
     const dashboardSummary = makeSummary_(dashboardRows);
+    const dashboardParams = requestParams_(e);
+    let dashboardOrders = filterOrders_(dashboardRows, dashboardParams);
+    let initialDate = dashboardParams.dateFrom;
+    if (dashboardParams.initial && dashboardOrders.total === 0) {
+      initialDate = latestOrderDate_(dashboardRows, dashboardParams.dateField);
+      if (initialDate) {
+        dashboardParams.dateFrom = initialDate;
+        dashboardParams.dateTo = initialDate;
+        dashboardOrders = filterOrders_(dashboardRows, dashboardParams);
+      }
+    }
     return jsonOutput_({
       ok: true,
       dashboardApi: true,
       version: 'PCT_DASHBOARD_API_V2',
+      initialDate: initialDate,
       summary: dashboardSummary,
-      orders: filterOrders_(dashboardRows, requestParams_(e))
+      orders: dashboardOrders
     });
   }
   if (action === 'dashboardLiveSummary') {
@@ -252,11 +264,25 @@ function saveCRMOrderFromWebhook_(payload) {
     // setValues changes only cell values; existing data validation/dropdowns in H and L remain intact.
     // For a new row, copy the validation and format from the preceding data row first.
     if (!existingRow && rowNumber > 2) {
-      const source = sheet.getRange(rowNumber - 1, 1, 1, 17);
-      source.copyTo(sheet.getRange(rowNumber, 1, 1, 17), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
-      sheet.getRange(rowNumber, 1, 1, 17).setDataValidations(source.getDataValidations());
+      const source = sheet.getRange(rowNumber - 1, 1, 1, CONFIG.ORDER_COLUMNS);
+      source.copyTo(sheet.getRange(rowNumber, 1, 1, CONFIG.ORDER_COLUMNS), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      sheet.getRange(rowNumber, 1, 1, CONFIG.ORDER_COLUMNS).setDataValidations(source.getDataValidations());
     }
-    sheet.getRange(rowNumber, 1, 1, 17).setValues([[
+    const operationFields = [
+      clean_(payload.model),
+      clean_(payload.customerType),
+      clean_(payload.transactionType),
+      clean_(payload.difficulty),
+      clean_(payload.productType) === 'air' ? clean_(payload.conceal) : '',
+      clean_(payload.columnQContent || payload.columnOContent),
+      clean_(payload.noted2)
+    ];
+    const modelCell = sheet.getRange(rowNumber, 12);
+    const modelValidation = modelCell.getDataValidation();
+    if (modelValidation && !modelValidation.getAllowInvalid()) {
+      modelCell.setDataValidation(modelValidation.copy().setAllowInvalid(true).build());
+    }
+    sheet.getRange(rowNumber, 1, 1, 11).setValues([[
       toSheetDate_(payload.columnA),
       clean_(payload.so),
       clean_(payload.doNumber),
@@ -267,19 +293,29 @@ function saveCRMOrderFromWebhook_(payload) {
       clean_(payload.statusLabel),
       clean_(payload.fillOnFile) || 'No',
       toSheetDate_(payload.apptDate),
-      clean_(payload.apptTime),
-      clean_(payload.model),
-      clean_(payload.customerType),
-      clean_(payload.transactionType),
-      clean_(payload.difficulty),
-      clean_(payload.columnOContent),
-      clean_(payload.noted2)
+      clean_(payload.apptTime)
     ]]);
+    sheet.getRange(rowNumber, 12, 1, 7).setValues([operationFields]);
     invalidateOrderCache_();
     SpreadsheetApp.flush();
+    const savedOperationFields = sheet.getRange(rowNumber, 12, 1, 7).getDisplayValues()[0];
+    const operationFieldsVerified = operationFields.every(function (value, index) {
+      return clean_(savedOperationFields[index]) === clean_(value);
+    });
+    if (!operationFieldsVerified) throw new Error('ตรวจสอบคอลัมน์ L-R ไม่ผ่าน');
     return {
       message: existingRow ? 'อัปเดต Order เรียบร้อยแล้ว' : 'เพิ่ม Order เรียบร้อยแล้ว',
-      rowNumber: rowNumber
+      rowNumber: rowNumber,
+      operationFieldsVerified: true,
+      savedOperationFields: {
+        model: savedOperationFields[0],
+        customerType: savedOperationFields[1],
+        transactionType: savedOperationFields[2],
+        difficulty: savedOperationFields[3],
+        conceal: savedOperationFields[4],
+        noted: savedOperationFields[5],
+        noted2: savedOperationFields[6]
+      }
     };
   } finally {
     lock.releaseLock();
@@ -308,6 +344,7 @@ function requestParams_(e) {
     date: clean_(p.date),
     month: clean_(p.month),
     dateField: clean_(p.dateField) === 'coming' ? 'coming' : 'appointment',
+    initial: clean_(p.initial) === '1',
     page: Math.max(1, Number(p.page) || 1),
     pageSize: Math.min(CONFIG.MAX_PAGE_SIZE, Math.max(10, Number(p.pageSize) || CONFIG.DEFAULT_PAGE_SIZE))
   };
@@ -383,7 +420,8 @@ function getCRMOrderBySO_(so) {
     customerType: normalize_(o.vip) || 'general',
     transactionType: o.type || 'Installation only',
     cls: o.difficulty,
-    columnOContent: o.noted,
+    conceal: o.conceal,
+    columnQContent: o.noted,
     noted2: o.noted2,
     productType: /washer|washing/i.test([o.model, o.type].join(' ')) ? 'washer' : /repair|service/i.test(o.type) ? 'repair' : 'air'
   };
@@ -400,7 +438,7 @@ function crmStatusKey_(value) {
 }
 
 /**
- * แก้ไข Orders!A:P โดยใช้ SO เดิมเป็นคีย์ค้นหาแถว
+ * แก้ไข Orders!A:Q โดยใช้ SO เดิมเป็นคีย์ค้นหาแถว
  */
 function updateOrderCaseFields(payload) {
   payload = payload || {};
@@ -414,7 +452,7 @@ function updateOrderCaseFields(payload) {
     if (!found) throw new Error('ไม่พบเลข SO ในหน้า Orders');
     const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
 
-    sheet.getRange(found.rowNumber, 1, 1, 16).setValues([[
+    sheet.getRange(found.rowNumber, 1, 1, 17).setValues([[
       toSheetDate_(payload.date),
       clean_(payload.so) || found.data.so,
       clean_(payload.deliveryOrder),
@@ -430,6 +468,7 @@ function updateOrderCaseFields(payload) {
       clean_(payload.vip),
       clean_(payload.type),
       clean_(payload.difficulty),
+      clean_(payload.conceal),
       clean_(payload.noted)
     ]]);
     sheet.getRange(found.rowNumber, 1).setNumberFormat('dd/MM/yyyy');
@@ -438,7 +477,7 @@ function updateOrderCaseFields(payload) {
 
     return {
       ok: true,
-      message: 'อัปเดตข้อมูล Orders คอลัมน์ A–P เรียบร้อยแล้ว',
+      message: 'อัปเดตข้อมูล Orders คอลัมน์ A–Q เรียบร้อยแล้ว',
       data: getEditableOrderCase(clean_(payload.so) || so)
     };
   } finally {
@@ -691,6 +730,15 @@ function filterOrders_(rows, params) {
   };
 }
 
+function latestOrderDate_(rows, dateField) {
+  let latest = '';
+  rows.forEach(function (order) {
+    const value = normalizeDateString_(dateField === 'coming' ? order.date : order.appointmentDate);
+    if (value && value > latest) latest = value;
+  });
+  return latest;
+}
+
 function makeOrderStatusSummary_(rows) {
   const summary = { total: rows.length, confirm: 0, pendingFillOnFile: 0 };
   rows.forEach(function (order) {
@@ -841,16 +889,17 @@ function mapOrderRow_(r) {
     vip: r[12],
     type: r[13],
     difficulty: r[14],
-    noted: r[15],
-    noted2: r[16],
-    csUpdate: r[17],
-    picture: r[18]
+    conceal: r[15],
+    noted: r[16],
+    noted2: r[17],
+    csUpdate: r[18],
+    picture: r[19]
   };
   data.searchText = normalize_([
     data.date, data.so, data.deliveryOrder, data.name, data.phone, data.address,
     data.postCode, data.status, data.fillOnFile, data.appointmentDate,
     data.appointmentTime, data.model, data.vip, data.type, data.difficulty,
-    data.noted, data.noted2, data.csUpdate, data.picture
+    data.conceal, data.noted, data.noted2, data.csUpdate, data.picture
   ].join(' '));
   return data;
 }
