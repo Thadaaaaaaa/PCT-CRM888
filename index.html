@@ -3899,7 +3899,10 @@ mnavSync();</script>
     dashboardState.orders = data;
     dashboardState.page = data.page || 1;
     dashboardState.totalPages = data.totalPages || 1;
-    renderDashboardStatusCards(dashboardState.appointmentFilterActive ? (data.summary || { total: data.total }) : dashboardState.summary);
+    const appointmentCounts = dashboardState.summary && dashboardState.summary.appointmentsByDate;
+    dashboardState.summary = Object.assign({}, dashboardState.summary || {}, data.summary || { total: data.total });
+    if (appointmentCounts) dashboardState.summary.appointmentsByDate = appointmentCounts;
+    renderDashboardStatusCards(dashboardState.summary);
     const content = document.getElementById('pctNativeContent');
     if (!content) return;
     if (dashboardState.appointmentFilterActive) {

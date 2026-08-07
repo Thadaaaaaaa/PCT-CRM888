@@ -33,24 +33,19 @@ function doGet(e) {
     return jsonOutput_({ ok: true, reportApi: true, version: 'PCT_REPORT_API_V1' });
   }
   if (action === 'dashboardBootstrap') {
-    const dashboardRows = getOrderRows_();
-    const dashboardSummary = makeSummary_(dashboardRows);
     const dashboardParams = requestParams_(e);
-    let dashboardOrders = filterOrders_(dashboardRows, dashboardParams);
-    let initialDate = dashboardParams.dateFrom;
-    if (dashboardParams.initial && dashboardOrders.total === 0) {
-      initialDate = latestOrderDate_(dashboardRows, dashboardParams.dateField, dashboardParams.dateFrom);
-      if (initialDate) {
-        dashboardParams.dateFrom = initialDate;
-        dashboardParams.dateTo = initialDate;
-        dashboardOrders = filterOrders_(dashboardRows, dashboardParams);
-      }
-    }
+    const dashboardRows = getOrderRowsForParams_(dashboardParams);
+    const dashboardOrders = filterOrders_(dashboardRows, dashboardParams);
+    const dashboardSummary = makeSummary_(dashboardRows);
+    const appointmentSummary = getAppointmentLiveSummary_();
+    dashboardSummary.appointmentsByDate = appointmentSummary.appointmentsByDate;
+    dashboardSummary.withAppointment = appointmentSummary.withAppointment;
     return jsonOutput_({
       ok: true,
       dashboardApi: true,
-      version: 'PCT_DASHBOARD_API_V2',
-      initialDate: initialDate,
+      version: 'PCT_DASHBOARD_API_V3',
+      initialDate: dashboardParams.dateFrom,
+      readMode: isExactDateFilter_(dashboardParams) ? 'selected-day' : 'all-orders',
       summary: dashboardSummary,
       orders: dashboardOrders
     });
@@ -359,7 +354,8 @@ function getBootstrap(params) {
 }
 
 function getOrders(params) {
-  return filterOrders_(getOrderRows_(), params || {});
+  params = params || {};
+  return filterOrders_(getOrderRowsForParams_(params), params);
 }
 
 function getPendingCases(params) {
@@ -723,20 +719,11 @@ function filterOrders_(rows, params) {
   return {
     items: filtered.slice(start, start + pageSize).map(stripSearchText_),
     total: filtered.length,
-    summary: makeOrderStatusSummary_(filtered),
+    summary: makeSummary_(filtered),
     page: page,
     pageSize: pageSize,
     totalPages: Math.max(1, Math.ceil(filtered.length / pageSize))
   };
-}
-
-function latestOrderDate_(rows, dateField, notAfterDate) {
-  let latest = '';
-  rows.forEach(function (order) {
-    const value = normalizeDateString_(dateField === 'coming' ? order.date : order.appointmentDate);
-    if (value && (!notAfterDate || value <= notAfterDate) && value > latest) latest = value;
-  });
-  return latest;
 }
 
 function makeOrderStatusSummary_(rows) {
@@ -869,6 +856,57 @@ function getOrderRows_(skipCache) {
   const values = sheet.getRange(2, 1, lastRow - 1, CONFIG.ORDER_COLUMNS).getDisplayValues();
   const rows = values.map(mapOrderRow_).filter(function (o) { return o.so; });
   storeOrderCache_(cache, token, metaKey, rows);
+  return rows;
+}
+
+function isExactDateFilter_(params) {
+  return Boolean(params && params.dateFrom && params.dateFrom === params.dateTo);
+}
+
+/**
+ * Fast path for a selected day: scan only the chosen date column, then read
+ * A:T for matching rows. The full 20-column Orders table is read only when
+ * the user explicitly chooses "ดูทุกวัน" or a multi-day range.
+ */
+function getOrderRowsForParams_(params) {
+  if (!isExactDateFilter_(params)) return getOrderRows_();
+  return getOrderRowsForDate_(params.dateField, params.dateFrom);
+}
+
+function getOrderRowsForDate_(dateField, targetDate) {
+  const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2 || !targetDate) return [];
+
+  const dateColumn = dateField === 'coming' ? 1 : 10;
+  const rowCount = lastRow - 1;
+  const dateValues = sheet.getRange(2, dateColumn, rowCount, 1).getDisplayValues();
+  const matchingRows = [];
+  dateValues.forEach(function (row, index) {
+    if (normalizeDateString_(row[0]) === targetDate) matchingRows.push(index + 2);
+  });
+  if (!matchingRows.length) return [];
+
+  const groups = [];
+  matchingRows.forEach(function (rowNumber) {
+    const lastGroup = groups[groups.length - 1];
+    if (lastGroup && rowNumber === lastGroup.end + 1) {
+      lastGroup.end = rowNumber;
+    } else {
+      groups.push({ start: rowNumber, end: rowNumber });
+    }
+  });
+
+  const rows = [];
+  groups.forEach(function (group) {
+    const height = group.end - group.start + 1;
+    sheet.getRange(group.start, 1, height, CONFIG.ORDER_COLUMNS)
+      .getDisplayValues()
+      .forEach(function (values) {
+        const order = mapOrderRow_(values);
+        if (order.so) rows.push(order);
+      });
+  });
   return rows;
 }
 
