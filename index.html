@@ -2389,7 +2389,9 @@ const RULES = [
 { key:'name',   words:['name','顾客姓名'] },
 { key:'tel',    words:['tel','电话'] },
 { key:'detail', words:['detail case'] },
-{ key:'car',    words:['team technician (car)','team technician（car）','team technician car','team technician'] },
+// Team must come from column X only: "Team Technician (Car)".
+// Never fall back to column W ("Team Technician").
+{ key:'car',    words:['team technician (car)'], exact:true },
 { key:'type',   words:['type'], exact:true },
 { key:'class',  words:['class'], exact:true },
 { key:'vip',    words:['kol','vip'] },
