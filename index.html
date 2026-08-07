@@ -2356,16 +2356,19 @@ Events: so:loaded, so:copied, so:edited, so:exported
 ========================================================== */
 const SOApp = (() => {
 'use strict';
-let _posts = [], _filtered = [], _teams = [];
+let _posts = [], _filtered = [], _cars = [];
 let _filter = 'all', _src = '';
 const _ct = {}; // copy timers
-/* ── Team colors ── */
-const TC = {
-TeamA:'#6366F1',TeamB:'#8B5CF6',TeamC:'#EC4899',TeamD:'#F59E0B',
-TeamE:'#10B981',TeamF:'#3B82F6',TeamG:'#F97316',TeamH:'#14B8A6',
-TeamI:'#E11D48',TeamJ:'#7C3AED',TeamK:'#0EA5E9',TeamL:'#84CC16',
-};
-function tc(t){ return TC[t]||'#6366F1'; }
+/* ── Team Technician (Car) / license plates ── */
+const CAR_PLATES = [
+'4ฒฌ3421','4ฒฌ3422','4ฒฌ3423','4ฒฌ3425','4ฒฌ3426','4ฒฌ3429',
+'4ฒฌ3430','4ฒฌ3433','4ฒญ4172','4ฒญ4173','4ฒญ4174'
+];
+const CAR_COLORS = ['#6366F1','#8B5CF6','#EC4899','#F59E0B','#10B981','#3B82F6','#F97316','#14B8A6','#E11D48','#7C3AED','#0EA5E9'];
+function carColor(plate){
+const i = CAR_PLATES.indexOf(plate);
+return i >= 0 ? CAR_COLORS[i] : '#6366F1';
+}
 function cc(c){
 if(c==='Class III') return 'b-c3';
 if(c==='Class II')  return 'b-c2';
@@ -2386,7 +2389,7 @@ const RULES = [
 { key:'name',   words:['name','顾客姓名'] },
 { key:'tel',    words:['tel','电话'] },
 { key:'detail', words:['detail case'] },
-{ key:'team',   words:['team technician'] },
+{ key:'car',    words:['team technician (car)','team technician（car）','team technician car','team technician'] },
 { key:'type',   words:['type'], exact:true },
 { key:'class',  words:['class'], exact:true },
 { key:'vip',    words:['kol','vip'] },
@@ -2448,7 +2451,7 @@ return s;
 }
 function composePost(r){
 const L = [];
-if(r.team) L.push(r.team);
+if(r.car) L.push(r.car);
 r.engineers.forEach(e=>{ if(e) L.push(e); });
 L.push('');
 if(r.serviceType) L.push(r.serviceType);
@@ -2472,7 +2475,7 @@ const r = rows[i];
 const so = String(r[ci.so]||'').trim();
 if(!so) continue;
 const engineers = (ci.engCols||[]).map(c=>String(r[c]||'').trim()).filter(v=>v && !v.startsWith('Team'));
-const team       = String(r[ci.team]||'').trim();
+const car        = ci.car!==undefined ? String(r[ci.car]||'').trim() : '';
 const serviceType= ci.type!==undefined ? String(r[ci.type]||'').trim() : '';
 const classLevel = ci.class!==undefined ? String(r[ci.class]||'').trim() : '';
 const detailCase = ci.detail!==undefined ? String(r[ci.detail]||'') : '';
@@ -2488,9 +2491,9 @@ const isWaitingPhoto = /waiting\s*photo/i.test(pictureVal);
 const pictureUrl = (!isWaitingPhoto && /^https?:\/\//i.test(pictureVal)) ? pictureVal.split(/\s|\n/)[0] : '';
 // pictureStatus: 'waiting' = ยังไม่มีรูป (พบคำว่า Waiting photo) | 'has' = มีรูปแนบ | 'none' = ไม่มีข้อมูล
 const pictureStatus = isWaitingPhoto ? 'waiting' : (pictureVal ? 'has' : 'none');
-const rd = { team, engineers, serviceType, classLevel, detailCase, dateVal, timeVal, so };
+const rd = { car, engineers, serviceType, classLevel, detailCase, dateVal, timeVal, so };
 const text = composePost(rd);
-out.push({ id:i, so, customer, tel, team, serviceType, classLevel:classLevel||extractClass(detailCase), vip, note, btu, date:dateVal, time:timeVal, engineers, pictureStatus, pictureUrl, text, originalText:text });
+out.push({ id:i, so, customer, tel, car, serviceType, classLevel:classLevel||extractClass(detailCase), vip, note, btu, date:dateVal, time:timeVal, engineers, pictureStatus, pictureUrl, text, originalText:text });
 }
 return out;
 }
@@ -2573,20 +2576,27 @@ const bar = $('so_fbar');
 const counts = {};
 let unassignedCount = 0;
 _posts.forEach(p=>{
-if(p.team) counts[p.team]=(counts[p.team]||0)+1;
+if(p.car) counts[p.car]=(counts[p.car]||0)+1;
 else unassignedCount++;
 });
-_teams = [...new Set(_posts.map(p=>p.team))].filter(Boolean).sort();
+_cars = [...new Set(_posts.map(p=>p.car))].filter(Boolean).sort((a,b)=>{
+const ai=CAR_PLATES.indexOf(a), bi=CAR_PLATES.indexOf(b);
+if(ai>=0&&bi>=0) return ai-bi;
+if(ai>=0) return -1;
+if(bi>=0) return 1;
+return a.localeCompare(b,'th');
+});
 let h = `<button class="pill ${_filter==='all'?'on':''}" onclick="SOApp.setFilter('all')">ทั้งหมด (${_posts.length})</button>`;
-_teams.forEach(t=>{
-const on = _filter===t;
-const st = on ? `background:${tc(t)};border-color:${tc(t)};color:#fff` : '';
-h += `<button class="pill ${on?'on':''}" style="${st}" onclick="SOApp.setFilter('${t}')">${t} (${counts[t]||0})</button>`;
+_cars.forEach(plate=>{
+const on = _filter===plate;
+const color = carColor(plate);
+const st = on ? `background:${color};border-color:${color};color:#fff` : '';
+h += `<button class="pill ${on?'on':''}" style="${st}" onclick="SOApp.setFilter('${plate}')">${plate} (${counts[plate]||0})</button>`;
 });
 if(unassignedCount>0){
 const on = _filter===UNASSIGNED;
 const st = on ? `background:#9CA3AF;border-color:#9CA3AF;color:#fff` : `color:#9CA3AF`;
-h += `<button class="pill ${on?'on':''}" style="${st}" onclick="SOApp.setFilter('${UNASSIGNED}')">⏳ รอมอบทีม (${unassignedCount})</button>`;
+h += `<button class="pill ${on?'on':''}" style="${st}" onclick="SOApp.setFilter('${UNASSIGNED}')">⏳ รอระบุรถ (${unassignedCount})</button>`;
 }
 bar.innerHTML = h;
 }
@@ -2596,9 +2606,9 @@ if(!_filtered.length){ c.innerHTML='<div class="empty">ไม่พบราย�
 c.innerHTML = _filtered.map(p=>{
 const mod = p.text!==p.originalText;
 const meta = [p.serviceType, p.btu, p.time].filter(Boolean).join(' · ');
-const teamBadge = p.team
-? `<span class="badge" style="color:${tc(p.team)};background:${tc(p.team)}18">${esc(p.team)}</span>`
-: `<span class="badge" style="color:#9CA3AF;background:#F3F4F6">⏳ รอมอบทีม</span>`;
+const carBadge = p.car
+? `<span class="badge" style="color:${carColor(p.car)};background:${carColor(p.car)}18">🚗 ${esc(p.car)}</span>`
+: `<span class="badge" style="color:#9CA3AF;background:#F3F4F6">⏳ รอระบุรถ</span>`;
 const picBadge = p.pictureStatus === 'waiting'
 ? `<span class="badge" style="color:#DC2626;background:#FEE2E2" title="พบคำว่า Waiting photo ในคอลัมน์ Picture in case">⏳ ยังไม่มีรูป</span>`
 : p.pictureStatus === 'has'
@@ -2611,7 +2621,7 @@ return `
 <div class="card-hd">
 <div class="card-badges">
 <div class="card-bl">
-${teamBadge}
+${carBadge}
 <span class="badge ${cc(p.classLevel)}">${esc(p.classLevel||'—')}</span>
 ${p.vip?`<span class="badge b-vip">${esc(p.vip)}</span>`:''}
 ${picBadge}
@@ -2690,7 +2700,7 @@ setFilter(t){ _filter=t; this.render(); },
 render(){
 const q = ($('so_search-i')?.value||'').toLowerCase();
 _filtered = _posts.filter(p=>{
-const tm = _filter==='all' || p.team===_filter || (_filter===UNASSIGNED && !p.team);
+const tm = _filter==='all' || p.car===_filter || (_filter===UNASSIGNED && !p.car);
 const sm = !q||p.customer.toLowerCase().includes(q)||p.so.toLowerCase().includes(q);
 return tm&&sm;
 });
@@ -2745,11 +2755,14 @@ setTimeout(()=>{ b.classList.remove('ok'); l.textContent=`คัดลอกท�
 /** Get posts */
 getPosts(){ return JSON.parse(JSON.stringify(_posts)); },
 getFiltered(){ return JSON.parse(JSON.stringify(_filtered)); },
-getByTeam(t){ return JSON.parse(JSON.stringify(_posts.filter(p=>p.team===t))); },
-getTeams(){ return [..._teams]; },
+getByCar(plate){ return JSON.parse(JSON.stringify(_posts.filter(p=>p.car===plate))); },
+getCars(){ return [..._cars]; },
+// Backward-compatible aliases for integrations that still call the old API names.
+getByTeam(plate){ return this.getByCar(plate); },
+getTeams(){ return this.getCars(); },
 /** Export JSON */
 exportJSON(){
-const d=_posts.map(p=>({so:p.so,customer:p.customer,tel:p.tel,team:p.team,engineers:p.engineers,serviceType:p.serviceType,classLevel:p.classLevel,vip:p.vip,btu:p.btu,date:p.date,time:p.time,pictureStatus:p.pictureStatus,pictureUrl:p.pictureUrl,postText:p.text}));
+const d=_posts.map(p=>({so:p.so,customer:p.customer,tel:p.tel,teamTechnicianCar:p.car,engineers:p.engineers,serviceType:p.serviceType,classLevel:p.classLevel,vip:p.vip,btu:p.btu,date:p.date,time:p.time,pictureStatus:p.pictureStatus,pictureUrl:p.pictureUrl,postText:p.text}));
 const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
 const u=URL.createObjectURL(b);
 const a=document.createElement('a'); a.href=u; a.download=`SO_Posts_${new Date().toISOString().slice(0,10)}.json`; a.click();
@@ -2759,13 +2772,13 @@ emit('so:exported',{format:'json',data:d});
 },
 /** Push to external endpoint */
 async pushTo(url,opts={}){
-const payload={timestamp:new Date().toISOString(),source:_src,posts:_posts.map(p=>({so:p.so,customer:p.customer,team:p.team,serviceType:p.serviceType,classLevel:p.classLevel,postText:p.text}))};
+const payload={timestamp:new Date().toISOString(),source:_src,posts:_posts.map(p=>({so:p.so,customer:p.customer,teamTechnicianCar:p.car,serviceType:p.serviceType,classLevel:p.classLevel,postText:p.text}))};
 const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json',...opts.headers},body:JSON.stringify(payload),...opts});
 return r.json();
 },
 /** Reset to input view */
 reset(){
-_posts=[];_filtered=[];_teams=[];_filter='all';_src='';
+_posts=[];_filtered=[];_cars=[];_filter='all';_src='';
 if($('so_search-i')) $('so_search-i').value='';
 $('so_input-view').style.display='flex';
 $('so_posts-view').style.display='none';
@@ -2796,7 +2809,7 @@ const panel = document.createElement('div');
 panel.className = 'crm-panel so-panel-wrap';
 panel.innerHTML = `
 <div class="crm-panel-head">
-<div><h3>📋 SO Post Generator</h3><div class="crm-sub">วางข้อมูล (Ctrl+V) จาก Lark/Excel โดยตรง หรืออัปโหลดไฟล์ .xlsx — ได้โพสต์งานช่างพร้อมส่ง Line ทีละทีม</div></div>
+<div><h3>📋 SO Post Generator</h3><div class="crm-sub">วางข้อมูล (Ctrl+V) จาก Lark/Excel โดยตรง หรืออัปโหลดไฟล์ .xlsx — ระบบอ่าน Team Technician (Car) และแยกโพสต์ตามทะเบียนรถ</div></div>
 </div>
 <div id="so_input-view">
 <div class="so-paste-zone" id="so_paste-zone">
