@@ -13,7 +13,8 @@ const CONFIG = Object.freeze({
     AC: 'AC service'
   }),
   ORDER_COLUMNS: 20,
-  ORDER_DATE_FORMAT: 'yyyy-mm-dd',
+  ORDER_DATE_FORMAT: 'dd/MM/yyyy',
+  ORDER_APPOINTMENT_DATE_FORMAT: 'yyyy-mm-dd',
   // Short cache keeps the dashboard responsive while reflecting sheet edits within one minute.
   CACHE_SECONDS: 60,
   DEFAULT_PAGE_SIZE: 30,
@@ -371,15 +372,23 @@ function repairOrderDropdownColours() {
 
 function formatOrderDateCells_(sheet, rowNumber) {
   sheet.getRange(rowNumber, 1).setNumberFormat(CONFIG.ORDER_DATE_FORMAT);
-  sheet.getRange(rowNumber, 10).setNumberFormat(CONFIG.ORDER_DATE_FORMAT);
+  sheet.getRange(rowNumber, 10).setNumberFormat(CONFIG.ORDER_APPOINTMENT_DATE_FORMAT);
 }
 
 /**
- * One-time repair for Orders!A (Date) and Orders!J (Date appointment).
- * Converts parseable text dates to native dates, keeps unrecognised text intact,
- * and displays every populated-row date cell as yyyy-mm-dd for safe copy/paste.
+ * Compatibility entry point kept for the Apps Script function selector.
+ * Repairs only Orders!J (Date appointment); Orders!A keeps its original display.
  */
 function repairOrderDatesToIso() {
+  return repairOrderAppointmentDatesToIso();
+}
+
+/**
+ * One-time repair for Orders!J (Date appointment).
+ * Converts parseable text dates to native dates, keeps unrecognised text intact,
+ * and displays Date appointment as yyyy-mm-dd for safe copy/paste.
+ */
+function repairOrderAppointmentDatesToIso() {
   const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) {
@@ -394,7 +403,7 @@ function repairOrderDatesToIso() {
   }
 
   const rowCount = lastRow - 1;
-  const dateColumns = [1, 10];
+  const dateColumns = [10];
   let convertedTextDates = 0;
   let preservedText = 0;
   let preservedFormulas = 0;
@@ -426,7 +435,7 @@ function repairOrderDatesToIso() {
     });
 
     range.setValues(normalized);
-    range.setNumberFormat(CONFIG.ORDER_DATE_FORMAT);
+    range.setNumberFormat(CONFIG.ORDER_APPOINTMENT_DATE_FORMAT);
   });
 
   invalidateOrderCache_();
