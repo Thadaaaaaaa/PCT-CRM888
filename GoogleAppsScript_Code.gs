@@ -253,12 +253,14 @@ function saveCRMOrderFromWebhook_(payload) {
   try {
     const existingRow = findRowByValue_(sheet, 2, payload.so);
     const rowNumber = existingRow || Math.max(2, sheet.getLastRow() + 1);
-    // setValues changes only cell values; existing data validation/dropdowns in H and L remain intact.
-    // For a new row, copy the validation and format from the preceding data row first.
+    // For a new row, keep the native dropdown metadata instead of rebuilding
+    // validation rules. PASTE_DATA_VALIDATION retains the dropdown chip colours.
     if (!existingRow && rowNumber > 2) {
       const source = sheet.getRange(rowNumber - 1, 1, 1, CONFIG.ORDER_COLUMNS);
-      source.copyTo(sheet.getRange(rowNumber, 1, 1, CONFIG.ORDER_COLUMNS), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
-      sheet.getRange(rowNumber, 1, 1, CONFIG.ORDER_COLUMNS).setDataValidations(source.getDataValidations());
+      const target = sheet.getRange(rowNumber, 1, 1, CONFIG.ORDER_COLUMNS);
+      source.copyTo(target, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+      source.copyTo(target, SpreadsheetApp.CopyPasteType.PASTE_DATA_VALIDATION, false);
+      sheet.setRowHeight(rowNumber, sheet.getRowHeight(rowNumber - 1));
     }
     const operationFields = [
       clean_(payload.model),
@@ -270,9 +272,12 @@ function saveCRMOrderFromWebhook_(payload) {
       clean_(payload.noted2)
     ];
     const modelCell = sheet.getRange(rowNumber, 12);
-    const modelValidation = modelCell.getDataValidation();
-    if (modelValidation && !modelValidation.getAllowInvalid()) {
-      modelCell.setDataValidation(modelValidation.copy().setAllowInvalid(true).build());
+    const modelTemplateValidation = sheet.getRange(2, 12).getDataValidation();
+    if (modelTemplateValidation &&
+        !orderValidationAcceptsValue_(modelTemplateValidation, operationFields[0])) {
+      // Preserve arbitrary Model text as requested. Restore the native coloured
+      // dropdown after writing so the value can still be corrected in Sheets.
+      modelCell.clearDataValidations();
     }
     sheet.getRange(rowNumber, 1, 1, 11).setValues([[
       toSheetDate_(payload.columnA),
@@ -288,6 +293,7 @@ function saveCRMOrderFromWebhook_(payload) {
       clean_(payload.apptTime)
     ]]);
     sheet.getRange(rowNumber, 12, 1, 7).setValues([operationFields]);
+    restoreOrderDropdownValidation_(sheet, rowNumber);
     invalidateOrderCache_();
     SpreadsheetApp.flush();
     const savedOperationFields = sheet.getRange(rowNumber, 12, 1, 7).getDisplayValues()[0];
@@ -312,6 +318,53 @@ function saveCRMOrderFromWebhook_(payload) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function orderValidationAcceptsValue_(rule, value) {
+  const text = clean_(value);
+  if (!rule || !text) return true;
+  if (rule.getCriteriaType() !== SpreadsheetApp.DataValidationCriteria.VALUE_IN_LIST) return true;
+  const criteriaValues = rule.getCriteriaValues();
+  const options = Array.isArray(criteriaValues[0]) ? criteriaValues[0] : [];
+  return options.map(clean_).indexOf(text) !== -1;
+}
+
+function restoreOrderDropdownValidation_(sheet, rowNumber) {
+  const templateRow = 2;
+  if (rowNumber === templateRow) return;
+  sheet.getRange(templateRow, 8, 1, 2).copyTo(
+    sheet.getRange(rowNumber, 8, 1, 2),
+    SpreadsheetApp.CopyPasteType.PASTE_DATA_VALIDATION,
+    false
+  );
+  sheet.getRange(templateRow, 12, 1, 5).copyTo(
+    sheet.getRange(rowNumber, 12, 1, 5),
+    SpreadsheetApp.CopyPasteType.PASTE_DATA_VALIDATION,
+    false
+  );
+}
+
+/**
+ * One-time repair for Orders rows created by older CRM versions.
+ * Copies only native validation metadata; customer values remain unchanged.
+ */
+function repairOrderDropdownColours() {
+  const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 3) return { ok: true, rowsRepaired: 0 };
+  const rowCount = lastRow - 2;
+  sheet.getRange(2, 8, 1, 2).copyTo(
+    sheet.getRange(3, 8, rowCount, 2),
+    SpreadsheetApp.CopyPasteType.PASTE_DATA_VALIDATION,
+    false
+  );
+  sheet.getRange(2, 12, 1, 5).copyTo(
+    sheet.getRange(3, 12, rowCount, 5),
+    SpreadsheetApp.CopyPasteType.PASTE_DATA_VALIDATION,
+    false
+  );
+  SpreadsheetApp.flush();
+  return { ok: true, rowsRepaired: rowCount };
 }
 
 function reportNumber_(value) {
