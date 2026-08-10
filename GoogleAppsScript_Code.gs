@@ -13,6 +13,7 @@ const CONFIG = Object.freeze({
     AC: 'AC service'
   }),
   ORDER_COLUMNS: 20,
+  ORDER_DATE_FORMAT: 'yyyy-mm-dd',
   // Short cache keeps the dashboard responsive while reflecting sheet edits within one minute.
   CACHE_SECONDS: 60,
   DEFAULT_PAGE_SIZE: 30,
@@ -292,6 +293,7 @@ function saveCRMOrderFromWebhook_(payload) {
       toSheetDate_(payload.apptDate),
       clean_(payload.apptTime)
     ]]);
+    formatOrderDateCells_(sheet, rowNumber);
     sheet.getRange(rowNumber, 12, 1, 7).setValues([operationFields]);
     restoreOrderDropdownValidation_(sheet, rowNumber);
     invalidateOrderCache_();
@@ -365,6 +367,78 @@ function repairOrderDropdownColours() {
   );
   SpreadsheetApp.flush();
   return { ok: true, rowsRepaired: rowCount };
+}
+
+function formatOrderDateCells_(sheet, rowNumber) {
+  sheet.getRange(rowNumber, 1).setNumberFormat(CONFIG.ORDER_DATE_FORMAT);
+  sheet.getRange(rowNumber, 10).setNumberFormat(CONFIG.ORDER_DATE_FORMAT);
+}
+
+/**
+ * One-time repair for Orders!A (Date) and Orders!J (Date appointment).
+ * Converts parseable text dates to native dates, keeps unrecognised text intact,
+ * and displays every populated-row date cell as yyyy-mm-dd for safe copy/paste.
+ */
+function repairOrderDatesToIso() {
+  const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) {
+    return {
+      ok: true,
+      rowsFormatted: 0,
+      cellsFormatted: 0,
+      convertedTextDates: 0,
+      preservedText: 0,
+      preservedFormulas: 0
+    };
+  }
+
+  const rowCount = lastRow - 1;
+  const dateColumns = [1, 10];
+  let convertedTextDates = 0;
+  let preservedText = 0;
+  let preservedFormulas = 0;
+
+  dateColumns.forEach(function (column) {
+    const range = sheet.getRange(2, column, rowCount, 1);
+    const values = range.getValues();
+    const formulas = range.getFormulas();
+    const normalized = values.map(function (row, index) {
+      const formula = formulas[index][0];
+      if (formula) {
+        preservedFormulas++;
+        return [formula];
+      }
+
+      const value = row[0];
+      if (value === '' || value == null) return [''];
+      if (value instanceof Date && !isNaN(value)) return [value];
+      if (typeof value === 'number' && isFinite(value)) return [value];
+
+      const parsed = parseFlexibleDate_(value);
+      if (parsed) {
+        convertedTextDates++;
+        return [parsed];
+      }
+
+      preservedText++;
+      return [value];
+    });
+
+    range.setValues(normalized);
+    range.setNumberFormat(CONFIG.ORDER_DATE_FORMAT);
+  });
+
+  invalidateOrderCache_();
+  SpreadsheetApp.flush();
+  return {
+    ok: true,
+    rowsFormatted: rowCount,
+    cellsFormatted: rowCount * dateColumns.length,
+    convertedTextDates: convertedTextDates,
+    preservedText: preservedText,
+    preservedFormulas: preservedFormulas
+  };
 }
 
 function reportNumber_(value) {
@@ -517,8 +591,7 @@ function updateOrderCaseFields(payload) {
       clean_(payload.conceal),
       clean_(payload.noted)
     ]]);
-    sheet.getRange(found.rowNumber, 1).setNumberFormat('dd/MM/yyyy');
-    sheet.getRange(found.rowNumber, 10).setNumberFormat('dd/MM/yyyy');
+    formatOrderDateCells_(sheet, found.rowNumber);
     invalidateOrderCache_();
 
     return {
