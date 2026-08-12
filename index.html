@@ -3797,7 +3797,9 @@ mnavSync();</script>
     const selectedDate = dashboardDateFromIso(selected);
     const dateLabel = selectedDate.toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     document.getElementById('pctAppointmentSelectedDate').textContent = dateLabel;
-    document.getElementById('pctAppointmentSelectedCount').textContent = reportNumber(counts[selected]).toLocaleString();
+    if (dashboardState.dateField === 'appointment') {
+      document.getElementById('pctAppointmentSelectedCount').textContent = reportNumber(counts[selected]).toLocaleString();
+    }
     document.getElementById('pctAppointmentDate').value = selected;
     document.getElementById('pctAppointmentUpdated').textContent = 'อัปเดต ' + clean(summary.updatedAt || 'ล่าสุด');
     const filterState = document.getElementById('pctAppointmentFilterState');
