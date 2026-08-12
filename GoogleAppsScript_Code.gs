@@ -53,7 +53,7 @@ function doGet(e) {
     return jsonOutput_({
       ok: true,
       dashboardApi: true,
-      summary: getAppointmentLiveSummary_()
+      summary: getDashboardLiveSummary_()
     });
   }
   if (action === 'getOrders') {
@@ -61,6 +61,9 @@ function doGet(e) {
   }
   if (action === 'getPendingCases') {
     return jsonOutput_({ ok: true, dashboardApi: true, pendingCases: getPendingCases(requestParams_(e)) });
+  }
+  if (action === 'getPendingFillCases') {
+    return jsonOutput_({ ok: true, dashboardApi: true, pendingFillCases: getPendingFillCases(requestParams_(e)) });
   }
   if (action === 'getProblemCases') {
     return jsonOutput_({ ok: true, dashboardApi: true, problems: getProblemCases(requestParams_(e)) });
@@ -498,7 +501,9 @@ function getPendingCases(params) {
   const pageSize = Math.min(CONFIG.MAX_PAGE_SIZE, Math.max(10, Number(params.pageSize) || CONFIG.DEFAULT_PAGE_SIZE));
   const rows = getOrderRows_().filter(function (order) {
     const status = normalize_(order.status);
-    return (status === 'no answer' || status === 'waiting confirm date') && (!q || order.searchText.includes(q));
+    const fillOnFile = normalize_(order.fillOnFile);
+    const isPendingStatus = !status || status === 'no answer' || status === 'waiting confirm date';
+    return isPendingStatus && fillOnFile === 'no' && (!q || order.searchText.includes(q));
   }).sort(function (a, b) {
     return dateSortValue_(b.date, '') - dateSortValue_(a.date, '');
   });
@@ -506,8 +511,31 @@ function getPendingCases(params) {
   return {
     items: rows.slice(start, start + pageSize).map(stripSearchText_),
     total: rows.length,
+    blankStatus: rows.filter(function (o) { return !normalize_(o.status); }).length,
     noAnswer: rows.filter(function (o) { return normalize_(o.status) === 'no answer'; }).length,
     waitingConfirmDate: rows.filter(function (o) { return normalize_(o.status) === 'waiting confirm date'; }).length,
+    page: page,
+    pageSize: pageSize,
+    totalPages: Math.max(1, Math.ceil(rows.length / pageSize))
+  };
+}
+
+function getPendingFillCases(params) {
+  params = params || {};
+  const q = normalize_(params.q);
+  const page = Math.max(1, Number(params.page) || 1);
+  const pageSize = Math.min(CONFIG.MAX_PAGE_SIZE, Math.max(10, Number(params.pageSize) || CONFIG.DEFAULT_PAGE_SIZE));
+  const rows = getOrderRows_().filter(function (order) {
+    return normalize_(order.status) === 'confirm' &&
+      normalize_(order.fillOnFile) === 'no' &&
+      (!q || order.searchText.includes(q));
+  }).sort(function (a, b) {
+    return dateSortValue_(b.date, '') - dateSortValue_(a.date, '');
+  });
+  const start = (page - 1) * pageSize;
+  return {
+    items: rows.slice(start, start + pageSize).map(stripSearchText_),
+    total: rows.length,
     page: page,
     pageSize: pageSize,
     totalPages: Math.max(1, Math.ceil(rows.length / pageSize))
@@ -885,7 +913,7 @@ function makeSummary_(rows) {
     const status = normalize_(o.status);
     const difficulty = normalize_(o.difficulty).replace(/\s/g, '');
     if (status === 'confirm') summary.confirm++;
-    if (status === 'no answer' || status === 'waiting confirm date') summary.pendingCases++;
+    if ((!status || status === 'no answer' || status === 'waiting confirm date') && normalize_(o.fillOnFile) === 'no') summary.pendingCases++;
     if (status === 'confirm' && normalize_(o.fillOnFile) === 'no') summary.pendingFillOnFile++;
     if (o.appointmentDate) {
       summary.withAppointment++;
@@ -906,24 +934,13 @@ function makeSummary_(rows) {
  * อัปเดต Dashboard แบบเบา: อ่านเฉพาะ Orders!J (Date appointment)
  * แทนการอ่าน Orders, Problem case และ AC service ทั้งชุดทุก 30 วินาที
  */
-function getAppointmentLiveSummary_() {
-  const sheet = getSheet_(CONFIG.SHEETS.ORDERS);
-  const lastRow = sheet.getLastRow();
-  const appointmentCounts = {};
-  let withAppointment = 0;
-  if (lastRow >= 2) {
-    sheet.getRange(2, 10, lastRow - 1, 1).getDisplayValues().forEach(function (row) {
-      const iso = normalizeDateString_(row[0]);
-      if (!iso) return;
-      withAppointment++;
-      appointmentCounts[iso] = (appointmentCounts[iso] || 0) + 1;
-    });
-  }
+function getDashboardLiveSummary_() {
+  const summary = makeSummary_(getOrderRows_());
   return {
-    withAppointment: withAppointment,
-    appointmentsByDate: Object.keys(appointmentCounts).sort().map(function (date) {
-      return { date: date, count: appointmentCounts[date] };
-    }),
+    withAppointment: summary.withAppointment,
+    appointmentsByDate: summary.appointmentsByDate,
+    globalPendingFillOnFile: summary.pendingFillOnFile,
+    globalPendingCases: summary.pendingCases,
     updatedAt: Utilities.formatDate(new Date(), CONFIG.TIME_ZONE, 'dd/MM/yyyy HH:mm:ss')
   };
 }
