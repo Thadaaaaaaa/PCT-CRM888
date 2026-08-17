@@ -1498,6 +1498,36 @@ document.body.appendChild(a); a.click(); a.remove();
 URL.revokeObjectURL(url);
 showToast('ดาวน์โหลดไฟล์ข้อมูลแล้ว — ส่งไฟล์นี้ให้เพื่อนร่วมทีมได้เลย');
 }
+function buildCatalogSnapshot(){
+return {
+version:4,
+exportedAt:Date.now(),
+categories:CATS.map(({id,name,icon,color,bgColor})=>({id,name,icon,color,bgColor:bgColor||null})),
+items:DATA.map(({id,category,title,desc,url,color,bgColor})=>({id,category,title,desc:desc||'',url:url||'',color:color||null,bgColor:bgColor||null})),
+layout:JSON.parse(JSON.stringify(LAYOUT||{}))
+};
+}
+function installCatalogSnapshotProbe(){
+if(new URLSearchParams(location.search).get('catalogExport')!=='1') return;
+if(document.getElementById('catalogExportProbeBtn')) return;
+const trigger=document.createElement('button');
+trigger.id='catalogExportProbeBtn';
+trigger.className='btn secondary';
+trigger.textContent='📋 ข้อมูลหัวข้อเครื่องนี้';
+const exportBtn=document.getElementById('exportBtn');
+if(exportBtn) exportBtn.insertAdjacentElement('afterend',trigger);
+const overlay=document.createElement('div');
+overlay.className='overlay';
+overlay.id='catalogExportProbeOverlay';
+overlay.innerHTML='<div class="modal wide"><h3>ข้อมูลหัวข้อสำหรับ GitHub</h3><div class="field"><label>เฉพาะหมวดหมู่ หัวข้อ และการจัดวาง — ไม่รวมรหัสผ่าน ประวัติ เคส หรือการตั้งค่า Sheet</label><textarea id="catalogExportProbeText" readonly style="min-height:55vh;font-family:ui-monospace,monospace;font-size:11px"></textarea></div><div class="modal-actions"><button class="btn secondary" id="catalogExportProbeClose">ปิด</button><div class="right"><button class="btn" id="catalogExportProbeCopy">คัดลอกข้อมูล</button></div></div></div>';
+document.body.appendChild(overlay);
+trigger.onclick=()=>{
+document.getElementById('catalogExportProbeText').value=JSON.stringify(buildCatalogSnapshot(),null,2);
+overlay.classList.add('show');
+};
+document.getElementById('catalogExportProbeClose').onclick=()=>overlay.classList.remove('show');
+document.getElementById('catalogExportProbeCopy').onclick=(event)=>copyText(document.getElementById('catalogExportProbeText').value,event.currentTarget);
+}
 function importData(payload){
 if(!payload || !Array.isArray(payload.categories) || !Array.isArray(payload.items)){
 showToast('ไฟล์ที่เลือกไม่ใช่ไฟล์ข้อมูลของระบบนี้');
@@ -3503,6 +3533,7 @@ window.scrollTo({top:0});
 });
 })();
 loadAll();
+installCatalogSnapshotProbe();
 mnavSync();</script>
 
 <script id="pctIntegratedDashboardModule">
