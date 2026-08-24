@@ -529,6 +529,22 @@ main{max-width:1480px;width:100%}.page-banner h2{font-size:19px;line-height:1.3}
   .card .actions{opacity:1}
 }
 </style>
+<style id="pct20260824IncentiveTool">
+.pct-incentive-tool{margin-top:24px;border:1px solid #eadfd7;border-radius:18px;background:#fff;box-shadow:0 10px 28px rgba(65,48,35,.065);overflow:hidden}
+.pct-incentive-tool>summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none;background:linear-gradient(135deg,#fff 0%,#fff8f2 100%)}
+.pct-incentive-tool>summary::-webkit-details-marker{display:none}
+.pct-incentive-tool>summary:hover{background:#fff7f0}
+.pct-incentive-icon{width:44px;height:44px;display:grid;place-items:center;flex:0 0 auto;border-radius:13px;background:#ff6900;color:#fff;font-size:21px;box-shadow:0 7px 18px rgba(255,105,0,.22)}
+.pct-incentive-title{flex:1;min-width:0}.pct-incentive-title strong{display:block;font-size:15px;color:var(--text)}.pct-incentive-title span{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.45}
+.pct-incentive-arrow{width:32px;height:32px;display:grid;place-items:center;border-radius:999px;background:#fff;color:var(--orange);font-size:20px;transition:transform .2s ease;box-shadow:0 2px 8px rgba(31,42,68,.08)}
+.pct-incentive-tool[open] .pct-incentive-arrow{transform:rotate(180deg)}
+.pct-incentive-body{padding:0 16px 16px;border-top:1px solid #f0e7e0}
+.pct-incentive-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 2px;color:var(--muted);font-size:11.5px}
+.pct-incentive-open{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid #ffd0ad;border-radius:999px;color:#e85e00;text-decoration:none;font-size:11.5px;font-weight:800;background:#fff8f2}
+.pct-incentive-open:hover{background:#ff6900;color:#fff;border-color:#ff6900}
+.pct-incentive-frame{display:block;width:100%;height:1120px;border:1px solid var(--line);border-radius:14px;background:#f5f5f5}
+@media(max-width:680px){.pct-incentive-tool>summary{padding:15px}.pct-incentive-body{padding:0 8px 8px}.pct-incentive-actions{align-items:flex-start;flex-direction:column}.pct-incentive-frame{height:950px}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1086,6 +1102,7 @@ showToast('รวมบรรทัดแล้ว — ลากแบ่งใ�
 if(totalCount===0){
 main.innerHTML += '<div class="empty">ยังไม่มีรายการในหมวดหมู่นี้ — กด "+ เพิ่มหัวข้อ" เพื่อเริ่มต้น</div>';
 if(cat.id === 'logi'){ renderSOPanel(main); renderQRPanel(main); }
+if(cat.id === 'people'){ renderIncentiveTool(main); }
 return;
 }
 let anyVisible = false;
@@ -1176,7 +1193,29 @@ divider3.innerHTML = `<span class="line"></span><span>เครื่องม�
 main.appendChild(divider3);
 renderQRPanel(main);
 }
+if(cat.id === 'people'){
+renderIncentiveTool(main);
+}
 requestAnimationFrame(detectCardOverflow);
+}
+function renderIncentiveTool(container){
+const details = document.createElement('details');
+details.className = 'pct-incentive-tool';
+details.innerHTML = `<summary aria-label="เปิดเครื่องมือคำนวณ Incentive">
+<span class="pct-incentive-icon">🧮</span>
+<span class="pct-incentive-title"><strong>Incentive Calculator — คำนวณคะแนนรายบุคคล</strong><span>นำเข้า Excel ตรวจ Class ของ AC/WM ค้นหา SO และ Copy คะแนนกลับไปใช้งานต่อได้</span></span>
+<span class="pct-incentive-arrow" aria-hidden="true">⌄</span>
+</summary>
+<div class="pct-incentive-body">
+<div class="pct-incentive-actions"><span>ระบบจะโหลดเมื่อเปิดหัวข้อนี้ครั้งแรก เพื่อให้หน้า Staff Management ทำงานได้เร็ว</span><a class="pct-incentive-open" href="tools/incentive-calculator.html" target="_blank" rel="noopener">เปิดเต็มหน้า ↗</a></div>
+<iframe class="pct-incentive-frame" title="Incentive Calculator" data-src="tools/incentive-calculator.html" loading="lazy"></iframe>
+</div>`;
+details.addEventListener('toggle', ()=>{
+if(!details.open) return;
+const frame = details.querySelector('.pct-incentive-frame');
+if(frame && !frame.src) frame.src = frame.dataset.src;
+}, {once:true});
+container.appendChild(details);
 }
 function renderSearchResults(q){
 const main = document.getElementById('main');
