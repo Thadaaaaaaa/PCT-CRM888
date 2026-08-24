@@ -545,6 +545,22 @@ main{max-width:1480px;width:100%}.page-banner h2{font-size:19px;line-height:1.3}
 .pct-incentive-frame{display:block;width:100%;height:1120px;border:1px solid var(--line);border-radius:14px;background:#f5f5f5}
 @media(max-width:680px){.pct-incentive-tool>summary{padding:15px}.pct-incentive-body{padding:0 8px 8px}.pct-incentive-actions{align-items:flex-start;flex-direction:column}.pct-incentive-frame{height:950px}}
 </style>
+<style id="pct20260824ButtonRefine">
+/* Mi-inspired controls: quiet surfaces, crisp hierarchy, and tactile feedback. */
+.btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 18px;border:1px solid transparent;border-radius:999px;background:linear-gradient(135deg,#ff7a1a 0%,#ff6900 68%,#f35d00 100%);box-shadow:0 7px 18px rgba(255,105,0,.2);letter-spacing:.005em;transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease,color .16s ease}
+.btn:hover{background:linear-gradient(135deg,#ff852e 0%,#ff6900 72%);box-shadow:0 10px 24px rgba(255,105,0,.26);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.98);box-shadow:0 4px 12px rgba(255,105,0,.2)}
+.btn.secondary{background:#fff;color:#2d2d2f;border-color:#e4e4e7;box-shadow:0 3px 10px rgba(31,42,68,.06)}
+.btn.secondary:hover{background:#fafafa;border-color:#d6d6da;color:#ff6900;box-shadow:0 7px 18px rgba(31,42,68,.1)}
+.btn.ghost{background:transparent;color:#666;border-color:transparent;box-shadow:none}
+.btn.ghost:hover{background:#f2f2f4;color:#ff6900;box-shadow:none}
+.btn.small{min-height:34px;padding:7px 13px}
+.iconbtn,.rowDelBtn,.card .actions button{border-color:#e5e5e8!important;background:rgba(255,255,255,.94)!important;box-shadow:0 3px 10px rgba(31,42,68,.07);transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease,color .15s ease!important}
+.iconbtn:hover,.rowDelBtn:hover,.card .actions button:hover{border-color:#ffc49a!important;color:#ff6900!important;box-shadow:0 7px 16px rgba(255,105,0,.14);transform:translateY(-1px)}
+.sidebar-addtab{border-radius:999px}.sidebar-collapse-btn,.hamburger{box-shadow:0 3px 10px rgba(31,42,68,.06)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid rgba(255,105,0,.24);outline-offset:3px}
+@media(max-width:680px){.btn{min-height:44px;padding:11px 17px}.topbar .btn{min-width:42px;padding-inline:13px}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -724,8 +740,8 @@ const SIDEBAR_COLLAPSE_KEY = 'pctFleetHubSidebarCollapsed_v1';
 // records so existing local edits remain intact while the latest workspace
 // structure and Google Sheet links are available on first open.
 const LATEST_SETTINGS_SEED = {
-  version: 3,
-  categories: [{id:'cat_o41isi5b',name:'Sparepart',icon:'🧩',color:'#64748b',bgColor:null}],
+  version: 4,
+  categories: [{id:'cat_o41isi5b',name:'Sparepart,Inventory',icon:'🔧',color:'#3b82f6',bgColor:null}],
   items: [
     {id:'item_g2f2zimm',category:'ops',title:'Appointment Mi Work',desc:'นำเคสที่ Appointment และวางแพลนแล้วมาใส่สำหรับทำ report',url:'https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1526247490#gid=1526247490'},
     {id:'item_9xx075sw',category:'ops',title:'Order Schedules',desc:'ใช้สำหรับนำข้อมูลจากระบบ XMS มาลง เพื่อดูข้อมูลได้อย่างง่าย',url:'https://mi-p.feishu.cn/sheets/VYSBsTQjUhSr44tsPbycnP1zn1b?sheet=60fc99'},
@@ -733,8 +749,15 @@ const LATEST_SETTINGS_SEED = {
     {id:'item_g2u9zo9b',category:'cust',title:'Template เชื่อมต่อ Mi Home',desc:'สำหรับการเชื่อมต่ออุปกรณ์เข้ากับแอป Mi Home: ติดตั้งแอป เข้าสู่ระบบ เลือกภูมิภาคไทย เชื่อม Wi‑Fi 2.4 GHz กด + เพิ่มอุปกรณ์ และทำตามขั้นตอนจนขึ้นว่าเพิ่มอุปกรณ์สำเร็จ',url:''},
     {id:'item_f7odv6ho',category:'ops',title:'Order Schedule Google sheet',desc:'ลงข้อมูล Order ผ่าน Google sheet',url:'https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1526247490#gid=1526247490'},
     {id:'item_le3fek6y',category:'claims',title:'Daily Report',desc:'ลิงก์หน้า Report',url:'https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=990874928#gid=990874928'},
-    {id:'item_k5wzhjya',category:'claims',title:'Cancel/Reschedule',desc:'ใช้สำหรับใส่ข้อมูลกรณีมีเคสยกเลิกหรือเลื่อนวัน',url:'https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1302822618#gid=1302822618'}
-  ]
+    {id:'item_k5wzhjya',category:'claims',title:'Cancel/Reschedule',desc:'ใช้สำหรับใส่ข้อมูลกรณีมีเคสยกเลิกหรือเลื่อนวัน',url:'https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1302822618#gid=1302822618'},
+    {id:'item_968t99os',category:'cat_68od6fap',title:'Data satisfied AC',desc:'',url:'https://docs.google.com/forms/d/1bg8cg8uksYyH-3Xx2pI7bU-YklwSHqXH59KPpYl-9aI/edit#responses'},
+    {id:'item_a11pg6it',category:'cat_68od6fap',title:'Satisfied WM',desc:'',url:'https://docs.google.com/forms/d/11vNHedlH3kHYBxt6psiUYmtF5LkiZTHxpeHTQ2ojz20/edit'},
+    {id:'item_j0kw2gy4',category:'cat_o41isi5b',title:'Stock Consum out',desc:'ใช้เช็คอุปกรณ์ที่เอาออกของอะเตา',url:'https://docs.google.com/spreadsheets/d/1YZmHIKZa7AU9MdXXI9litdyiK22hIJLxaW21gaWV1UM/edit?gid=564576950#gid=564576950'}
+  ],
+  layout: {
+    cat_68od6fap: [{label:'Google Satisfied Form',ids:['item_968t99os','item_a11pg6it']}],
+    cat_o41isi5b: [{label:'Inventory',ids:['item_j0kw2gy4']}]
+  }
 };
 let CATS = [];
 let DATA = [];
@@ -813,6 +836,7 @@ try{
 const raw = localStorage.getItem(LS_KEY);
 if(raw) parsed = JSON.parse(raw);
 }catch(e){ parsed = null; }
+const loadedSeedVersion = Number(parsed && parsed.seedVersion) || 0;
 if(parsed && Array.isArray(parsed.categories) && parsed.categories.length){
 CATS = sanitizeCategories(parsed.categories);
 } else {
@@ -826,7 +850,14 @@ DATA = sanitizeCatalogItems(JSON.parse(JSON.stringify(DEFAULT_PAYLOAD.items)));
 // Apply the latest exported JSON as a non-destructive migration. Existing
 // cards and user edits win; only missing categories/items are added.
 const existingCatIds = new Set(CATS.map(cat=>cat.id));
-LATEST_SETTINGS_SEED.categories.forEach(cat=>{ if(!existingCatIds.has(cat.id)){ CATS.push({...cat}); } });
+LATEST_SETTINGS_SEED.categories.forEach(cat=>{
+if(!existingCatIds.has(cat.id)){
+CATS.push({...cat});
+} else if(loadedSeedVersion < LATEST_SETTINGS_SEED.version && cat.id === 'cat_o41isi5b'){
+const existing = CATS.find(current=>current.id===cat.id);
+Object.assign(existing, cat);
+}
+});
 const existingItemIds = new Set(DATA.map(item=>item.id));
 LATEST_SETTINGS_SEED.items.forEach(item=>{ if(!existingItemIds.has(item.id)){ DATA.push({...item, color:null, bgColor:null, lastEditedAt:Date.now(), history:[]}); } });
 // รายการ Report รุ่นเก่าถูกยกเลิกตาม workflow ใหม่ แต่การ์ดหมวดอื่นคงไว้ทั้งหมด
@@ -836,6 +867,21 @@ if(parsed && parsed.layout){
 LAYOUT = parsed.layout;
 } else {
 LAYOUT = JSON.parse(JSON.stringify(DEFAULT_PAYLOAD.layout || {}));
+}
+if(loadedSeedVersion < LATEST_SETTINGS_SEED.version && LATEST_SETTINGS_SEED.layout){
+Object.entries(LATEST_SETTINGS_SEED.layout).forEach(([catId, seedRows])=>{
+if(!Array.isArray(LAYOUT[catId])) LAYOUT[catId] = [];
+const seededIds = new Set(seedRows.flatMap(row=>row.ids||[]));
+LAYOUT[catId].forEach(row=>{ row.ids = (row.ids||[]).filter(id=>!seededIds.has(id)); });
+seedRows.forEach(seedRow=>{
+const target = LAYOUT[catId].find(row=>row.label===seedRow.label);
+if(target){
+(seedRow.ids||[]).forEach(id=>{ if(!target.ids.includes(id)) target.ids.push(id); });
+} else {
+LAYOUT[catId].push({label:seedRow.label,ids:[...(seedRow.ids||[])]});
+}
+});
+});
 }
 if(Array.isArray(LAYOUT.claims)) LAYOUT.claims.forEach(row=>{ row.ids = (row.ids||[]).filter(id=>!removedReportIds.has(id)); });
 DATA = sanitizeCatalogItems(DATA);
