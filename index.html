@@ -730,6 +730,17 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid rgb
   <button class="mnav-btn" data-cat="__menu"><span class="ic">☰</span><span class="lb">เมนู</span></button>
 </nav>
 
+<style id="pctErrorCodeKnowledgeStyles">
+.kb-error-shell{margin:14px 0 18px;padding:16px;background:linear-gradient(145deg,#fff 0%,#fffaf6 100%);border:1px solid #f0e4da;border-radius:14px;box-shadow:0 8px 24px rgba(71,49,32,.06)}
+.kb-error-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.kb-error-head h4{margin:0;font-size:15px}.kb-error-head p{margin:3px 0 0;color:var(--muted);font-size:11.5px}.kb-error-total{flex:0 0 auto;background:var(--orange-tint);color:var(--orange-dark);border-radius:999px;padding:5px 10px;font-size:11px;font-weight:800}
+.kb-error-search{display:flex;align-items:center;gap:9px;background:#fff;border:1.5px solid #ffd4b5;border-radius:11px;padding:10px 12px}.kb-error-search:focus-within{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,105,0,.1)}.kb-error-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text);font:inherit;font-size:14px}.kb-error-search button{border:0;background:none;color:var(--muted2);cursor:pointer;font-size:14px}
+.kb-error-filter-row{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:10px 1px 4px;scrollbar-width:thin}.kb-error-filter-label{font-size:10.5px;font-weight:800;color:var(--muted);white-space:nowrap;margin-right:2px}.kb-error-filter{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:7px 11px;font:inherit;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer}.kb-error-filter:hover{border-color:var(--orange)}.kb-error-filter.on{border-color:var(--orange);background:var(--orange);color:#fff}
+.kb-error-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 1px 7px;color:var(--muted);font-size:11px}.kb-error-source{color:var(--orange-dark);text-decoration:none;font-weight:700}.kb-error-list{display:grid;gap:8px}.kb-error-card{background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden}.kb-error-card.open{border-color:#ffb985;box-shadow:0 5px 18px rgba(255,105,0,.08)}
+.kb-error-summary{width:100%;border:0;background:none;padding:12px 13px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;cursor:pointer;color:inherit;font:inherit}.kb-error-summary:hover{background:#fffaf6}.kb-error-code{min-width:58px;text-align:center;padding:5px 8px;border-radius:8px;background:#1f2a44;color:#fff;font-size:12px;font-weight:900;letter-spacing:.02em}.kb-error-title{min-width:0}.kb-error-title strong{display:block;font-size:12.5px;line-height:1.4;overflow-wrap:anywhere}.kb-error-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}.kb-error-chip{padding:2px 7px;border-radius:999px;background:var(--panel2);color:var(--muted);font-size:9.5px;font-weight:800}.kb-error-chip.sev-critical{background:#fee2e2;color:#b91c1c}.kb-error-chip.sev-warning{background:#fef3c7;color:#9a5a00}.kb-error-chip.sev-info{background:#dbeafe;color:#1d4ed8}.kb-error-arrow{color:var(--muted2);font-size:18px;transition:transform .18s}.kb-error-card.open .kb-error-arrow{transform:rotate(90deg)}
+.kb-error-body{display:none;border-top:1px solid var(--line);padding:13px}.kb-error-card.open .kb-error-body{display:block}.kb-error-section{margin-bottom:12px}.kb-error-section:last-child{margin-bottom:0}.kb-error-section h5{margin:0 0 5px;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}.kb-error-section p,.kb-error-section ol{margin:0;font-size:12.3px;line-height:1.7;color:var(--text);white-space:pre-wrap}.kb-error-section ol{padding-left:21px}.kb-error-section li+li{margin-top:6px}.kb-error-warning{background:#fff7ed;border-left:3px solid var(--orange);border-radius:7px;padding:9px 11px}.kb-error-warning h5{color:#b45309}.kb-error-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.kb-error-copy{border:0;background:var(--orange);color:#fff;border-radius:8px;padding:8px 12px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.kb-error-copy.ok{background:#16a34a}.kb-error-rowref{font-size:9.5px;color:var(--muted2)}.kb-error-empty{text-align:center;padding:30px 14px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px}.kb-error-more{width:100%;margin-top:9px;border:1px dashed var(--orange);background:#fff;color:var(--orange-dark);border-radius:9px;padding:9px;font-weight:800;cursor:pointer}
+@media(max-width:640px){.kb-error-shell{padding:13px;margin-left:-4px;margin-right:-4px}.kb-error-head{align-items:center}.kb-error-head p{display:none}.kb-error-summary{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 10px;gap:8px}.kb-error-code{min-width:50px;padding:5px 6px}.kb-error-actions{align-items:stretch;flex-direction:column}.kb-error-copy{min-height:42px}.kb-tabbar{overflow-x:auto}.kb-tab{min-width:max-content}}
+</style>
+<script src="data/error-codes.js"></script>
 <script>const ICON_OPTIONS = ['📅','💬','📊','🧰','👥','🚗','🛠️','📦','🧾','📍','🔧','💧','❄️','🧼','💰','📌','🗂️','🛡️','🔌','⚙️','📞','✅','⚠️','🏠','🧯','🔥','🌡️','🧊','📡','🪫','🔋','📋','🗃️','📁','🛒','🎯','⭐','🏷️','🧑‍🔧','🚚'];
 const COLOR_SWATCHES = ['#FF6900','#3b82f6','#16a34a','#d97706','#9333ea','#db2777','#0d9488','#ef4444','#0ea5e9','#1f2a44'];
 const BG_SWATCHES = ['#FFFFFF','#FFF4EA','#FFF9DB','#EAF6FF','#EAFBEF','#F5EAFF','#FFE9F1','#E6FFFB','#F1F2F5','#FDEAEA'];
@@ -3118,6 +3129,12 @@ const KB_EXTRA_DATA = {
     {q:'ประตูตู้เย็นปิดไม่สนิทต้องตรวจอะไร?',a:'ตรวจของที่ดันประตู ซีลประตู และการวางเครื่องให้ได้ระดับ หากซีลฉีก/บวมให้ส่งทีมหลังการขาย'}
   ]}
 };
+const KB_ERROR_MODEL = window.PCT_ERROR_CODE_DATA || {records:[],products:{},sourceUrl:""};
+const KB_ERROR_RECORDS = Array.isArray(KB_ERROR_MODEL.records) ? KB_ERROR_MODEL.records : [];
+const KB_ERROR_SEVERITY = {
+critical:{label:"เร่งด่วน",icon:"⛔"}, warning:{label:"ระวัง",icon:"⚠️"},
+standard:{label:"ตรวจสอบ",icon:"🔧"}, info:{label:"ข้อมูล",icon:"ℹ️"}
+};
 const KB_LS_KEY = "pctKbData_v1";
 let KB = {};
 let kbCurProd = null, kbCurTab = "info";
@@ -3150,6 +3167,7 @@ panel.innerHTML = `
 </div>
 <div id="kbHome" class="kb-home">
 <div class="kb-global-search"><span>🔎</span><input id="kbGlobalSearch" type="search" placeholder="ค้นหาอาการ วิธีแก้ หรือคำถามทุกผลิตภัณฑ์..." oninput="kbGlobalSearch(this.value)"></div><div id="kbGlobalResults" class="kb-global-results"></div>
+<div id="kbErrorExplorer-home"></div>
 <div class="kb-home-title">เลือกผลิตภัณฑ์</div>
 <div class="kb-home-sub">แตะเพื่อดูข้อมูลทั่วไปและ Q&amp;A ของแต่ละสินค้า</div>
 <div class="kb-pcards" id="kbPcards"></div>
@@ -3160,6 +3178,7 @@ panel.innerHTML = `
 `;
 main.appendChild(panel);
 kbRenderHome(panel);
+kbRenderErrorExplorer("home");
 }
 function kbRenderHome(panel){
 const wrap = panel.querySelector("#kbPcards");
@@ -3171,6 +3190,7 @@ wrap.innerHTML = Object.entries(KB_PRODS).map(([key,info])=>`
 <div class="kb-pcm">
 <span class="kb-pcchip">📋 ${KB[key].general.length} หัวข้อ</span>
 <span class="kb-pcchip">❓ ${KB[key].qa.length} Q&amp;A</span>
+<span class="kb-pcchip">🧰 ${KB_ERROR_RECORDS.filter(x=>x.product===key).length} Error</span>
 </div>
 <div class="kb-pcr">›</div>
 </div>`).join("");
@@ -3179,11 +3199,78 @@ function kbGlobalSearch(q){
  const host=document.getElementById('kbGlobalResults'); if(!host) return;
  q=(q||'').trim().toLowerCase(); if(!q){host.innerHTML='';return;}
  const hits=[];
+ KB_ERROR_RECORDS.forEach(x=>{const score=kbErrorScore(x,q);if(score>0)hits.push({p:x.product,kind:'Error Code',title:x.code+' — '+x.meaning,text:x.rootCause||x.troubleshooting,errorId:x.id,score:score+1000});});
  Object.entries(KB).forEach(([p,data])=>{
-  (data.general||[]).forEach(x=>{if((x.topic+' '+x.detail).toLowerCase().includes(q))hits.push({p,kind:'ข้อมูล',title:x.topic,text:x.detail});});
-  (data.qa||[]).forEach(x=>{if((x.q+' '+x.a).toLowerCase().includes(q))hits.push({p,kind:'Q&A',title:x.q,text:x.a});});
+  (data.general||[]).forEach(x=>{if((x.topic+' '+x.detail).toLowerCase().includes(q))hits.push({p,kind:'ข้อมูล',title:x.topic,text:x.detail,score:100});});
+  (data.qa||[]).forEach(x=>{if((x.q+' '+x.a).toLowerCase().includes(q))hits.push({p,kind:'Q&A',title:x.q,text:x.a,score:100});});
  });
- host.innerHTML=hits.length?'<div class="kb-global-count">พบ '+hits.length+' รายการ</div>'+hits.slice(0,30).map(x=>'<button class="kb-global-hit" onclick="kbOpenProd(\''+x.p+'\')"><b>'+escapeHtml(KB_PRODS[x.p].label)+' · '+x.kind+'</b><strong>'+escapeHtml(x.title)+'</strong><span>'+escapeHtml(x.text)+'</span></button>').join(''):'<div class="kb-global-empty">ไม่พบคำค้นหา ลองใช้คำว่า น้ำหยด, ไม่เย็น, Error หรือกลิ่นไหม้</div>';
+ hits.sort((a,b)=>(b.score||0)-(a.score||0));
+ host.innerHTML=hits.length?'<div class="kb-global-count">พบ '+hits.length+' รายการ</div>'+hits.slice(0,30).map(x=>'<button class="kb-global-hit" onclick="'+(x.errorId?'kbOpenError(\''+x.errorId+'\')':'kbOpenProd(\''+x.p+'\')')+'"><b>'+escapeHtml(KB_PRODS[x.p].label)+' · '+x.kind+'</b><strong>'+escapeHtml(x.title)+'</strong><span>'+escapeHtml(x.text)+'</span></button>').join(''):'<div class="kb-global-empty">ไม่พบคำค้นหา ลองใช้รหัส เช่น F1.1, อาการ เช่น น้ำไม่ระบาย หรือชื่อชิ้นส่วน</div>';
+}
+
+const KB_ERROR_STATE = {};
+function kbErrorNormalize(value){return String(value||'').toLowerCase().normalize('NFKC').replace(/[\s._\-/]+/g,' ').trim();}
+function kbErrorDistance(a,b){
+ a=kbErrorNormalize(a).replace(/\s/g,''); b=kbErrorNormalize(b).replace(/\s/g,'');
+ const row=Array.from({length:b.length+1},(_,i)=>i);
+ for(let i=1;i<=a.length;i++){let prev=row[0];row[0]=i;for(let j=1;j<=b.length;j++){const hold=row[j];row[j]=Math.min(row[j]+1,row[j-1]+1,prev+(a[i-1]===b[j-1]?0:1));prev=hold;}}
+ return row[b.length];
+}
+function kbErrorScore(item,query){
+ const q=kbErrorNormalize(query); if(!q)return 1;
+ const code=kbErrorNormalize(item.code), codeTight=code.replace(/\s/g,''), qTight=q.replace(/\s/g,'');
+ const fields=[item.meaning,item.rootCause,item.troubleshooting,item.recommendedMaterials,(item.keywords||[]).join(' ')];
+ const hay=kbErrorNormalize(fields.join(' ')); let score=0;
+ if(codeTight===qTight)score+=500; else if(codeTight.startsWith(qTight))score+=260; else if(codeTight.includes(qTight))score+=180;
+ if(hay.includes(q))score+=120;
+ const tokens=q.split(' ').filter(Boolean); const matched=tokens.filter(token=>code.includes(token)||hay.includes(token));
+ if(tokens.length&&matched.length===tokens.length)score+=60+matched.length*12;
+ if(qTight.length>=2&&codeTight.length<=12){const d=kbErrorDistance(codeTight,qTight);if(d<=1)score+=90;else if(d===2&&qTight.length>=4)score+=35;}
+ return score;
+}
+function kbErrorState(scope,overrides={}){
+ if(!KB_ERROR_STATE[scope])KB_ERROR_STATE[scope]={product:scope==='home'?'all':scope,severity:'all',query:'',limit:24};
+ Object.assign(KB_ERROR_STATE[scope],overrides); return KB_ERROR_STATE[scope];
+}
+function kbRenderErrorExplorer(scope,overrides={}){
+ const host=document.getElementById(`kbErrorExplorer-${scope}`); if(!host)return;
+ const state=kbErrorState(scope,overrides); const fixedProduct=scope!=='home';
+ const productFilters=fixedProduct?'':`<div class="kb-error-filter-row"><span class="kb-error-filter-label">สินค้า</span><button class="kb-error-filter ${state.product==='all'?'on':''}" onclick="kbErrorSetFilter('${scope}','product','all')">ทั้งหมด</button>${Object.entries(KB_PRODS).map(([key,p])=>`<button class="kb-error-filter ${state.product===key?'on':''}" onclick="kbErrorSetFilter('${scope}','product','${key}')">${p.icon} ${p.label}</button>`).join('')}</div>`;
+ host.innerHTML=`<section class="kb-error-shell" aria-label="ค้นหารหัสข้อผิดพลาด"><div class="kb-error-head"><div><h4>🧰 ค้นหา Error Code สำหรับช่าง</h4><p>ค้นหาจากรหัส อาการ สาเหตุ หรือชื่ออะไหล่ รองรับคำใกล้เคียง</p></div><span class="kb-error-total">${KB_ERROR_RECORDS.length} รายการ</span></div><div class="kb-error-search"><span>🔎</span><input id="kbErrorInput-${scope}" type="search" placeholder="เช่น F1.1, น้ำไม่ระบาย, เซ็นเซอร์..." oninput="kbErrorQuery('${scope}',this.value)"><button onclick="kbErrorQuery('${scope}','')" aria-label="ล้างคำค้นหา">✕</button></div>${productFilters}<div class="kb-error-filter-row"><span class="kb-error-filter-label">ระดับ</span><button class="kb-error-filter ${state.severity==='all'?'on':''}" onclick="kbErrorSetFilter('${scope}','severity','all')">ทั้งหมด</button>${Object.entries(KB_ERROR_SEVERITY).map(([key,s])=>`<button class="kb-error-filter ${state.severity===key?'on':''}" onclick="kbErrorSetFilter('${scope}','severity','${key}')">${s.icon} ${s.label}</button>`).join('')}</div><div class="kb-error-meta"><span id="kbErrorCount-${scope}"></span><a class="kb-error-source" href="${KB_ERROR_MODEL.sourceUrl}" target="_blank" rel="noopener">ดูแหล่งข้อมูล ↗</a></div><div class="kb-error-list" id="kbErrorResults-${scope}"></div></section>`;
+ const input=host.querySelector(`#kbErrorInput-${scope}`);if(input)input.value=state.query;
+ kbUpdateErrorResults(scope);
+}
+function kbErrorMatches(state){
+ return KB_ERROR_RECORDS.map(item=>({item,score:kbErrorScore(item,state.query)})).filter(x=>(state.product==='all'||x.item.product===state.product)&&(state.severity==='all'||x.item.severity===state.severity)&&x.score>0).sort((a,b)=>b.score-a.score||String(a.item.code).localeCompare(String(b.item.code),'th'));
+}
+function kbErrorSetFilter(scope,key,value){const state=kbErrorState(scope);state[key]=value;state.limit=24;kbRenderErrorExplorer(scope);}
+function kbErrorQuery(scope,value){
+ const state=kbErrorState(scope,{query:value,limit:24}); const input=document.getElementById(`kbErrorInput-${scope}`);if(input&&input.value!==value)input.value=value;kbUpdateErrorResults(scope);
+}
+function kbUpdateErrorResults(scope){
+ const state=kbErrorState(scope),host=document.getElementById(`kbErrorResults-${scope}`),counter=document.getElementById(`kbErrorCount-${scope}`);if(!host)return;
+ const matches=kbErrorMatches(state),visible=matches.slice(0,state.limit);if(counter)counter.textContent=`พบ ${matches.length} จาก ${KB_ERROR_RECORDS.length} รายการ`;
+ host.innerHTML=visible.length?visible.map(({item})=>kbErrorCard(item,scope)).join('')+(matches.length>state.limit?`<button class="kb-error-more" onclick="kbErrorShowMore('${scope}')">แสดงเพิ่มอีก ${matches.length-state.limit} รายการ</button>`:''):`<div class="kb-error-empty">ไม่พบข้อมูล ลองตรวจตัวสะกด เปลี่ยนหมวดสินค้า หรือค้นหาด้วยอาการแทนรหัส</div>`;
+}
+function kbErrorCard(item,scope){
+ const product=KB_PRODS[item.product]||{label:item.category,icon:'🧰'},sev=KB_ERROR_SEVERITY[item.severity]||KB_ERROR_SEVERITY.standard;
+ const root=item.rootCause?`<section class="kb-error-section"><h5>สาเหตุที่เป็นไปได้</h5><p>${kbNl2br(item.rootCause)}</p></section>`:'';
+ const steps=item.troubleshootingSteps?.length?`<section class="kb-error-section"><h5>ขั้นตอนตรวจสอบและแก้ไข</h5><ol>${item.troubleshootingSteps.map(step=>`<li>${kbNl2br(step)}</li>`).join('')}</ol></section>`:`<section class="kb-error-section"><h5>แนวทางตรวจสอบ</h5><p>${kbNl2br(item.troubleshooting)}</p></section>`;
+ const warnings=item.safetyWarnings?.length?`<section class="kb-error-section kb-error-warning"><h5>⚠️ ข้อควรระวัง</h5><p>${item.safetyWarnings.map(escapeHtml).join('<br>')}</p></section>`:'';
+ const materials=item.recommendedMaterials?`<section class="kb-error-section"><h5>อะไหล่/วัสดุที่แนะนำ</h5><p>${kbNl2br(item.recommendedMaterials)}</p></section>`:'';
+ return `<article class="kb-error-card" id="kbErrorCard-${item.id}"><button class="kb-error-summary" onclick="kbToggleError('${item.id}')" aria-expanded="false"><span class="kb-error-code">${escapeHtml(item.code||'—')}</span><span class="kb-error-title"><strong>${escapeHtml(item.meaning||'ไม่ระบุอาการ')}</strong><span class="kb-error-chips"><span class="kb-error-chip">${product.icon} ${escapeHtml(product.label)}</span><span class="kb-error-chip sev-${item.severity}">${sev.icon} ${sev.label}</span></span></span><span class="kb-error-arrow">›</span></button><div class="kb-error-body">${root}${warnings}${steps}${materials}<div class="kb-error-actions"><button class="kb-error-copy" onclick="kbCopyError('${item.id}',this)">📋 คัดลอกแนวทางแก้ไข</button><span class="kb-error-rowref">${escapeHtml(item.source.sheet)} · แถว ${item.source.row}</span></div></div></article>`;
+}
+function kbToggleError(id,forceOpen=false){
+ const card=document.getElementById(`kbErrorCard-${id}`);if(!card)return;const next=forceOpen||!card.classList.contains('open');card.classList.toggle('open',next);card.querySelector('.kb-error-summary')?.setAttribute('aria-expanded',String(next));
+}
+function kbErrorShowMore(scope){kbErrorState(scope).limit+=48;kbUpdateErrorResults(scope);}
+function kbCopyError(id,button){
+ const item=KB_ERROR_RECORDS.find(x=>x.id===id);if(!item)return;const product=KB_PRODS[item.product]?.label||item.category;
+ const lines=[`${product} | Error ${item.code}`,item.meaning,item.rootCause?`สาเหตุ: ${item.rootCause}`:'',item.safetyWarnings?.length?`ข้อควรระวัง:\n- ${item.safetyWarnings.join('\n- ')}`:'',item.troubleshootingSteps?.length?`ขั้นตอนแก้ไข:\n${item.troubleshootingSteps.map((step,i)=>`${i+1}. ${step}`).join('\n')}`:`แนวทางแก้ไข:\n${item.troubleshooting}`,item.recommendedMaterials?`อะไหล่/วัสดุที่แนะนำ: ${item.recommendedMaterials}`:''].filter(Boolean).join('\n\n');
+ kbCopy(lines,`kbErrorCard-${id}`);const original=button.textContent;button.textContent='✓ คัดลอกแล้ว';button.classList.add('ok');setTimeout(()=>{button.textContent=original;button.classList.remove('ok');},1800);
+}
+function kbOpenError(id){
+ const item=KB_ERROR_RECORDS.find(x=>x.id===id);if(!item)return;kbOpenProd(item.product);kbSwitchTab(item.product,'error');const state=kbErrorState(item.product,{product:item.product,severity:'all',query:item.code,limit:24});kbRenderErrorExplorer(item.product,state);setTimeout(()=>{const card=document.getElementById(`kbErrorCard-${id}`);kbToggleError(id,true);card?.scrollIntoView({behavior:'smooth',block:'center'});},30);
 }
 function kbOpenProd(p){
 kbCurProd = p; kbCurTab = "info";
@@ -3213,6 +3300,7 @@ pg.innerHTML = `
 <div class="kb-tabbar">
 <button class="kb-tab on" id="kbTabInfo-${p}" onclick="kbSwitchTab('${p}','info')">📋 ข้อมูลทั่วไป (${KB[p].general.length})</button>
 <button class="kb-tab" id="kbTabQa-${p}" onclick="kbSwitchTab('${p}','qa')">❓ Q&amp;A (${KB[p].qa.length})</button>
+<button class="kb-tab" id="kbTabError-${p}" onclick="kbSwitchTab('${p}','error')">🧰 Error Codes (${KB_ERROR_RECORDS.filter(x=>x.product===p).length})</button>
 </div>
 <div class="kb-sbar">
 <span style="color:var(--muted2)">🔍</span>
@@ -3222,6 +3310,7 @@ pg.innerHTML = `
 </div>
 <div id="kbTc-${p}-info" class="kb-tc on">${kbRenderGeneral(p)}</div>
 <div id="kbTc-${p}-qa" class="kb-tc">${kbRenderQA(p)}</div>
+<div id="kbTc-${p}-error" class="kb-tc"><div id="kbErrorExplorer-${p}"></div></div>
 `;
 }
 function kbRenderGeneral(p){
@@ -3271,9 +3360,12 @@ function kbSwitchTab(p,tab){
 kbCurTab = tab;
 document.getElementById(`kbTc-${p}-info`).classList.toggle("on", tab==="info");
 document.getElementById(`kbTc-${p}-qa`).classList.toggle("on", tab==="qa");
+document.getElementById(`kbTc-${p}-error`).classList.toggle("on", tab==="error");
 document.getElementById(`kbTabInfo-${p}`).classList.toggle("on", tab==="info");
 document.getElementById(`kbTabQa-${p}`).classList.toggle("on", tab==="qa");
+document.getElementById(`kbTabError-${p}`).classList.toggle("on", tab==="error");
 kbClearSearch(p);
+if(tab==="error") kbRenderErrorExplorer(p,{product:p});
 }
 function kbDoSearch(p,q){
 q = q.toLowerCase().trim();
@@ -3281,10 +3373,12 @@ if(kbCurTab==="info"){
 document.querySelectorAll(`#kbGgrid-${p} .kb-gcard`).forEach(el=>{
 el.style.display = (q && !el.textContent.toLowerCase().includes(q)) ? "none" : "";
 });
-} else {
+} else if(kbCurTab==="qa") {
 document.querySelectorAll(`#kbQlist-${p} .kb-qitem`).forEach(el=>{
 el.classList.toggle("hidden", !!(q && !el.textContent.toLowerCase().includes(q)));
 });
+} else {
+kbRenderErrorExplorer(p,{product:p,query:q});
 }
 }
 function kbClearSearch(p){
@@ -3292,6 +3386,7 @@ const si = document.getElementById(`kbSearch-${p}`);
 if(si) si.value = "";
 document.querySelectorAll(`#kbGgrid-${p} .kb-gcard`).forEach(el=>el.style.display="");
 document.querySelectorAll(`#kbQlist-${p} .kb-qitem`).forEach(el=>el.classList.remove("hidden"));
+if(kbCurTab==="error") kbRenderErrorExplorer(p,{product:p,query:""});
 }
 function kbToggleQ(p,i){
 const el = document.getElementById(`kbQi-${p}-${i}`);
