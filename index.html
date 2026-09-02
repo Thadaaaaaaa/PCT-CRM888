@@ -459,6 +459,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
 .pct-native-table{min-width:1780px}.pct-native-table th{white-space:nowrap}.pct-native-table td{max-width:220px}.pct-native-clip.wide{max-width:300px}
 .pct-native-pill.pending-fill{background:#fff4db;color:#a85b00}.pct-native-modal-card{width:min(75vw,1180px);max-height:92vh}.pct-order-edit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.pct-order-edit-grid .full{grid-column:1/-1}.pct-order-edit-grid textarea{min-height:88px}.pct-order-edit-grid .pct-order-noted textarea{min-height:260px;font-size:14px;line-height:1.65}
 .crm-customer-type-prominent{padding:12px;border:1px solid #ffcfad;background:#fff8f2;border-radius:12px}.crm-line-import{margin:10px 0 14px;padding:14px;border:1px dashed #ffad70;border-radius:12px;background:#fffaf6}.crm-line-import label{display:block;font-weight:800;font-size:12px;margin-bottom:6px}.crm-line-import textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:9px;padding:10px 12px;resize:vertical;font:12.5px/1.55 ui-monospace,monospace}.crm-line-import small{display:block;color:var(--muted);margin-top:6px}
+.crm-line-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}.crm-line-language{display:flex;gap:5px;padding:4px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}.crm-line-language button{border:0;background:transparent;color:var(--muted);border-radius:7px;padding:8px 13px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.crm-line-language button.active{background:var(--orange);color:#fff;box-shadow:0 2px 7px rgba(255,105,0,.24)}.crm-line-reset{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:8px;padding:8px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer}.crm-line-reset:hover{border-color:var(--orange);color:var(--orange-dark)}.crm-line-editor-label{display:block;margin-bottom:5px;color:var(--muted);font-size:11px}.crm-line-editor{display:block;width:100%;min-height:260px;max-height:none!important;resize:vertical;font:13px/1.7 -apple-system,"Segoe UI","PingFang SC",Arial,sans-serif;outline:none}.crm-line-editor:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,105,0,.1)}.crm-line-copy-btn{width:100%;min-height:42px}.crm-line-copy-btn.copied{background:#16a34a;color:#fff;border-color:#16a34a}@media(max-width:600px){.crm-line-language{width:100%}.crm-line-language button{flex:1;padding:9px 7px}.crm-line-reset{width:100%}.crm-line-editor{min-height:320px}}
 .survey-choice-group{display:flex;gap:7px;flex-wrap:wrap}.survey-choice-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;color:var(--muted);cursor:pointer}.survey-choice-btn.active{background:var(--orange);border-color:var(--orange);color:#fff}
 .case-pagination{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px}.case-pagination span{font-size:12px;color:var(--muted)}
 .pct-performance-toolbar{display:flex;gap:8px;flex-wrap:wrap}.pct-performance-toolbar button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 11px;font-weight:700;color:var(--muted);cursor:pointer}.pct-performance-toolbar button.active{background:var(--orange);border-color:var(--orange);color:#fff}.pct-performance-legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pct-performance-legend span{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}.pct-performance-legend i{width:9px;height:9px;border-radius:3px}.pct-performance-chart{display:flex;align-items:flex-end;gap:7px;height:260px;overflow-x:auto;padding:16px 4px 4px}.pct-performance-day{min-width:44px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}.pct-performance-bars{height:215px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px}.pct-performance-bars i{width:5px;min-height:2px;border-radius:4px 4px 0 0}.pct-performance-day small{font-size:9px;color:var(--muted);white-space:nowrap}.pct-report-date-readable{color:var(--orange-dark);font-size:11px;font-weight:700;margin-top:5px;display:block}
@@ -1897,6 +1898,7 @@ so:'', doNumber:'', customerName:'', phone:'', secondaryContact:'', lineId:'',
 address:'', postcode:'', apptDate:'', apptTime:'', model:'', unitCount:'1',
 customerRequest:'', noted:'', noted2:'', conceal:'',
 airFloor:'', airOutdoor:'', airIndoor:'',
+lineLanguage:'th', lineMessages:{},
 answers: new Array(10).fill(''),
 lastEditedAt:null, history:[]
 };
@@ -1942,10 +1944,48 @@ return lines.join('\n');
 const CRM_CUSTOMER_NOTE_TEXT_AIR = 'หมายเหตุ:\n- หากเป็นจุดติดตั้งใหม่ รบกวนเตรียมเมนไฟไว้หน้างานติดตั้ง\n- หากเข้าติดตั้งไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n- แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่ออุปกรณ์ให้ใช้งานได้เต็มประสิทธิภาพ\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
 const CRM_CUSTOMER_NOTE_TEXT_WASHER = 'หมายเหตุ:\n- หากเข้าติดตั้งไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n- แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่ออุปกรณ์ให้ใช้งานได้เต็มประสิทธิภาพ\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
 const CRM_CUSTOMER_NOTE_TEXT_REPAIR = 'หมายเหตุ:\n- หากเข้าซ่อมไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
-function crmBuildLineMessage(c){
+const CRM_LINE_LANGUAGES = {
+th:{label:'ไทย',flag:'🇹🇭'}, en:{label:'English',flag:'🇬🇧'}, zh:{label:'中文',flag:'🇨🇳'}
+};
+const CRM_CUSTOMER_NOTES_I18N = {
+en:{
+air:'Notes:\n- For a new installation point, please have the main electrical supply ready at the installation site.\n- If installation cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n- We recommend installing the Mi Home app to access all device features.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**',
+washer:'Notes:\n- If installation cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n- We recommend installing the Mi Home app to access all device features.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**',
+repair:'Notes:\n- If the inspection cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**'
+},
+zh:{
+air:'注意事项：\n- 如为新安装位置，请提前准备好安装点的主电源。\n- 如无法按预约时间开始安装，技术人员需按计划前往下一服务地点。请在预约前准备好安装区域。\n- 建议安装米家（Mi Home）应用，以便使用设备的完整功能。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**',
+washer:'注意事项：\n- 如无法按预约时间开始安装，技术人员需按计划前往下一服务地点。请在预约前准备好安装区域。\n- 建议安装米家（Mi Home）应用，以便使用设备的完整功能。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**',
+repair:'注意事项：\n- 如无法按预约时间开始检修，技术人员需按计划前往下一服务地点。请在预约前准备好现场。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**'
+}
+};
+function crmBuildLineMessage(c, language){
+const lang = CRM_LINE_LANGUAGES[language] ? language : 'th';
 const greetingName = c.customerName ? `คุณ${c.customerName}` : 'คุณ..';
 const apptDMY = toDMY(c.apptDate);
 let body;
+if(lang === 'en'){
+const name = c.customerName || 'Customer';
+if(c.productType === 'washer'){
+body = `Dear ${name},\nService Order: ${c.so||''}\nModel: ${c.model||''}\nThank you for choosing Xiaomi. We would like to confirm your installation appointment on ${apptDMY||'-'} at ${c.apptTime||'-'}.\n\nTo help us assess the installation site, please send the following wide-angle videos/photos:\n- Washing machine installation location\n- Electrical outlet to be used\n- Drain and water tap locations\n- Google Maps location link`;
+} else if(c.productType === 'repair'){
+body = `Dear ${name},\nService Order: ${c.so||''}\nModel: ${c.model||''}\nThank you for choosing Xiaomi. We would like to confirm your inspection appointment on ${apptDMY||'-'} at ${c.apptTime||'-'}.\n\nTo help our technician prepare the correct tools, please send:\n- A video/photo clearly showing the issue\n- Google Maps location link`;
+} else {
+body = `Dear ${name},\nService Order: ${c.so||''}\nModel: ${c.model||''}\nThank you for choosing Xiaomi. We would like to confirm your installation appointment on ${apptDMY||'-'} at ${c.apptTime||'-'}.\n\nTo help us assess the installation site, please send the following wide-angle videos/photos:\n- Indoor and outdoor unit installation locations\n- Electrical wiring, circuit breaker, and drain locations\n- Google Maps location link`;
+}
+return body + '\n\n' + (CRM_CUSTOMER_NOTES_I18N.en[c.productType] || CRM_CUSTOMER_NOTES_I18N.en.air);
+}
+if(lang === 'zh'){
+const name = c.customerName || '客户';
+if(c.productType === 'washer'){
+body = `尊敬的${name}：\n服务单号：${c.so||''}\n型号：${c.model||''}\n感谢您选择小米产品。现确认安装预约时间为 ${apptDMY||'-'} ${c.apptTime||'-'}。\n\n为便于我们提前确认安装环境，请提供以下广角视频或照片：\n- 洗衣机安装位置\n- 将要使用的电源插座\n- 排水口和水龙头位置\n- Google 地图位置链接`;
+} else if(c.productType === 'repair'){
+body = `尊敬的${name}：\n服务单号：${c.so||''}\n型号：${c.model||''}\n感谢您选择小米产品。现确认上门检修时间为 ${apptDMY||'-'} ${c.apptTime||'-'}。\n\n为便于技术人员准备合适的工具，请提供：\n- 能清楚显示故障情况的视频或照片\n- Google 地图位置链接`;
+} else {
+body = `尊敬的${name}：\n服务单号：${c.so||''}\n型号：${c.model||''}\n感谢您选择小米产品。现确认安装预约时间为 ${apptDMY||'-'} ${c.apptTime||'-'}。\n\n为便于我们提前确认安装环境，请提供以下广角视频或照片：\n- 室内机和室外机的安装位置\n- 电线、断路器和排水口位置\n- Google 地图位置链接`;
+}
+return body + '\n\n' + (CRM_CUSTOMER_NOTES_I18N.zh[c.productType] || CRM_CUSTOMER_NOTES_I18N.zh.air);
+}
 if(c.productType === 'washer'){
 body = `เรียน${greetingName}\nService Order : ${c.so||''}\nModel : ${c.model||''}\nทางเราขอขอบคุณที่เลือกผลิตภัณฑ์ Xiaomi ขอแจ้งยืนยันกำหนดการเข้าติดตั้งวันที่ ${apptDMY||'-'} เวลา ${c.apptTime||'-'} ครับ\n\nรบกวนขอข้อมูลวีดีโอมุมกว้างและรูปถ่ายเพิ่มเติมเพื่อตรวจสอบหน้างานดังนี้:\n- วีดีโอ/รูปถ่ายจุดติดตั้งเครื่องซักผ้า\n- วีดีโอ/รูปถ่ายจุดปลั๊กไฟที่จะใช้งาน\n- วีดีโอ/รูปถ่ายจุดท่อน้ำทิ้ง/ก๊อกน้ำ\n- ลิ้งค์ Google map`;
 } else if(c.productType === 'repair'){
@@ -1955,6 +1995,11 @@ body = `เรียน${greetingName}\nService Order : ${c.so||''}\nModel : ${c
 }
 return body + '\n\n' + (c.productType === 'washer' ? CRM_CUSTOMER_NOTE_TEXT_WASHER : c.productType === 'repair' ? CRM_CUSTOMER_NOTE_TEXT_REPAIR : CRM_CUSTOMER_NOTE_TEXT_AIR);
 }
+function crmEnsureLineState(c){
+if(!CRM_LINE_LANGUAGES[c.lineLanguage]) c.lineLanguage='th';
+if(!c.lineMessages || typeof c.lineMessages!=='object' || Array.isArray(c.lineMessages)) c.lineMessages={};
+}
+function crmGetLineMessage(c){crmEnsureLineState(c);return Object.prototype.hasOwnProperty.call(c.lineMessages,c.lineLanguage)?String(c.lineMessages[c.lineLanguage]):crmBuildLineMessage(c,c.lineLanguage);}
 function crmCustomerTypeLabel(c){
 if(!c.customerType || c.customerType==='general') return '';
 return c.customerType.toUpperCase(); // 'VIP' or 'KOL'
@@ -2052,7 +2097,7 @@ const response = await fetch(SHEET_CONFIG.webAppUrl + separator + 'action=getCRM
 const payload = await response.json();
 if(!response.ok || !payload || payload.ok!==true || !payload.data){ throw new Error((payload&&payload.message)||'ไม่พบ SO ในแท็บ Orders'); }
 const row = payload.data;
-crmDraft = Object.assign({}, crmDraft, row, {answers: Array.isArray(crmDraft.answers)?crmDraft.answers:new Array(10).fill('')});
+crmDraft = Object.assign({}, crmDraft, row, {answers: Array.isArray(crmDraft.answers)?crmDraft.answers:new Array(10).fill(''),lineMessages:{}});
 if(!Array.isArray(crmDraft.answers) || crmDraft.answers.length!==10) crmDraft.answers = new Array(10).fill('');
 crmEditingId = null;
 render();
@@ -2068,6 +2113,7 @@ if(crmMode === 'paste'){ renderColumnOPatcher(main); return; }
 const panel = document.createElement('div');
 panel.className = 'crm-panel';
 const c = crmDraft;
+crmEnsureLineState(c);
 panel.innerHTML = `
 <div class="crm-panel-head">
 <div><h3>🌬️🧼 Multi-Product Smart CRM</h3><div class="crm-sub">${crmEditingId ? 'กำลังแก้ไขเคสที่บันทึกไว้' : 'บันทึกเคสใหม่ — ข้อมูลจะสร้างคอลัมน์ Q ให้อัตโนมัติ'}</div></div>
@@ -2166,10 +2212,12 @@ ${c.productType==='air' ? `<div class="crm-section-title">🏠 Conseal / Conceal
 <button class="btn secondary" id="crmCopyOBtn">📋 คัดลอกข้อความคอลัมน์ Q</button>
 <button class="btn secondary" id="crmCopyRowBtn">📋 คัดลอกแถวสำหรับ Google Sheet</button>
 </div>
-<div class="crm-section-title">💬 ข้อความส่งต่อ Line@ (ขอรูปภาพ/วิดีโอ Auto-Fill + แนบหมายเหตุเตือนความจำ)</div>
+<div class="crm-section-title">💬 ข้อความส่งต่อ Line@ — เลือกภาษา แก้ไข และคัดลอกได้ทันที</div>
 <div class="crm-line-import"><label>วางเนื้อหาแบบเต็มเพื่อดึงข้อมูลอัตโนมัติ</label><textarea id="crmLineImport" placeholder="วางข้อความที่มี Customer, Service Order และ Model ที่นี่..."></textarea><small>ระบบจะตรวจ Customer → ชื่อลูกค้า, Service Order → SO และ Model → รุ่นสินค้า โดยไม่เปลี่ยนเนื้อหาส่วนอื่นของข้อความ</small></div>
-<div class="crm-line-box" id="crmLineBox"></div>
-<button class="btn secondary" id="crmCopyLineBtn">📋 คัดลอกข้อความทักไลน์</button>
+<div class="crm-line-toolbar"><div class="crm-line-language" id="crmLineLanguage">${Object.entries(CRM_LINE_LANGUAGES).map(([key,lang])=>`<button type="button" data-lang="${key}" class="${c.lineLanguage===key?'active':''}">${lang.flag} ${lang.label}</button>`).join('')}</div><button type="button" class="crm-line-reset" id="crmLineResetBtn">↻ ใช้ข้อความมาตรฐาน</button></div>
+<label class="crm-line-editor-label" for="crmLineEditor">แก้ไขข้อความก่อนส่งได้ และเก็บแยกตามภาษา · เมื่อแก้เอง ข้อความจะคงเดิมจนกด “ใช้ข้อความมาตรฐาน”</label>
+<textarea class="crm-line-box crm-line-editor" id="crmLineEditor" spellcheck="true"></textarea>
+<button class="btn secondary crm-line-copy-btn" id="crmCopyLineBtn">📋 คัดลอกข้อความทักไลน์</button>
 <div class="crm-section-title">🔗 ส่งข้อมูลเข้า Google Sheet แบบไม่ต้องล็อกอิน (ยังไม่จำเป็นต้องตั้งค่าตอนนี้)</div>
 <div class="crm-sheet-box">
 <div class="field"><label>Google Apps Script Web App URL (ไม่บังคับ — ใช้ปุ่มคัดลอกแถวไปวางในชีตได้เลยถ้ายังไม่พร้อม)</label><input type="text" id="crmWebAppUrl" placeholder="https://script.google.com/macros/s/XXXXX/exec" value="${escapeAttr(SHEET_CONFIG.webAppUrl)}"></div>
@@ -2191,6 +2239,7 @@ return;
 }
 crmDraft.productType = newType;
 crmDraft.answers = new Array(10).fill('');
+crmDraft.lineMessages = {};
 if(newType!=='air') crmDraft.conceal = '';
 crmDraft.airFloor = ''; crmDraft.airOutdoor = ''; crmDraft.airIndoor = '';
 renderAirCRMRefresh();
@@ -2306,7 +2355,17 @@ if(event.key==='Enter'){ event.preventDefault(); crmLoadOrderFromSheet(event.cur
 panel.querySelector('#crmSaveSendBtn').onclick = crmSaveAndSend;
 panel.querySelector('#crmCopyOBtn').onclick = (e)=>copyText(crmBuildColumnO(crmDraft), e.target);
 panel.querySelector('#crmCopyRowBtn').onclick = ()=>crmCopyRowForSheet(crmDraft);
-panel.querySelector('#crmCopyLineBtn').onclick = (e)=>copyText(crmBuildLineMessage(crmDraft), e.target);
+panel.querySelectorAll('#crmLineLanguage button').forEach(button=>{
+button.onclick=()=>{
+crmDraft.lineLanguage=button.dataset.lang;
+panel.querySelectorAll('#crmLineLanguage button').forEach(item=>item.classList.toggle('active',item===button));
+panel.querySelector('#crmLineEditor').value=crmGetLineMessage(crmDraft);
+panel.querySelector('#crmCopyLineBtn').textContent=`📋 คัดลอกข้อความ ${CRM_LINE_LANGUAGES[crmDraft.lineLanguage].label}`;
+};
+});
+panel.querySelector('#crmLineEditor').addEventListener('input',(event)=>{crmEnsureLineState(crmDraft);crmDraft.lineMessages[crmDraft.lineLanguage]=event.target.value;});
+panel.querySelector('#crmLineResetBtn').onclick=()=>{crmEnsureLineState(crmDraft);delete crmDraft.lineMessages[crmDraft.lineLanguage];panel.querySelector('#crmLineEditor').value=crmGetLineMessage(crmDraft);showToast('คืนข้อความมาตรฐานภาษา '+CRM_LINE_LANGUAGES[crmDraft.lineLanguage].label+' แล้ว');};
+panel.querySelector('#crmCopyLineBtn').onclick = (e)=>copyText(panel.querySelector('#crmLineEditor').value, e.currentTarget);
 panel.querySelector('#crmLineImport').addEventListener('input', (event)=>{
 window.clearTimeout(panel._lineImportTimer);
 panel._lineImportTimer = window.setTimeout(()=>crmImportLineIdentity(event.target.value, panel), 120);
@@ -2340,7 +2399,9 @@ crmRefreshPreviewsIn(panel);
 }
 function crmRefreshPreviewsIn(panel){
 panel.querySelector('#crmOPreview').textContent = crmBuildColumnO(crmDraft);
-panel.querySelector('#crmLineBox').textContent = crmBuildLineMessage(crmDraft);
+crmEnsureLineState(crmDraft);
+const editor=panel.querySelector('#crmLineEditor');if(editor)editor.value=crmGetLineMessage(crmDraft);
+const copyButton=panel.querySelector('#crmCopyLineBtn');if(copyButton)copyButton.textContent=`📋 คัดลอกข้อความ ${CRM_LINE_LANGUAGES[crmDraft.lineLanguage].label}`;
 }
 function crmRefreshPreviews(){
 const panel = document.querySelector('.crm-panel');
