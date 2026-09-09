@@ -20,7 +20,56 @@ const CONFIG = Object.freeze({
   DEFAULT_PAGE_SIZE: 30,
   MAX_PAGE_SIZE: 100
 });
+// Synced from postcode-zones > สรุปโซน (9 Sep 2026). The Orders sheet also
+// has matching conditional-format rules; this direct format makes webhook
+// writes deterministic even before the sheet finishes recalculating.
+const POSTCODE_ZONE_GROUPS = Object.freeze([
+  ['G01','#D9EAF7',['10100','10110','10120','10310']],
+  ['G02','#FCE4D6',['10130','10140','10150','10600']],
+  ['G03','#E2F0D9',['10160','10170']],
+  ['G04','#FFF2CC',['10200','10300','10320','10321','10330','10400','10500']],
+  ['G05','#E4DFEC',['10210','10220','10222','10900']],
+  ['G06','#DDEBF7',['10230','10240']],
+  ['G07','#F4CCCC',['10250','10254','10260']],
+  ['G08','#D9EAD3',['10270','10271','10290']],
+  ['G09','#FCE5CD',['10280']],
+  ['G10','#D0E0E3',['10510']],
+  ['G11','#EAD1DC',['10520','10521']],
+  ['G12','#CFE2F3',['10530']],
+  ['G13','#D9EAF7',['10540']],
+  ['G14','#FCE4D6',['10550','10560','10570']],
+  ['G15','#E2F0D9',['10700','10800','11130']],
+  ['G16','#FFF2CC',['11000','11120']],
+  ['G17','#E4DFEC',['11110','11140']],
+  ['G18','#DDEBF7',['11150']],
+  ['G19','#F4CCCC',['12000']],
+  ['G20','#D9EAD3',['12110','12150']],
+  ['G21','#FCE5CD',['12120']],
+  ['G22','#D0E0E3',['12130']],
+  ['G23','#EAD1DC',['12170']],
+  ['G24','#CFE2F3',['74000']],
+  ['G25','#D9EAF7',['75000']],
+  ['G26','#FCE4D6',['80000']],
+  ['G27','#E2F0D9',['92110']],
+  ['CHECK','#FFF1D6',['1026','105410','90326']]
+]);
 let SPREADSHEET_CACHE_ = null;
+
+function postcodeZone_(value) {
+  const postcode = clean_(value).replace(/\D/g, '');
+  for (let i = 0; i < POSTCODE_ZONE_GROUPS.length; i++) {
+    if (POSTCODE_ZONE_GROUPS[i][2].indexOf(postcode) !== -1) {
+      return { id: POSTCODE_ZONE_GROUPS[i][0], color: POSTCODE_ZONE_GROUPS[i][1] };
+    }
+  }
+  return null;
+}
+
+function applyPostcodeZoneColor_(sheet, rowNumber, value) {
+  const zone = postcodeZone_(value);
+  sheet.getRange(rowNumber, 7).setBackground(zone ? zone.color : '#ffffff');
+  return zone;
+}
 
 function doGet(e) {
   const action = e && e.parameter ? clean_(e.parameter.action) : '';
@@ -297,6 +346,7 @@ function saveCRMOrderFromWebhook_(payload) {
       toSheetDate_(payload.apptDate),
       clean_(payload.apptTime)
     ]]);
+    const postcodeZone = applyPostcodeZoneColor_(sheet, rowNumber, payload.postcode);
     formatOrderDateCells_(sheet, rowNumber);
     sheet.getRange(rowNumber, 12, 1, 7).setValues([operationFields]);
     restoreOrderDropdownValidation_(sheet, rowNumber);
@@ -310,6 +360,7 @@ function saveCRMOrderFromWebhook_(payload) {
     return {
       message: existingRow ? 'อัปเดต Order เรียบร้อยแล้ว' : 'เพิ่ม Order เรียบร้อยแล้ว',
       rowNumber: rowNumber,
+      postcodeZone: postcodeZone ? postcodeZone.id : '',
       operationFieldsVerified: true,
       savedOperationFields: {
         model: savedOperationFields[0],

@@ -463,6 +463,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
 .pct-native-table{min-width:1780px}.pct-native-table th{white-space:nowrap}.pct-native-table td{max-width:220px}.pct-native-clip.wide{max-width:300px}
 .pct-native-pill.pending-fill{background:#fff4db;color:#a85b00}.pct-native-modal-card{width:min(75vw,1180px);max-height:92vh}.pct-order-edit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.pct-order-edit-grid .full{grid-column:1/-1}.pct-order-edit-grid textarea{min-height:88px}.pct-order-edit-grid .pct-order-noted textarea{min-height:260px;font-size:14px;line-height:1.65}
 .crm-customer-type-prominent{padding:12px;border:1px solid #ffcfad;background:#fff8f2;border-radius:12px}.crm-line-import{margin:10px 0 14px;padding:14px;border:1px dashed #ffad70;border-radius:12px;background:#fffaf6}.crm-line-import label{display:block;font-weight:800;font-size:12px;margin-bottom:6px}.crm-line-import textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:9px;padding:10px 12px;resize:vertical;font:12.5px/1.55 ui-monospace,monospace}.crm-line-import small{display:block;color:var(--muted);margin-top:6px}
+.crm-postcode-zone{display:flex;align-items:center;gap:7px;width:fit-content;max-width:100%;margin-top:6px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);color:var(--muted);font-size:10.5px;font-weight:800;transition:background .15s,border-color .15s}.crm-postcode-zone::before{content:'';width:8px;height:8px;flex:0 0 auto;border-radius:50%;background:currentColor}.crm-postcode-zone[data-state="mapped"]{color:#26313f}.crm-postcode-zone[data-state="check"]{color:#923f0e}.crm-postcode-zone[data-state="unknown"]{color:#b42318;background:#fff1f0;border-color:#f7c7c2}
 .crm-line-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}.crm-line-language{display:flex;gap:5px;padding:4px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}.crm-line-language button{border:0;background:transparent;color:var(--muted);border-radius:7px;padding:8px 13px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.crm-line-language button.active{background:var(--orange);color:#fff;box-shadow:0 2px 7px rgba(255,105,0,.24)}.crm-line-reset{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:8px;padding:8px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer}.crm-line-reset:hover{border-color:var(--orange);color:var(--orange-dark)}.crm-line-editor-label{display:block;margin-bottom:5px;color:var(--muted);font-size:11px}.crm-line-editor{display:block;width:100%;min-height:260px;max-height:none!important;resize:vertical;font:13px/1.7 -apple-system,"Segoe UI","PingFang SC",Arial,sans-serif;outline:none}.crm-line-editor:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,105,0,.1)}.crm-line-copy-btn{width:100%;min-height:42px}.crm-line-copy-btn.copied{background:#16a34a;color:#fff;border-color:#16a34a}@media(max-width:600px){.crm-line-language{width:100%}.crm-line-language button{flex:1;padding:9px 7px}.crm-line-reset{width:100%}.crm-line-editor{min-height:320px}}
 .survey-choice-group{display:flex;gap:7px;flex-wrap:wrap}.survey-choice-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;color:var(--muted);cursor:pointer}.survey-choice-btn.active{background:var(--orange);border-color:var(--orange);color:#fff}
 .case-pagination{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px}.case-pagination span{font-size:12px;color:var(--muted)}
@@ -786,6 +787,7 @@ body.pct-dark{color-scheme:dark;--muted:#aeb4bf;--muted2:#737b89;--navy:#f3f5f8}
 </style>
 <script src="data/error-codes.js"></script>
 <script src="data/latest-site-data.js"></script>
+<script src="data/postcode-zones.js"></script>
 <script>const ICON_OPTIONS = ['📅','💬','📊','🧰','👥','🚗','🛠️','📦','🧾','📍','🔧','💧','❄️','🧼','💰','📌','🗂️','🛡️','🔌','⚙️','📞','✅','⚠️','🏠','🧯','🔥','🌡️','🧊','📡','🪫','🔋','📋','🗃️','📁','🛒','🎯','⭐','🏷️','🧑‍🔧','🚚','🚀','🧠','🧪','🧭','🗓️','⏱️','🔔','🔒','🔓','🆘','❌','🟢','🟡','🔴','🔵','🟣','🟠','🧮','📈','📉','🛎️','🧹','🔩','🧱','🧑‍💼','👨‍🔧','👩‍🔧','🏢','🌬️','💡','🎨','🌟','🏆','💎','📝','🔍','🧩','🛰️','🗺️','🧳','🎁','🔗'];
 const COLOR_SWATCHES = ['#FF6900','#3b82f6','#16a34a','#d97706','#9333ea','#db2777','#0d9488','#ef4444','#0ea5e9','#1f2a44'];
 const BG_SWATCHES = ['#FFFFFF','#FFF4EA','#FFF9DB','#EAF6FF','#EAFBEF','#F5EAFF','#FFE9F1','#E6FFFB','#F1F2F5','#FDEAEA'];
@@ -2130,7 +2132,8 @@ if(res.ok && result && result.ok === true && result.operationFieldsVerified === 
 const fields = result.savedOperationFields || {};
 const savedTail = ['model','customerType','transactionType','difficulty','conceal','noted','noted2']
   .filter(key => String(fields[key] || '').trim()).length;
-showToast('ส่งเข้า Google Sheet สำเร็จ ✓ · ตรวจสอบข้อมูล L–R แล้ว ' + savedTail + '/7 ช่อง');
+const zoneText = result.postcodeZone ? ' · Post code ' + result.postcodeZone : '';
+showToast('ส่งเข้า Google Sheet สำเร็จ ✓ · ตรวจสอบข้อมูล L–R แล้ว ' + savedTail + '/7 ช่อง' + zoneText);
 return true;
 } else {
 showToast((result && result.message) || ('ส่งข้อมูลไม่สำเร็จ (HTTP ' + res.status + ') — ตรวจสอบการ Deploy ของ Web App URL'));
@@ -2238,7 +2241,7 @@ ${CRM_TRANSACTION_TYPES.map(t=>`<option value="${escapeAttr(t)}" ${c.transaction
 <div><label>เบอร์โทรศัพท์ลูกค้า</label><input type="text" id="crmPhone" value="${escapeAttr(c.phone)}"></div>
 <div class="full crm-addr-row">
 <div><label>ที่อยู่ติดตั้ง</label><input type="text" id="crmAddress" value="${escapeAttr(c.address)}"></div>
-<div><label>รหัสไปรษณีย์</label><input type="text" id="crmPostcode" value="${escapeAttr(c.postcode)}"></div>
+<div><label>รหัสไปรษณีย์</label><input type="text" id="crmPostcode" inputmode="numeric" maxlength="6" value="${escapeAttr(c.postcode)}"><span class="crm-postcode-zone" id="crmPostcodeZone" aria-live="polite">กรอกรหัสเพื่อดูโซน</span></div>
 </div>
 <div><label>วันที่ลูกค้ายืนยันติดตั้ง</label><input type="date" id="crmDate" value="${escapeAttr(c.apptDate)}"></div>
 <div><label>เวลานัดติดตั้ง</label><input type="time" id="crmTime" value="${escapeAttr(c.apptTime)}"></div>
@@ -2459,6 +2462,21 @@ panel.querySelector('#crmOPreview').textContent = crmBuildColumnO(crmDraft);
 crmEnsureLineState(crmDraft);
 const editor=panel.querySelector('#crmLineEditor');if(editor)editor.value=crmGetLineMessage(crmDraft);
 const copyButton=panel.querySelector('#crmCopyLineBtn');if(copyButton)copyButton.textContent=`📋 คัดลอกข้อความ ${CRM_LINE_LANGUAGES[crmDraft.lineLanguage].label}`;
+const zoneBadge=panel.querySelector('#crmPostcodeZone');
+if(zoneBadge){
+const postcode=String(crmDraft.postcode||'').replace(/\D/g,'');
+const zone=typeof window.pctFindPostcodeZone==='function' ? window.pctFindPostcodeZone(postcode) : null;
+zoneBadge.style.backgroundColor='';zoneBadge.style.borderColor='';
+if(zone){
+zoneBadge.dataset.state=zone.id==='CHECK'?'check':'mapped';
+zoneBadge.textContent=zone.id==='CHECK'?'CHECK · รหัสต้องตรวจสอบ':zone.id+' · สีตามกลุ่มพื้นที่';
+zoneBadge.style.backgroundColor=zone.color;zoneBadge.style.borderColor=zone.color;
+}else if(postcode){
+zoneBadge.dataset.state='unknown';zoneBadge.textContent='ยังไม่พบรหัสนี้ในตารางกลุ่ม';
+}else{
+zoneBadge.dataset.state='empty';zoneBadge.textContent='กรอกรหัส 5 หลักเพื่อดูโซน';
+}
+}
 }
 function crmRefreshPreviews(){
 const panel = document.querySelector('.crm-panel');
