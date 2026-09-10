@@ -2466,11 +2466,11 @@ const zoneBadge=panel.querySelector('#crmPostcodeZone');
 if(zoneBadge){
 const postcode=String(crmDraft.postcode||'').replace(/\D/g,'');
 const zone=typeof window.pctFindPostcodeZone==='function' ? window.pctFindPostcodeZone(postcode) : null;
-zoneBadge.style.backgroundColor='';zoneBadge.style.borderColor='';
+zoneBadge.style.backgroundColor='';zoneBadge.style.borderColor='';zoneBadge.style.color='';
 if(zone){
 zoneBadge.dataset.state=zone.id==='CHECK'?'check':'mapped';
 zoneBadge.textContent=zone.id==='CHECK'?'CHECK · รหัสต้องตรวจสอบ':zone.id+' · สีตามกลุ่มพื้นที่';
-zoneBadge.style.backgroundColor=zone.color;zoneBadge.style.borderColor=zone.color;
+zoneBadge.style.backgroundColor=zone.color;zoneBadge.style.borderColor=zone.color;zoneBadge.style.color=zone.textColor||'#fff';
 }else if(postcode){
 zoneBadge.dataset.state='unknown';zoneBadge.textContent='ยังไม่พบรหัสนี้ในตารางกลุ่ม';
 }else{
