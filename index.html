@@ -960,6 +960,8 @@ CASES = sanitizeCases((useLatestDataExport && Array.isArray(PUBLIC_DATA_PAYLOAD.
 SHEET_CONFIG = useLatestDataExport ? {...SHEET_CONFIG, ...(PUBLIC_DATA_PAYLOAD.sheetConfig || {})} : ((parsed && parsed.sheetConfig) ? {...SHEET_CONFIG, ...parsed.sheetConfig} : SHEET_CONFIG);
 if(!SHEET_CONFIG.webAppUrl) SHEET_CONFIG.webAppUrl = 'https://script.google.com/macros/s/AKfycbxLUoq_OCTXKKEkTaSvtegOTr1l3PKefmtvj-OlP7E-Ir7qZtq8fOxPmJxbwZkpNxrtgA/exec';
 DAILY_REPORTS = (useLatestDataExport && PUBLIC_DATA_PAYLOAD.dailyReports) ? PUBLIC_DATA_PAYLOAD.dailyReports : ((parsed && parsed.dailyReports) ? parsed.dailyReports : {});
+SHEET_CONFIG.webAppUrl = 'https://script.google.com/macros/s/AKfycbwrhRqiS1gTyUqDD7xvBIT5ATi3P425qLwKU8jvuwX1luUlqa2KhjDdDNwrQpoS3ioZ/exec';
+try { localStorage.setItem('pctDashboardWebAppUrl_v2', SHEET_CONFIG.webAppUrl); } catch (storageError) {}
 activeCategory = CATS.length ? CATS[0].id : null;
 initSidebarCollapse();
 setupGlobalEvents();
