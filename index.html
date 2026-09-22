@@ -4044,7 +4044,7 @@ mnavSync();</script>
 
   function getDashboardUrl() {
     const stored = clean(localStorage.getItem(URL_KEY));
-    return validWebAppUrl(stored) ? stored : DEFAULT_URL;
+    return validWebAppUrl(stored) ? stored : ((typeof SHEET_CONFIG !== 'undefined' && validWebAppUrl(SHEET_CONFIG.webAppUrl)) ? SHEET_CONFIG.webAppUrl : DEFAULT_URL);
   }
 
   function setDashboardUrl(value) {
