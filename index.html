@@ -1089,7 +1089,7 @@ if(activeCategory===c.id){
 item.style.setProperty('--accent', c.color);
 item.style.setProperty('--tint', hexToRgba(c.color, 0.12));
 }
-const lockMark = c.id===MANAGER_CATEGORY_ID ? '<span class="manager-nav-lock" aria-label="ต้องใช้รหัสผ่าน">🔒</span>' : '';
+const lockMark = isManagerCategory(c) ? '<span class="manager-nav-lock" aria-label="ต้องใช้รหัสผ่าน">🔒</span>' : '';
 item.innerHTML = `<span class="ic">${c.icon}</span><span class="nm">${escapeHtml(c.name)}</span>${lockMark}<span class="cnt">${n}</span><span class="editTab" title="แก้ไขหมวดหมู่">✎</span>`;
 item.querySelector('.editTab').onclick = (e)=>{ e.stopPropagation(); openCatModal(c.id); };
 item.addEventListener('click', (e)=>{
@@ -1105,8 +1105,13 @@ nav.appendChild(item);
 });
 }
 function catIdFromItem(item, fallback){ return item && item.dataset.catid ? item.dataset.catid : fallback; }
+function isManagerCategory(categoryOrId){
+if(typeof categoryOrId==='object' && categoryOrId) return categoryOrId.id===MANAGER_CATEGORY_ID || String(categoryOrId.name||'').trim().toLowerCase()==='manager';
+const category = CATS.find(c=>c.id===categoryOrId);
+return Boolean(category && isManagerCategory(category));
+}
 async function selectCategory(catId){
-if(catId===MANAGER_CATEGORY_ID && !managerGateIsOpen()){
+if(isManagerCategory(catId) && !managerGateIsOpen()){
 managerGatePendingCategory = catId;
 const unlocked = await openManagerGate();
 if(!unlocked){ managerGatePendingCategory = null; return; }
