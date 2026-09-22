@@ -618,6 +618,17 @@ body.pct-dark{color-scheme:dark;--muted:#aeb4bf;--muted2:#737b89;--navy:#f3f5f8}
 .crm-line-box{border-radius:12px!important;background:#fff!important;box-shadow:inset 0 1px 4px rgba(72,47,30,.05)}
 @media(max-width:720px){.crm-controlbar,.crm-sheet-box{padding:13px!important;border-radius:13px!important}.crm-actions-row{position:sticky;bottom:8px;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);padding:8px;border:1px solid #eadfd7;border-radius:13px;box-shadow:0 8px 24px rgba(0,0,0,.1)}.crm-actions-row .btn{flex:1;min-width:0;font-size:12px;padding:10px 8px}}
 </style>
+<style id="managerLockStyles">
+#managerLockOverlay{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:20px;background:rgba(15,23,42,.42);backdrop-filter:blur(7px);opacity:0;pointer-events:none;transition:opacity .18s ease}
+#managerLockOverlay.show{opacity:1;pointer-events:auto}
+.manager-lock-card{width:min(420px,100%);padding:26px;border:1px solid color-mix(in srgb,var(--line) 82%,#ef4444 18%);border-radius:22px;background:var(--panel);box-shadow:0 24px 80px rgba(15,23,42,.22)}
+.manager-lock-icon{width:48px;height:48px;display:grid;place-items:center;margin-bottom:14px;border-radius:15px;background:rgba(239,68,68,.11);font-size:24px}
+.manager-lock-card h3{margin:0;color:var(--text);font-size:20px}.manager-lock-card p{margin:8px 0 18px;color:var(--muted);font-size:12px;line-height:1.6}
+.manager-nav-lock{margin-left:auto;font-size:11px;opacity:.82;filter:saturate(.8)}
+.manager-lock-card label{display:grid;gap:7px;color:var(--muted);font-size:11px;font-weight:800}.manager-lock-card input{width:100%;height:44px;padding:0 13px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);font:inherit;box-sizing:border-box}.manager-lock-card input:focus{outline:0;border-color:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.12)}
+.manager-lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.manager-lock-actions button{min-height:40px;padding:0 16px;border-radius:11px;font:inherit;font-weight:800;cursor:pointer}.manager-lock-cancel{border:1px solid var(--line);background:var(--panel2);color:var(--text)}.manager-lock-submit{border:0;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;box-shadow:0 8px 16px rgba(220,38,38,.2)}.manager-lock-error{min-height:18px;margin-top:8px;color:#dc2626;font-size:11px;font-weight:700}
+@media(max-width:520px){.manager-lock-card{padding:21px;border-radius:18px}.manager-lock-actions{display:grid;grid-template-columns:1fr 1fr}.manager-lock-actions button{width:100%}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -839,6 +850,10 @@ let CATS = [];
 let DATA = [];
 let LAYOUT = {};
 let activeCategory = null;
+const MANAGER_CATEGORY_ID = 'cat_esfziig5';
+const MANAGER_GATE_HASH = 'b5b70c2273edd4d46aa41c8e8e453f4ae1900b3ce901bd938406dea419224aed';
+const MANAGER_GATE_KEY = 'pct_manager_gate_v1';
+let managerGatePendingCategory = null;
 let editingId = null;
 let editingCatId = null;
 let historyItemId = null;
@@ -1074,7 +1089,8 @@ if(activeCategory===c.id){
 item.style.setProperty('--accent', c.color);
 item.style.setProperty('--tint', hexToRgba(c.color, 0.12));
 }
-item.innerHTML = `<span class="ic">${c.icon}</span><span class="nm">${escapeHtml(c.name)}</span><span class="cnt">${n}</span><span class="editTab" title="แก้ไขหมวดหมู่">✎</span>`;
+const lockMark = c.id===MANAGER_CATEGORY_ID ? '<span class="manager-nav-lock" aria-label="ต้องใช้รหัสผ่าน">🔒</span>' : '';
+item.innerHTML = `<span class="ic">${c.icon}</span><span class="nm">${escapeHtml(c.name)}</span>${lockMark}<span class="cnt">${n}</span><span class="editTab" title="แก้ไขหมวดหมู่">✎</span>`;
 item.querySelector('.editTab').onclick = (e)=>{ e.stopPropagation(); openCatModal(c.id); };
 item.addEventListener('click', (e)=>{
 if(e.target.closest('.editTab')) return;
@@ -1089,10 +1105,64 @@ nav.appendChild(item);
 });
 }
 function catIdFromItem(item, fallback){ return item && item.dataset.catid ? item.dataset.catid : fallback; }
-function selectCategory(catId){
+async function selectCategory(catId){
+if(catId===MANAGER_CATEGORY_ID && !managerGateIsOpen()){
+managerGatePendingCategory = catId;
+const unlocked = await openManagerGate();
+if(!unlocked){ managerGatePendingCategory = null; return; }
+}
 activeCategory = catId; reorderMode = false;
 document.getElementById('ask').value = '';
 closeSidebarMobile(); render();
+}
+function managerGateIsOpen(){
+try{return sessionStorage.getItem(MANAGER_GATE_KEY)==='ok';}catch(e){return false;}
+}
+async function managerGateDigest(value){
+const bytes = new TextEncoder().encode(value);
+const digest = await crypto.subtle.digest('SHA-256', bytes);
+return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function managerGateEnsureModal(){
+let overlay = document.getElementById('managerLockOverlay');
+if(overlay) return overlay;
+overlay = document.createElement('div');
+overlay.id = 'managerLockOverlay';
+overlay.setAttribute('role','dialog');
+overlay.setAttribute('aria-modal','true');
+overlay.innerHTML = `<div class="manager-lock-card" role="document"><div class="manager-lock-icon">🔒</div><h3>Manager</h3><p>ส่วนนี้จำกัดสิทธิ์การเข้าถึง กรุณาใส่รหัสผ่านเพื่อดำเนินการต่อ</p><label>รหัสผ่าน<input id="managerLockInput" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false"></label><div id="managerLockError" class="manager-lock-error" aria-live="polite"></div><div class="manager-lock-actions"><button type="button" class="manager-lock-cancel">ยกเลิก</button><button type="button" class="manager-lock-submit">เข้าใช้งาน</button></div></div>`;
+document.body.appendChild(overlay);
+const input = overlay.querySelector('#managerLockInput');
+const error = overlay.querySelector('#managerLockError');
+const close = (result)=>{ overlay.classList.remove('show'); input.value=''; error.textContent=''; if(typeof overlay._managerResolve==='function'){ const resolve=overlay._managerResolve; overlay._managerResolve=null; resolve(Boolean(result)); } };
+overlay.querySelector('.manager-lock-cancel').addEventListener('click', ()=>{ managerGatePendingCategory=null; close(false); });
+overlay.querySelector('.manager-lock-submit').addEventListener('click', async ()=>{
+const value = input.value;
+if(!value){ error.textContent='กรุณาใส่รหัสผ่าน'; input.focus(); return; }
+const submit = overlay.querySelector('.manager-lock-submit');
+submit.disabled = true; error.textContent='กำลังตรวจสอบ…';
+try{
+const digest = await managerGateDigest(value);
+if(digest!==MANAGER_GATE_HASH){ error.textContent='รหัสผ่านไม่ถูกต้อง'; input.select(); return; }
+try{ sessionStorage.setItem(MANAGER_GATE_KEY,'ok'); }catch(e){}
+close(true);
+const pending = managerGatePendingCategory; managerGatePendingCategory=null;
+if(pending) { activeCategory=pending; reorderMode=false; document.getElementById('ask').value=''; closeSidebarMobile(); render(); }
+}catch(e){ error.textContent='ไม่สามารถตรวจสอบรหัสผ่านได้ กรุณาลองใหม่'; }
+finally{ submit.disabled=false; }
+});
+input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); overlay.querySelector('.manager-lock-submit').click(); } if(e.key==='Escape'){ managerGatePendingCategory=null; close(false); } });
+overlay.addEventListener('click', e=>{ if(e.target===overlay){ managerGatePendingCategory=null; close(false); } });
+return overlay;
+}
+function openManagerGate(){
+const overlay = managerGateEnsureModal();
+overlay.classList.add('show');
+const input = overlay.querySelector('#managerLockInput');
+setTimeout(()=>input.focus(),40);
+return new Promise(resolve=>{
+overlay._managerResolve = resolve;
+});
 }
 function attachSidebarDrag(item, catId){
 item.addEventListener('pointerdown', (e)=>{
