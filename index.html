@@ -5783,7 +5783,7 @@ mnavSync();</script>
             zoneNoteButton.setAttribute('aria-label', 'ดูหมายเหตุสีโซนรหัสไปรษณีย์');
             zoneNoteButton.textContent = 'ⓘ';
             zoneNoteButton.onclick = function(){openPostcodeZoneNote(zoneNoteButton);};
-            heading.appendChild(zoneNoteButton);
+            heading.prepend(zoneNoteButton);
           }
         }
       };
