@@ -464,6 +464,20 @@ input[type=checkbox],input[type=radio]{accent-color:var(--orange)}
 .pct-native-pill.pending-fill{background:#fff4db;color:#a85b00}.pct-native-modal-card{width:min(75vw,1180px);max-height:92vh}.pct-order-edit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.pct-order-edit-grid .full{grid-column:1/-1}.pct-order-edit-grid textarea{min-height:88px}.pct-order-edit-grid .pct-order-noted textarea{min-height:260px;font-size:14px;line-height:1.65}
 .crm-customer-type-prominent{padding:12px;border:1px solid #ffcfad;background:#fff8f2;border-radius:12px}.crm-line-import{margin:10px 0 14px;padding:14px;border:1px dashed #ffad70;border-radius:12px;background:#fffaf6}.crm-line-import label{display:block;font-weight:800;font-size:12px;margin-bottom:6px}.crm-line-import textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:9px;padding:10px 12px;resize:vertical;font:12.5px/1.55 ui-monospace,monospace}.crm-line-import small{display:block;color:var(--muted);margin-top:6px}
 .crm-postcode-zone{display:flex;align-items:center;gap:7px;width:fit-content;max-width:100%;margin-top:6px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);color:var(--muted);font-size:10.5px;font-weight:800;transition:background .15s,border-color .15s}.crm-postcode-zone::before{content:'';width:8px;height:8px;flex:0 0 auto;border-radius:50%;background:currentColor}.crm-postcode-zone[data-state="mapped"]{color:#26313f}.crm-postcode-zone[data-state="check"]{color:#923f0e}.crm-postcode-zone[data-state="unknown"]{color:#b42318;background:#fff1f0;border-color:#f7c7c2}
+.postcode-zone-note-btn{display:inline-grid;place-items:center;width:23px;height:23px;margin-left:7px;padding:0;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--muted);font:700 12px/1 inherit;cursor:pointer;vertical-align:middle}
+.postcode-zone-note-overlay{position:fixed;inset:0;z-index:160;display:grid;place-items:center;padding:18px;background:rgba(15,23,42,.48)}
+.postcode-zone-note{width:min(760px,100%);max-height:88vh;overflow:auto;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--card,#fff);box-shadow:0 24px 80px rgba(15,23,42,.24)}
+.postcode-zone-note-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.postcode-zone-note-title{margin:0;font-size:18px}
+.postcode-zone-note-close{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}
+.postcode-zone-note-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.postcode-zone-note-group{overflow:hidden;border:1px solid var(--line);border-radius:12px}
+.postcode-zone-note-group-title{margin:0;padding:8px 11px;font-size:13px}
+.postcode-zone-note-list{list-style:none;margin:0;padding:6px 11px}
+.postcode-zone-note-list li{display:grid;grid-template-columns:52px 1fr;gap:9px;padding:5px 0;font-size:12px;line-height:1.45}
+.postcode-zone-note-code{font-weight:750;font-variant-numeric:tabular-nums}
+.postcode-zone-note-source{margin:15px 0 0;font-size:12px;color:var(--muted)}
+@media(max-width:620px){.postcode-zone-note-overlay{align-items:end;padding:0}.postcode-zone-note{width:100%;max-height:85vh;padding:18px 15px;border-radius:16px 16px 0 0}.postcode-zone-note-groups{grid-template-columns:1fr}.postcode-zone-note-title{font-size:16px}}
 .crm-class-field{max-width:210px!important}.crm-class-label-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.crm-class-label-row label{margin-bottom:6px!important}.crm-class-help{border:0;background:transparent;color:var(--orange-dark);padding:0;font:inherit;font-size:10.5px;font-weight:800;cursor:pointer;white-space:nowrap}.crm-class-help:hover{text-decoration:underline}.crm-class-guide{position:fixed;inset:0;z-index:190;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(15,17,21,.56);backdrop-filter:blur(3px)}.crm-class-guide.show{display:flex}.crm-class-guide-card{width:min(620px,100%);max-height:min(88vh,760px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 70px rgba(15,23,42,.24)}.crm-class-guide-head{position:sticky;top:0;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 20px 14px;background:#fff;border-bottom:1px solid var(--line)}.crm-class-guide-head h4{margin:0;font-size:17px}.crm-class-guide-head p{margin:4px 0 0;color:var(--muted);font-size:11.5px;line-height:1.5}.crm-class-guide-close{display:grid;place-items:center;flex:0 0 auto;width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--muted);font-size:18px;cursor:pointer}.crm-class-guide-close:hover{border-color:var(--orange);color:var(--orange-dark)}.crm-class-guide-body{padding:18px 20px 20px}.crm-class-levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}.crm-class-level{padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}.crm-class-level b{display:block;margin-bottom:5px;font-size:13px}.crm-class-level span{font-size:12px;color:var(--muted)}.crm-class-level.i{border-color:#bbf7d0;background:#f0fdf4}.crm-class-level.i b{color:#15803d}.crm-class-level.ii{border-color:#fde68a;background:#fffbeb}.crm-class-level.ii b{color:#a16207}.crm-class-level.iii{border-color:#fecaca;background:#fef2f2}.crm-class-level.iii b{color:#b91c1c}.crm-class-check-title{margin:0 0 9px;font-size:13px}.crm-class-checks{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px}.crm-class-checks li{display:flex;align-items:flex-start;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:12px;line-height:1.45}.crm-class-checks li::before{content:'✓';display:grid;place-items:center;flex:0 0 auto;width:19px;height:19px;border-radius:50%;background:#dcfce7;color:#15803d;font-size:11px;font-weight:900}.crm-class-guide-note{margin:14px 0 0;padding:10px 12px;border-left:3px solid var(--orange);border-radius:0 8px 8px 0;background:var(--orange-tint);color:#7c3a0b;font-size:11px;line-height:1.55}@media(max-width:600px){.crm-class-field{max-width:none!important}.crm-class-guide{align-items:flex-end;padding:0}.crm-class-guide-card{max-height:92vh;border-radius:18px 18px 0 0}.crm-class-guide-head,.crm-class-guide-body{padding-left:15px;padding-right:15px}.crm-class-levels,.crm-class-checks{grid-template-columns:1fr}.crm-class-levels{gap:7px}.crm-class-level{display:flex;align-items:center;justify-content:space-between;gap:10px}.crm-class-level b{margin:0}}
 .crm-line-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}.crm-line-language{display:flex;gap:5px;padding:4px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}.crm-line-language button{border:0;background:transparent;color:var(--muted);border-radius:7px;padding:8px 13px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.crm-line-language button.active{background:var(--orange);color:#fff;box-shadow:0 2px 7px rgba(255,105,0,.24)}.crm-line-reset{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:8px;padding:8px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer}.crm-line-reset:hover{border-color:var(--orange);color:var(--orange-dark)}.crm-line-editor-label{display:block;margin-bottom:5px;color:var(--muted);font-size:11px}.crm-line-editor{display:block;width:100%;min-height:260px;max-height:none!important;resize:vertical;font:13px/1.7 -apple-system,"Segoe UI","PingFang SC",Arial,sans-serif;outline:none}.crm-line-editor:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,105,0,.1)}.crm-line-copy-btn{width:100%;min-height:42px}.crm-line-copy-btn.copied{background:#16a34a;color:#fff;border-color:#16a34a}@media(max-width:600px){.crm-line-language{width:100%}.crm-line-language button{flex:1;padding:9px 7px}.crm-line-reset{width:100%}.crm-line-editor{min-height:320px}}
 .survey-choice-group{display:flex;gap:7px;flex-wrap:wrap}.survey-choice-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;color:var(--muted);cursor:pointer}.survey-choice-btn.active{background:var(--orange);border-color:var(--orange);color:#fff}
@@ -1252,6 +1266,21 @@ if(desc.includes(word)) score += 1;
 return score;
 }
 /* ===== Main render ===== */
+function openPostcodeZoneNote(){
+  const groups = window.PCT_POSTCODE_ZONE_REFERENCE || [];
+  const overlay = document.createElement('div');
+  overlay.className = 'postcode-zone-note-overlay';
+  overlay.innerHTML = '<section class="postcode-zone-note" role="dialog" aria-modal="true" aria-labelledby="postcodeZoneNoteTitle"><div class="postcode-zone-note-header"><h2 class="postcode-zone-note-title" id="postcodeZoneNoteTitle">หมายเหตุสีโซนรหัสไปรษณีย์</h2><button class="postcode-zone-note-close" type="button" aria-label="ปิด">✕</button></div><div class="postcode-zone-note-groups">' + groups.map(function(group){return '<section class="postcode-zone-note-group"><h3 class="postcode-zone-note-group-title" style="background:' + escapeAttr(group.color) + ';color:' + escapeAttr(group.textColor) + '">' + escapeHtml(group.label) + '</h3><ul class="postcode-zone-note-list">' + group.places.map(function(place){return '<li><span class="postcode-zone-note-code">' + escapeHtml(place[0]) + '</span><span>' + escapeHtml(place[1]) + '</span></li>';}).join('') + '</ul></section>';}).join('') + '</div><p class="postcode-zone-note-source">อ้างอิงจาก <a href="https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1113795633#gid=1113795633" target="_blank" rel="noopener noreferrer">ชีต Zone postcode</a></p></section>';
+  document.body.appendChild(overlay);
+  const closeButton = overlay.querySelector('.postcode-zone-note-close');
+  const trigger = document.getElementById('postcodeZoneNoteBtn');
+  function close(){document.removeEventListener('keydown', onKeyDown);overlay.remove();if(trigger)trigger.focus();}
+  function onKeyDown(event){if(event.key === 'Escape')close();}
+  closeButton.onclick = close;
+  overlay.addEventListener('click',function(event){if(event.target === overlay)close();});
+  document.addEventListener('keydown',onKeyDown);
+  closeButton.focus();
+}
 function render(){
 renderSidebar();
 if(typeof mnavSync === 'function') mnavSync();
@@ -1295,11 +1324,13 @@ if(cat.bgColor){ banner.style.setProperty('--banner-bg', cat.bgColor); }
 const totalCount = DATA.filter(d=>d.category===cat.id).length;
 banner.innerHTML = `<div class="left"><div class="badge">${cat.icon}</div><div><h2>${escapeHtml(cat.name)}</h2><div class="sub">${totalCount} รายการ</div></div></div>
 <div class="right-actions">
+${cat.id === 'ops' ? '<button class="postcode-zone-note-btn" id="postcodeZoneNoteBtn" type="button" title="หมายเหตุสีโซนรหัสไปรษณีย์" aria-label="ดูหมายเหตุสีโซนรหัสไปรษณีย์">ⓘ</button>' : ''}
 <button class="btn secondary" id="repackBtn">📦 รวมเป็นบรรทัดเดียว</button>
 <button class="btn secondary reorder-toggle${reorderMode?' on':''}" id="reorderBtn">${reorderMode ? '✓ เสร็จสิ้นการจัดเรียง' : '↕ จัดเรียง/แบ่งบรรทัด'}</button>
 </div>`;
 main.appendChild(banner);
-banner.querySelector('#reorderBtn').onclick = ()=>{ reorderMode = !reorderMode; render(); };
+  const zoneNoteBtn = banner.querySelector('#postcodeZoneNoteBtn');
+  if(zoneNoteBtn) zoneNoteBtn.onclick = openPostcodeZoneNote;banner.querySelector('#reorderBtn').onclick = ()=>{ reorderMode = !reorderMode; render(); };
 banner.querySelector('#repackBtn').onclick = ()=>{
 if(!confirm('รวมการ์ดทั้งหมดในหมวดหมู่นี้ไว้บรรทัดเดียว (ป้ายชื่อบรรทัดเดิมจะหายไป) ใช่หรือไม่?')) return;
 const flatIds = [];
@@ -2011,7 +2042,7 @@ const CRM_SURVEY_QUESTIONS_REPAIR = [
 'ระยะเวลาที่พบปัญหา',
 'มีข้อจำกัดจากนิติบุคคลหรือไม่ เวลาในการใช้เสียงได้กี่โมงถึงกี่โมง ติดตั้งวันเสาร์ได้ไหม (ที่จอดรถ / การขออนุญาตใช้ลิฟต์)'
 ];
-const CRM_REMINDER_TEXT = 'ห้ามเลื่อนนัด\nหมายเหตุ : หากพบปัญหาที่ไม่เป็นไปตามขั้นตอนการทำงาน หรือปัญหาใดๆรบกวนติดต่อเข้ามายัง Fleet/Manager เพื่อรับทราบและแก้ไขปัญหาโดยเร็วที่สุด **หากมีการยกเลิกสินค้าให้นำสินค้าของลูกค้ากลับมาด้วยทุกเคส**';
+const CRM_REMINDER_TEXT = 'ห้ามเลื่อนนัด\nหมายเหตุ : หากพบปัญหาที่ไม่เป็นไปตามขั้นตอนการทำงาน หรือปัญหาใดๆรบกวนติดต่อเข้ามายัง Fleet/Manager เพื่อรับทราบและแก้ไขปัญหาโดยเร็วที่สุด **หากมีการเลื่อนวันหรือยกเลิกให้แจ้งทาง Fleet/Manager ก่อนออกจากพื้นที่เท่านั้น**';
 const CRM_STATUS_DEFS = [
 {key:'confirm', label:'🟢 Confirm'},
 {key:'reschedule', label:'🟠 Reschedule'},
