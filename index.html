@@ -1267,14 +1267,14 @@ if(desc.includes(word)) score += 1;
 return score;
 }
 /* ===== Main render ===== */
-function openPostcodeZoneNote(){
+function openPostcodeZoneNote(triggerButton){
   const groups = window.PCT_POSTCODE_ZONE_REFERENCE || [];
   const overlay = document.createElement('div');
   overlay.className = 'postcode-zone-note-overlay';
   overlay.innerHTML = '<section class="postcode-zone-note" role="dialog" aria-modal="true" aria-labelledby="postcodeZoneNoteTitle"><div class="postcode-zone-note-header"><h2 class="postcode-zone-note-title" id="postcodeZoneNoteTitle">หมายเหตุสีโซนรหัสไปรษณีย์</h2><button class="postcode-zone-note-close" type="button" aria-label="ปิด">✕</button></div><div class="postcode-zone-note-groups">' + groups.map(function(group){return '<section class="postcode-zone-note-group"><h3 class="postcode-zone-note-group-title" style="background:' + escapeAttr(group.color) + ';color:' + escapeAttr(group.textColor) + '">' + escapeHtml(group.label) + '</h3><ul class="postcode-zone-note-list">' + group.places.map(function(place){return '<li><span class="postcode-zone-note-code">' + escapeHtml(place[0]) + '</span><span>' + escapeHtml(place[1]) + '</span></li>';}).join('') + '</ul></section>';}).join('') + '</div><p class="postcode-zone-note-source">อ้างอิงจาก <a href="https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1113795633#gid=1113795633" target="_blank" rel="noopener noreferrer">ชีต Zone postcode</a></p></section>';
   document.body.appendChild(overlay);
   const closeButton = overlay.querySelector('.postcode-zone-note-close');
-  const trigger = document.getElementById('postcodeZoneNoteBtn');
+  const trigger = triggerButton || document.getElementById('postcodeZoneNoteBtn');
   function close(){document.removeEventListener('keydown', onKeyDown);overlay.remove();if(trigger)trigger.focus();}
   function onKeyDown(event){if(event.key === 'Escape')close();}
   closeButton.onclick = close;
@@ -1331,7 +1331,7 @@ ${cat.id === 'ops' ? '<button class="postcode-zone-note-btn" id="postcodeZoneNot
 </div>`;
 main.appendChild(banner);
   const zoneNoteBtn = banner.querySelector('#postcodeZoneNoteBtn');
-  if(zoneNoteBtn) zoneNoteBtn.onclick = openPostcodeZoneNote;banner.querySelector('#reorderBtn').onclick = ()=>{ reorderMode = !reorderMode; render(); };
+  if(zoneNoteBtn) zoneNoteBtn.onclick = function(){openPostcodeZoneNote(zoneNoteBtn);};banner.querySelector('#reorderBtn').onclick = ()=>{ reorderMode = !reorderMode; render(); };
 banner.querySelector('#repackBtn').onclick = ()=>{
 if(!confirm('รวมการ์ดทั้งหมดในหมวดหมู่นี้ไว้บรรทัดเดียว (ป้ายชื่อบรรทัดเดิมจะหายไป) ใช่หรือไม่?')) return;
 const flatIds = [];
@@ -5770,7 +5770,22 @@ mnavSync();</script>
           sheetBox.remove();
         }
         const heading = panel.querySelector('.crm-panel-head h3');
-        if (heading) heading.textContent = 'Customer Case Workspace';
+        if (heading) {
+          heading.textContent = 'Customer Case Workspace';
+          heading.style.display = 'flex';
+          heading.style.alignItems = 'center';
+          heading.style.gap = '9px';
+          if (!heading.querySelector('.crm-workspace-zone-note-btn')) {
+            const zoneNoteButton = document.createElement('button');
+            zoneNoteButton.type = 'button';
+            zoneNoteButton.className = 'postcode-zone-note-btn crm-workspace-zone-note-btn';
+            zoneNoteButton.title = 'หมายเหตุสีโซนรหัสไปรษณีย์';
+            zoneNoteButton.setAttribute('aria-label', 'ดูหมายเหตุสีโซนรหัสไปรษณีย์');
+            zoneNoteButton.textContent = 'ⓘ';
+            zoneNoteButton.onclick = function(){openPostcodeZoneNote(zoneNoteButton);};
+            heading.appendChild(zoneNoteButton);
+          }
+        }
       };
     }
 
