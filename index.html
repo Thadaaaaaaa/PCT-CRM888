@@ -645,6 +645,67 @@ body.pct-dark{color-scheme:dark;--muted:#aeb4bf;--muted2:#737b89;--navy:#f3f5f8}
 .manager-lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.manager-lock-actions button{min-height:40px;padding:0 16px;border-radius:11px;font:inherit;font-weight:800;cursor:pointer}.manager-lock-cancel{border:1px solid var(--line);background:var(--panel2);color:var(--text)}.manager-lock-submit{border:0;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;box-shadow:0 8px 16px rgba(220,38,38,.2)}.manager-lock-error{min-height:18px;margin-top:8px;color:#dc2626;font-size:11px;font-weight:700}
 @media(max-width:520px){.manager-lock-card{padding:21px;border-radius:18px}.manager-lock-actions{display:grid;grid-template-columns:1fr 1fr}.manager-lock-actions button{width:100%}}
 </style>
+<style id="pctFieldOperationsRefresh20260926">
+:root{--fo-radius:var(--pct-radius,16px);--fo-shadow:0 3px 14px rgba(31,42,68,.055);--fo-shadow-hover:0 9px 24px rgba(31,42,68,.1)}
+.page-banner,.crm-panel,.pct-native-section,.pct-native-review,.pct-report-card,.kb-pcard,.kb-gcard,.kb-qitem,.so-card,.modal{border-radius:var(--fo-radius)!important;box-shadow:var(--fo-shadow)!important}
+.page-banner{padding:18px 20px!important;gap:16px;border-color:var(--line)!important}
+.page-banner .badge{width:46px;height:46px;border-radius:14px}
+.page-banner h2{font-size:19px;line-height:1.35}
+.page-banner .right-actions{align-items:center}
+.row-flex{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.row-flex>.card{min-height:156px;padding:16px;border-radius:var(--fo-radius);box-shadow:var(--fo-shadow)}
+.row-flex>.card:hover{box-shadow:var(--fo-shadow-hover)}
+.btn{min-height:42px}
+input:not([type=checkbox]):not([type=radio]),select{min-height:42px}
+.crm-panel{padding:22px!important}
+.crm-panel-head{align-items:flex-start;gap:14px;margin-bottom:20px;padding-bottom:16px}
+.crm-panel-head h3{font-size:18px;line-height:1.4}
+.crm-panel-head .crm-sub{font-size:12px;line-height:1.5}
+.crm-controlbar{padding:18px!important;border-radius:14px!important;background:color-mix(in srgb,var(--panel2) 65%,var(--panel))!important}
+.crm-toprow{gap:12px}
+.crm-toprow .field label,.crm-controlbar .field label{font-size:11.5px;letter-spacing:.01em;text-transform:none}
+.crm-section-title{margin:24px 0 12px;font-size:12px;line-height:1.5;letter-spacing:0;color:var(--text);text-transform:none}
+.crm-section-title::after{background:color-mix(in srgb,var(--line) 75%,transparent)}
+.crm-actions-row{gap:10px;margin-top:20px}
+.crm-actions-row .btn{min-height:44px}
+.crm-line-language button{min-height:40px}
+.crm-line-copy-btn{min-height:46px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid color-mix(in srgb,var(--orange) 35%,transparent)!important;outline-offset:2px}
+@media(max-width:900px){
+  .row-flex{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+}
+@media(max-width:720px){
+  .page-banner{align-items:flex-start;padding:16px!important}
+  .page-banner .right-actions{width:100%}
+  .page-banner .right-actions .btn{flex:1}
+  .crm-panel{padding:16px!important}
+  .crm-panel-head{align-items:flex-start}
+  .crm-controlbar{padding:14px!important}
+  .crm-actions-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+  .crm-actions-row #crmSaveSendBtn{grid-column:1/-1}
+  .crm-actions-row .btn{width:100%;min-height:46px;padding:10px 8px;font-size:12px;white-space:normal;line-height:1.35}
+}
+@media(max-width:620px){
+  main{padding:12px 14px calc(106px + env(safe-area-inset-bottom,0px))}
+  .row-flex{grid-template-columns:1fr;gap:10px}
+  .row-flex>.card{min-height:0;padding:15px}
+  .crm-panel-head h3{font-size:16px}
+  .crm-toprow{gap:10px!important}
+  .crm-toprow .field{min-width:min(100%,160px)}
+  .crm-section-title{margin-top:20px;font-size:11.5px}
+  .crm-line-toolbar{align-items:stretch}
+  .crm-line-reset{min-height:42px}
+}
+@media(max-width:380px){
+  .page-banner .right-actions{display:grid;grid-template-columns:1fr}
+  .crm-panel-head{gap:10px}
+  .crm-panel-head .crm-reset-btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .row-flex>.card:hover{transform:none}
+}
+</style>
 </head>
 <body>
 <div class="app">
