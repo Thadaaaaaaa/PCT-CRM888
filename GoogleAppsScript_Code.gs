@@ -13,7 +13,7 @@ const CONFIG = Object.freeze({
     AC: 'AC service'
   }),
   ORDER_COLUMNS: 20,
-  ORDER_ROW_HEIGHT: 47,
+  ORDER_ROW_HEIGHT: 48,
   ORDER_DATE_FORMAT: 'dd/MM/yyyy',
   ORDER_APPOINTMENT_DATE_FORMAT: 'yyyy-mm-dd',
   // Short cache keeps the dashboard responsive while reflecting sheet edits within one minute.
@@ -350,9 +350,8 @@ function saveCRMOrderFromWebhook_(payload) {
     formatOrderDateCells_(sheet, rowNumber);
     sheet.getRange(rowNumber, 12, 1, 7).setValues([operationFields]);
     restoreOrderDropdownValidation_(sheet, rowNumber);
-    // Keep every CRM-written order aligned with the established Orders table.
-    // A fixed height prevents an oversized previous row from propagating.
-    sheet.setRowHeight(rowNumber, CONFIG.ORDER_ROW_HEIGHT);
+    // Keep long notes in Q from expanding the whole order row.
+    sheet.setRowHeightsForced(rowNumber, 1, CONFIG.ORDER_ROW_HEIGHT);
     invalidateOrderCache_();
     SpreadsheetApp.flush();
     const savedOperationFields = sheet.getRange(rowNumber, 12, 1, 7).getDisplayValues()[0];
@@ -683,6 +682,7 @@ function updateOrderCaseFields(payload) {
       clean_(payload.noted)
     ]]);
     formatOrderDateCells_(sheet, found.rowNumber);
+    sheet.setRowHeightsForced(found.rowNumber, 1, CONFIG.ORDER_ROW_HEIGHT);
     invalidateOrderCache_();
 
     return {
