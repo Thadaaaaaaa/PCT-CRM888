@@ -25,3 +25,4 @@ jobs:
           node verify-design.cjs
           node verify-access.cjs
           node verify-performance.cjs
+          node verify-quick-access.cjs
