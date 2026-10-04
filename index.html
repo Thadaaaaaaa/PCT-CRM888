@@ -708,6 +708,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </style>
 </head>
 <body>
+<a class="pct-skip-link" href="#main">ข้ามไปยังเนื้อหาหลัก</a>
+<style>
+.pct-skip-link{position:fixed;left:16px;top:-100px;z-index:10000;padding:12px 18px;background:#fff;color:#9c3e00;border:2px solid #ff6900;border-radius:10px}
+.pct-skip-link:focus{top:12px}
+:focus-visible{outline:3px solid #ff6900;outline-offset:3px}
+@media(max-width:640px){
+  .card .copy-sm,.card .copybtn,.card .expandbtn,.card .inlinecopy{min-height:44px}.card .actions{opacity:1}
+  .askbar input{min-width:0;width:100%}
+  .qr-form,.qr-preview{min-width:0!important;max-width:100%;flex-basis:100%!important}
+  .qr-row2,.qr-actions{flex-wrap:wrap}.qr-form textarea,.qr-form select{max-width:100%;min-width:0}
+}
+</style>
 <div class="app">
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside class="sidebar" id="sidebar">
@@ -743,12 +755,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="askbar-wrap">
       <div class="askbar" id="askbarBox">
         <span class="ic">✨</span>
-        <input type="text" id="ask" placeholder="ค้นหาเมนู เทมเพลต หรือลิงก์ข้อมูลอ้างอิง...">
+        <input type="text" id="ask" aria-label="ค้นหาเมนู เทมเพลต หรือลิงก์ข้อมูลอ้างอิง" placeholder="ค้นหาเมนู เทมเพลต หรือลิงก์ข้อมูลอ้างอิง...">
         <span class="clearbtn" id="askClear">✕</span>
       </div>
     </div>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
       <div class="loading">กำลังโหลดข้อมูล...</div>
     </main>
     <footer>ข้อมูล Orders, Report และ CRM เชื่อมต่อผ่าน Google Apps Script · เมนู เทมเพลต และการจัดวางเก็บในเบราว์เซอร์เครื่องนี้</footer>
@@ -865,7 +877,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- ===== Mobile bottom navigation ===== -->
 <nav class="mnav" id="mnav">
@@ -928,8 +940,9 @@ let DATA = [];
 let LAYOUT = {};
 let activeCategory = null;
 const MANAGER_CATEGORY_ID = 'cat_esfziig5';
-const MANAGER_GATE_HASH = 'b5b70c2273edd4d46aa41c8e8e453f4ae1900b3ce901bd938406dea419224aed';
-const MANAGER_GATE_KEY = 'pct_manager_gate_v1';
+const MANAGER_GATE_HASH = 'eee04ea33003b81d117d0f7d3a43753290fc8592ae2b3fb557727e6bb8be384a';
+// Bind the local unlock session to this password revision.
+const MANAGER_GATE_KEY = 'pct_manager_gate_v2_' + MANAGER_GATE_HASH.slice(0,12);
 let managerGatePendingCategory = null;
 let editingId = null;
 let editingCatId = null;
@@ -945,7 +958,7 @@ let crmEditingId = null;
 let crmCaseSearchQ = '';
 let selectedCaseIds = new Set(); // bulk copy selection
 let DAILY_REPORTS = {}; // { 'YYYY-MM-DD': {finishAC, finishWM, cancelCount, rescheduleCount, newOrderCount, repairOutCount, link, notes} }
-let dailyReportSelectedDate = new Date().toISOString().slice(0,10);
+let dailyReportSelectedDate = todayISO();
 const DAILY_REPORT_LINK_DEFAULT = 'https://mi.feishu.cn/sheets/TgMdsVOJBhj6z5tQDvncirbnn3f?sheet=5f6d62';
 function uid(p){ return (p||'id') + '_' + Math.random().toString(36).slice(2,10); }
 function sanitizeHistory(history){
@@ -1005,7 +1018,8 @@ const raw = localStorage.getItem(LS_KEY);
 if(raw) parsed = JSON.parse(raw);
 }catch(e){ parsed = null; }
 const loadedSeedVersion = Number(parsed && parsed.seedVersion) || 0;
-const useLatestDataExport = !parsed || Number(parsed.dataExportedAt || 0) < LATEST_DATA_EXPORT;
+// Seed only new browsers; updates must not replace an operator's saved data.
+const useLatestDataExport = !parsed;
 if(useLatestDataExport && Array.isArray(PUBLIC_DATA_PAYLOAD.categories) && PUBLIC_DATA_PAYLOAD.categories.length){
   CATS = sanitizeCategories(JSON.parse(JSON.stringify(PUBLIC_DATA_PAYLOAD.categories)));
 } else if(parsed && Array.isArray(parsed.categories) && parsed.categories.length){
@@ -1026,16 +1040,13 @@ const existingCatIds = new Set(CATS.map(cat=>cat.id));
 LATEST_SETTINGS_SEED.categories.forEach(cat=>{
 if(!existingCatIds.has(cat.id)){
 CATS.push({...cat});
-} else if(loadedSeedVersion < LATEST_SETTINGS_SEED.version && cat.id === 'cat_o41isi5b'){
-const existing = CATS.find(current=>current.id===cat.id);
-Object.assign(existing, cat);
 }
 });
 if(!CATS.some(cat=>cat.id===MANAGER_CATEGORY_SEED.id)) CATS.push({...MANAGER_CATEGORY_SEED});
 const existingItemIds = new Set(DATA.map(item=>item.id));
 LATEST_SETTINGS_SEED.items.forEach(item=>{ if(!existingItemIds.has(item.id)){ DATA.push({...item, color:null, bgColor:null, lastEditedAt:Date.now(), history:[]}); } });
 // รายการ Report รุ่นเก่าถูกยกเลิกตาม workflow ใหม่ แต่การ์ดหมวดอื่นคงไว้ทั้งหมด
-const removedReportIds = new Set(['item_z1v2h7eu','item_7rzc7nuf']);
+const removedReportIds = new Set(parsed ? [] : ['item_z1v2h7eu','item_7rzc7nuf']);
 DATA = DATA.filter(item=>!removedReportIds.has(item.id));
 if(useLatestDataExport && PUBLIC_DATA_PAYLOAD.layout){
 LAYOUT = JSON.parse(JSON.stringify(PUBLIC_DATA_PAYLOAD.layout));
@@ -1044,7 +1055,7 @@ LAYOUT = parsed.layout;
 } else {
 LAYOUT = JSON.parse(JSON.stringify(PUBLIC_DATA_PAYLOAD.layout || {}));
 }
-if(loadedSeedVersion < LATEST_SETTINGS_SEED.version && LATEST_SETTINGS_SEED.layout){
+if(!parsed && LATEST_SETTINGS_SEED.layout){
 Object.entries(LATEST_SETTINGS_SEED.layout).forEach(([catId, seedRows])=>{
 if(!Array.isArray(LAYOUT[catId])) LAYOUT[catId] = [];
 const seededIds = new Set(seedRows.flatMap(row=>row.ids||[]));
@@ -1066,8 +1077,12 @@ CASES = sanitizeCases((useLatestDataExport && Array.isArray(PUBLIC_DATA_PAYLOAD.
 SHEET_CONFIG = useLatestDataExport ? {...SHEET_CONFIG, ...(PUBLIC_DATA_PAYLOAD.sheetConfig || {})} : ((parsed && parsed.sheetConfig) ? {...SHEET_CONFIG, ...parsed.sheetConfig} : SHEET_CONFIG);
 if(!SHEET_CONFIG.webAppUrl) SHEET_CONFIG.webAppUrl = 'https://script.google.com/macros/s/AKfycbxLUoq_OCTXKKEkTaSvtegOTr1l3PKefmtvj-OlP7E-Ir7qZtq8fOxPmJxbwZkpNxrtgA/exec';
 DAILY_REPORTS = (useLatestDataExport && PUBLIC_DATA_PAYLOAD.dailyReports) ? PUBLIC_DATA_PAYLOAD.dailyReports : ((parsed && parsed.dailyReports) ? parsed.dailyReports : {});
-SHEET_CONFIG.webAppUrl = 'https://script.google.com/macros/s/AKfycbwrhRqiS1gTyUqDD7xvBIT5ATi3P425qLwKU8jvuwX1luUlqa2KhjDdDNwrQpoS3ioZ/exec';
-try { localStorage.setItem('pctDashboardWebAppUrl_v2', SHEET_CONFIG.webAppUrl); } catch (storageError) {}
+if(!parsed || !parsed.sheetConfig || !parsed.sheetConfig.webAppUrl) {
+  SHEET_CONFIG.webAppUrl = 'https://script.google.com/macros/s/AKfycbwrhRqiS1gTyUqDD7xvBIT5ATi3P425qLwKU8jvuwX1luUlqa2KhjDdDNwrQpoS3ioZ/exec';
+}
+try {
+  if(!localStorage.getItem('pctDashboardWebAppUrl_v2')) localStorage.setItem('pctDashboardWebAppUrl_v2', SHEET_CONFIG.webAppUrl);
+} catch (storageError) {}
 activeCategory = CATS.length ? CATS[0].id : null;
 initSidebarCollapse();
 setupGlobalEvents();
@@ -1095,8 +1110,12 @@ t.classList.add('show');
 clearTimeout(t._timer);
 t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
 }
-function escapeHtml(s){ return (s||'').replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-function escapeAttr(s){ return (s||'').replace(/'/g,"&#39;").replace(/`/g,'&#96;'); }
+function escapeHtml(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s){ return escapeHtml(s).replace(/`/g,'&#96;'); }
+function safeExternalUrl(value){
+  try { const url = new URL(String(value).trim()); return /^https?:$/.test(url.protocol) ? url.href : ''; }
+  catch(e){ return ''; }
+}
 function hexToRgba(hex, alpha){
 hex = (hex||'#FF6900').replace('#','');
 if(hex.length===3){ hex = hex.split('').map(c=>c+c).join(''); }
@@ -1574,17 +1593,17 @@ if(reorderMode && !isSearchResult){
 html += `<div class="actions" style="opacity:1;"><span class="draghandle">↕</span></div>`;
 } else {
 html += `<div class="actions">
-<button class="iconbtn" onclick="openEdit('${item.id}')">✎</button>
-<button class="iconbtn" onclick="deleteItem('${item.id}')">🗑</button>
+<button class="iconbtn" data-card-action="edit" aria-label="แก้ไขรายการ">✎</button>
+<button class="iconbtn" data-card-action="delete" aria-label="ลบรายการ">🗑</button>
 </div>`;
 }
 if(isSearchResult){
-html += `<div class="tagchip">${cat.icon} ${escapeHtml(cat.name)}</div>`;
+html += `<div class="tagchip">${escapeHtml(cat.icon)} ${escapeHtml(cat.name)}</div>`;
 }
 // ----- Title (with its own copy button) -----
 html += `<h3><span class="titletext">${escapeHtml(item.title)}</span>`;
 if(!reorderMode){
-html += `<button class="inlinecopy" title="คัดลอกชื่อหัวข้อ" onclick="copyText('${escapeAttr(item.title)}', this)">📋</button>`;
+html += `<button class="inlinecopy" title="คัดลอกชื่อหัวข้อ" aria-label="คัดลอกชื่อหัวข้อ" data-card-copy="title">📋</button>`;
 }
 html += `</h3>`;
 // ----- Description / bullets (clamp + own expand + own copy) -----
@@ -1600,24 +1619,31 @@ html += `<div class="desc-fade"></div></div>`;
 if(!reorderMode){
 html += `<div class="desc-tools">
 <button class="expandbtn" onclick="toggleDescExpand(this)">ดูเพิ่มเติม ▾</button>
-<button class="copy-sm" onclick="copyText(\`${escapeAttr(item.desc||'')}\`, this)">📋 คัดลอกคำอธิบาย</button>
+<button class="copy-sm" data-card-copy="desc">📋 คัดลอกคำอธิบาย</button>
 </div>`;
 }
 }
 // ----- URL (link + its own copy button) -----
 if(item.url){
-html += `<div class="row"><a class="link" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.url)}</a></div>`;
+const safeUrl = safeExternalUrl(item.url);
+html += safeUrl ? `<div class="row"><a class="link" href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.url)}</a></div>` : `<div class="row"><span class="link">ลิงก์ไม่ปลอดภัยหรือรูปแบบไม่ถูกต้อง</span></div>`;
 if(!reorderMode){
-html += `<div class="row"><button class="btn copybtn secondary" onclick="copyText('${escapeAttr(item.url)}', this)">📋 คัดลอกลิงก์</button></div>`;
+html += `<div class="row"><button class="btn copybtn secondary" data-card-copy="url">📋 คัดลอกลิงก์</button></div>`;
 }
 }
 if(!reorderMode){
 html += `<div class="card-footer">
 <span class="edited-time">แก้ไขล่าสุด ${formatRelativeTime(item.lastEditedAt)}</span>
-<button class="historybtn" title="ดูประวัติการแก้ไข" onclick="openHistory('${item.id}')">🕒</button>
+<button class="historybtn" title="ดูประวัติการแก้ไข" aria-label="ดูประวัติการแก้ไข" data-card-action="history">🕒</button>
 </div>`;
 }
 card.innerHTML = html;
+card.querySelectorAll('[data-card-copy]').forEach(btn => {
+  btn.addEventListener('click', () => copyText(String(item[btn.dataset.cardCopy] || ''), btn));
+});
+card.querySelectorAll('[data-card-action]').forEach(btn => {
+  btn.addEventListener('click', () => ({edit:openEdit, delete:deleteItem, history:openHistory})[btn.dataset.cardAction](item.id));
+});
 if(reorderMode && !isSearchResult){
 card.draggable = true;
 card.addEventListener('dragstart', ()=>{ dragId = item.id; card.classList.add('dragging'); });
@@ -1646,12 +1672,16 @@ const overflowing = wrap.scrollHeight > wrap.clientHeight + 2;
 wrap.classList.toggle('has-overflow', overflowing);
 });
 }
-function copyText(text, btn){
-navigator.clipboard.writeText(text).then(()=>{
+async function copyText(text, btn){
+try {
+if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
+await navigator.clipboard.writeText(String(text));
+if(btn){
 const old = btn.textContent;
 btn.textContent = 'คัดลอกแล้ว ✓';
 setTimeout(()=>btn.textContent=old, 1200);
-});
+}
+} catch(e){ showToast('คัดลอกไม่สำเร็จ — อนุญาต Clipboard หรือเลือกข้อความแล้วกด Ctrl+C'); }
 }
 function deleteItem(id){
 if(!confirm('ลบรายการนี้ใช่หรือไม่?')) return;
@@ -1732,6 +1762,8 @@ return changed.length ? ('แก้ไข: ' + changed.join(', ')) : 'บัน�
 function saveModal(){
 const title = document.getElementById('f-title').value.trim();
 if(!title){ showToast('กรุณากรอกชื่อหัวข้อ'); return; }
+const enteredUrl = document.getElementById('f-url').value.trim();
+if(enteredUrl && !safeExternalUrl(enteredUrl)){ showToast('ลิงก์ต้องเป็น URL แบบ https:// หรือ http://'); return; }
 const newCategory = document.getElementById('f-category').value;
 const now = Date.now();
 const obj = {
@@ -1908,7 +1940,7 @@ const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'
 const url = URL.createObjectURL(blob);
 const a = document.createElement('a');
 a.href = url;
-const dateStr = new Date().toISOString().slice(0,10);
+const dateStr = todayISO();
 a.download = `pct-fleet-hub-data-${dateStr}.json`;
 document.body.appendChild(a); a.click(); a.remove();
 URL.revokeObjectURL(url);
@@ -2130,7 +2162,11 @@ if(parts.length!==3) return isoDate;
 const [y,m,d] = parts;
 return `${d}/${m}/${y}`;
 }
-function todayISO(){ return new Date().toISOString().slice(0,10); }
+function todayISO(date = new Date()){
+  const parts = new Intl.DateTimeFormat('en-US', {timeZone:'Asia/Bangkok',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return values.year + '-' + values.month + '-' + values.day;
+}
 function blankCrmCase(){
 return {
 id: null, status:'waiting_confirm_date', cls:'', productType:'air', customerType:'general',
@@ -2583,7 +2619,8 @@ item.innerHTML = `<div class="qtext">${i+1}. ${escapeHtml(q)}</div>
 <div><label>ชั้นที่ติดตั้ง (Floor)</label><input type="text" id="crmAirFloor" value="${escapeAttr(c.airFloor)}"></div>
 <div><label>จุดติดตั้งคอยล์ร้อน (Outdoor Unit Details)</label><input type="text" id="crmAirOutdoor" value="${escapeAttr(c.airOutdoor)}"></div>
 <div><label>จุดติดตั้งคอยล์เย็น (Indoor Unit Details)</label><input type="text" id="crmAirIndoor" value="${escapeAttr(c.airIndoor)}"></div>
-</div>`;
+</div>
+<p class="crm-installation-reminder" style="color:#dc2626;font-size:13px;line-height:1.65;margin:10px 0 0;">หมายเหตุ : หากมี Wallpaper สิ่งกีดขวางบริเวณติดตั้ง แนะนำให้ลูกค้าเคลียร์พื้นที่ให้เรียบร้อย หากเกิดความเสียหายจะไม่อยู่ในการดูแลของทางศูนย์บริการ</p>`;
 surveyBox.appendChild(item);
 item.querySelector('#crmAirFloor').addEventListener('input', (e)=>{ crmDraft.airFloor = e.target.value; crmRefreshPreviews(); });
 item.querySelector('#crmAirOutdoor').addEventListener('input', (e)=>{ crmDraft.airOutdoor = e.target.value; crmRefreshPreviews(); });
@@ -4313,6 +4350,11 @@ mnavSync();</script>
     const item = document.createElement('div');
     item.className = 'navitem pct-dashboard-nav' + (dashboardActive ? ' active' : '');
     item.dataset.specialDashboard = 'true';
+    item.tabIndex = 0;
+    item.setAttribute('role', 'button');
+    item.addEventListener('keydown', function(event){
+      if(event.key === 'Enter' || event.key === ' '){ event.preventDefault(); openDashboard(); }
+    });
     item.title = 'Dashboard';
     item.innerHTML = '<span class="ic">▦</span><span class="nm">Dashboard</span><span class="cnt">LIVE</span>';
     item.onclick = function () {
@@ -5904,3 +5946,5 @@ mnavSync();</script>
 </script>
 </body>
 </html>
+
+
