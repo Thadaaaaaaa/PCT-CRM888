@@ -1,0 +1,27 @@
+name: PCT static quality checks
+on:
+  push:
+    branches: [main]
+    paths: ['index.html', 'data/**', 'tools/**', 'verify*.cjs', '.github/workflows/quality.yml']
+  pull_request:
+    paths: ['index.html', 'data/**', 'tools/**', 'verify*.cjs', '.github/workflows/quality.yml']
+permissions:
+  contents: read
+concurrency:
+  group: pct-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify protected templates, access filters and lazy loading
+        run: |
+          node verify.cjs
+          node verify-design.cjs
+          node verify-access.cjs
+          node verify-performance.cjs
