@@ -4,12 +4,16 @@ const items=[{id:'old',category:'stock',title:'Aug26',url:'https://example.com/a
 const ctx=vm.createContext({URL,DATA:items});
 function run(name){const start=code.indexOf(' function '+name+'('),end=code.indexOf('\n function ',start+1);assert(start>=0&&end>start);vm.runInContext(code.slice(start,end),ctx);}
 vm.runInContext("const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];",ctx);
-['linkUrl','period','members','groupCopyText'].forEach(run);
+['linkUrl','period','members','groupItemCopyText','groupCopyText'].forEach(run);
 const group={name:'Monthly stock',category:'stock',memberIds:['old','new','other','missing']};
 const sorted=ctx.members(group);
 assert.deepEqual(Array.from(sorted,item=>item.id),['new','old']);
 assert.equal(ctx.groupCopyText(group,sorted),'Monthly stock\n\nSep26\nhttps://example.com/sep\n\nAug26\nhttps://example.com/aug');
 assert.equal(ctx.groupCopyText(group,[]),'');
+const address={title:'Warehouse C',desc:'Address: Samut Prakan\nhttps://maps.app.goo.gl/example',url:''};
+assert.equal(ctx.groupItemCopyText(address),'Warehouse C\nAddress: Samut Prakan\nhttps://maps.app.goo.gl/example');
+assert(ctx.groupCopyText(group,[address]).includes(address.desc),'Description-only cards must be included in bulk copy');
+assert.equal(ctx.groupCopyText(group,[{title:'Text only',url:''}]),'Monthly stock\n\nText only');
 assert.equal(ctx.groupCopyText(group,[{title:'Unsafe',url:'javascript:alert(1)'},{title:'Credentials',url:'https://name:secret@example.com'}]),'');
 assert.deepEqual(items.map(item=>item.id),['old','new','other'],'Sorting must not mutate source records');
 assert(code.includes('color:\'#000000\',name:\'สีดำ\',description:\'ห้ามใส่เคส\''));

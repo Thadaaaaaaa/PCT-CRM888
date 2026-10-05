@@ -121,7 +121,13 @@
    host.querySelector('[data-cg-manage]').onclick=()=>editTopicGroup(group.category,group);
    host.querySelector('[data-cg-manage]').textContent='✎ แก้ไขชื่อ / กลุ่ม';
    const allText=groupCopyText(group,links);
-   const copyAll=document.createElement('button');copyAll.type='button';copyAll.className='cg-btn';copyAll.dataset.cgCopyAll='';copyAll.textContent='คัดลอกทุกลิงก์';copyAll.disabled=!allText;copyAll.onclick=()=>copyText(allText,copyAll);host.querySelector('.cg-toolbar').appendChild(copyAll);
+   const copyAll=document.createElement('button');copyAll.type='button';copyAll.className='cg-btn';copyAll.dataset.cgCopyAll='';copyAll.textContent='คัดลอกทั้งหมด';copyAll.disabled=!allText;copyAll.onclick=()=>copyText(allText,copyAll);host.querySelector('.cg-toolbar').appendChild(copyAll);
+   const linkIndex=new Map(links.map(item=>[item.id,item]));
+   host.querySelectorAll('.cg-link-row').forEach((row,i)=>{
+     const item=links[i],actions=row.querySelector('.cg-link-actions'),empty=actions.querySelector('.cg-muted');if(empty)empty.remove();
+     const copy=document.createElement('button');copy.type='button';copy.className='cg-btn';copy.dataset.cgCopyText=item.id;copy.textContent='คัดลอกข้อความ';copy.setAttribute('aria-label','คัดลอกข้อความ '+item.title);copy.onclick=()=>copyText(groupItemCopyText(item),copy);actions.prepend(copy);
+     if(item.desc){const desc=document.createElement('button');desc.type='button';desc.className='cg-btn';desc.dataset.cgCopyDesc=item.id;desc.textContent='คัดลอกคำอธิบาย';desc.onclick=()=>copyText(item.desc,desc);actions.insertBefore(desc,copy.nextSibling);}
+   });
    const search=document.createElement('label');search.className='cg-group-search';search.innerHTML='<span>ค้นหาลิงก์ในกลุ่ม</span><input type="search" placeholder="ชื่อไฟล์ เดือน หรือคำสำคัญ" aria-label="ค้นหาลิงก์ในกลุ่ม"><small role="status"></small>';
    host.querySelector('.cg-links').before(search);
    const rows=[...host.querySelectorAll('.cg-link-row')],searchIndex=links.map(item=>[item.title,item.desc,item.url,period(item)].join(' ').normalize('NFKC').toLocaleLowerCase('th'));
@@ -137,15 +143,17 @@
      const item={id:uid('item'),category:group.category,title,desc:'',url,linkMonth:/^\d{4}-(0[1-9]|1[0-2])$/.test(month)?month:'',color:null,bgColor:null,lastEditedAt:Date.now(),history:[{ts:Date.now(),summary:'เพิ่มลิงก์ในกลุ่ม'}]};
      DATA.push(item);ensureLayout(group.category);CATALOG_GROUPS=CATALOG_GROUPS.map(g=>g.id===group.id?{...g,memberIds:g.memberIds.concat(item.id)}:g);closeDialog();saveAndRender();openGroup(group.id);showToast('เพิ่มลิงก์ในกลุ่มแล้ว');
    };
-   host.querySelectorAll('[data-cg-copy]').forEach(button=>button.onclick=()=>{const item=DATA.find(i=>i.id===button.dataset.cgCopy);if(item)copyText(linkUrl(item.url),button);});
+   host.querySelectorAll('[data-cg-copy]').forEach(button=>button.onclick=()=>{const item=linkIndex.get(button.dataset.cgCopy);if(item)copyText(linkUrl(item.url),button);});
    host.querySelectorAll('[data-cg-item-edit]').forEach(button=>button.onclick=()=>{closeDialog();openEdit(button.dataset.cgItemEdit);});
    host.querySelector('[data-cg-ungroup]').onclick=()=>{if(!confirm('ยกเลิกกลุ่มนี้และแสดงการ์ดแยกเหมือนเดิม? ลิงก์และข้อมูลทั้งหมดจะยังอยู่'))return;CATALOG_GROUPS=CATALOG_GROUPS.filter(g=>g.id!==id);closeDialog();saveAndRender();};
  }
- function groupCopyText(group,links){const blocks=links.filter(item=>linkUrl(item.url)).map(item=>String(item.title||'ไฟล์')+'\n'+linkUrl(item.url));return blocks.length?group.name+'\n\n'+blocks.join('\n\n'):'';}
+ function groupItemCopyText(item){return [String(item.title||'').trim(),String(item.desc||'').trim(),linkUrl(item.url)].filter(Boolean).join('\n');}
+ function groupCopyText(group,links){const blocks=links.filter(item=>String(item.desc||'').trim()||linkUrl(item.url)||!item.url).map(groupItemCopyText).filter(Boolean);return blocks.length?group.name+'\n\n'+blocks.join('\n\n'):'';}
  function openGroupCopy(group,links){
    if(!allowedGroup(group))return;
    const text=groupCopyText(group,links),host=showDialog(header('คัดลอกกลุ่ม',group.name)+'<div class="cg-copy-options"><button class="cg-btn" type="button" data-cg-copy-name>คัดลอกชื่อกลุ่ม</button><button class="cg-btn" type="button" data-cg-copy-description '+(!group.description?'disabled':'')+'>คัดลอกคำอธิบาย</button><button class="cg-btn cg-primary" type="button" data-cg-copy-links '+(!text?'disabled':'')+'>คัดลอกทุกลิงก์พร้อมชื่อไฟล์</button></div><p class="cg-muted">คัดลอกทุกลิงก์ในกลุ่ม เรียงเดือนล่าสุดก่อน · คัดลอกเฉพาะไฟล์ได้เมื่อเปิดกลุ่ม</p>');
    host.setAttribute('aria-label','คัดลอกข้อมูลกลุ่ม');host.querySelector('[data-cg-copy-name]').onclick=event=>copyText(group.name,event.currentTarget);host.querySelector('[data-cg-copy-description]').onclick=event=>copyText(group.description,event.currentTarget);host.querySelector('[data-cg-copy-links]').onclick=event=>copyText(text,event.currentTarget);
+   host.querySelector('[data-cg-copy-links]').textContent='คัดลอกทั้งหมดในกลุ่ม';host.querySelector('.cg-muted').textContent='คัดลอกชื่อ คำอธิบาย และลิงก์ของทุกรายการ รวมรายการที่เป็นข้อความหรือที่อยู่ · เรียงเดือนล่าสุดก่อน';
  }
  function groupCard(group,cat,index){
    const links=members(group,index),latest=links.find(item=>period(item));const card=document.createElement('section');card.className='card cg-group-card';card.dataset.groupId=group.id;card.style.setProperty('--c',cat.color);card.style.setProperty('--cg-accent',cat.color);
