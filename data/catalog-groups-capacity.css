@@ -44,6 +44,9 @@ body #main .card.cg-group-card .cg-group-open>strong{font-size:15px;line-height:
 html.pct-cap-scroll-locked{overflow:hidden!important;overscroll-behavior:none;scrollbar-gutter:stable}
 html.pct-cap-scroll-locked body{overflow:hidden!important;overscroll-behavior:none}
 .pct-cap-frame{overscroll-behavior:contain}
+/* Capture entry before passing input to an out-of-process Google iframe.
+   Touch devices remain directly interactive; keyboard focus also unlocks input. */
+@media(hover:hover){html:not(.pct-cap-scroll-locked) .pct-cap-frame iframe{pointer-events:none}}
 .pct-cap-icon{width:44px;height:44px;background:linear-gradient(145deg,#ff8b38,#ff6900);color:#fff;border:1px solid #ff8a36;box-shadow:0 4px 10px rgba(255,105,0,.18)}
 .pct-cap-icon svg{width:26px;height:26px}
 body .pct-cap-chevron{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:40px;padding:8px 12px;border:1px solid #f3d4bd;border-radius:11px;background:var(--panel);color:var(--orange-dark);font-size:12px;font-weight:600;transform:none!important;white-space:nowrap}
