@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>PCT x Xiaomi Fleet Operations Hub</title>
 <link rel="stylesheet" href="data/quick-access.css?v=20261005">
-<link rel="stylesheet" href="data/catalog-groups-capacity.css?v=20261005a">
+<link rel="stylesheet" href="data/catalog-groups-capacity.css?v=20261005b">
 <!-- ===== PWA / Mobile App ===== -->
 <meta name="theme-color" content="#FF6900">
 <meta name="mobile-web-app-capable" content="yes">
@@ -824,6 +824,11 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
 <div class="overlay" id="overlay">
   <div class="modal">
     <h3 id="modalTitle">เพิ่มหัวข้อใหม่</h3>
+    <div class="field cg-card-type">
+      <label for="f-card-type">รูปแบบการ์ด</label>
+      <select id="f-card-type"><option value="single">↗ การ์ดเดี่ยว — หัวข้อ / ลิงก์เดียว</option><option value="group">📁 การ์ดกลุ่ม — เพิ่มลิงก์ภายในได้</option></select>
+      <div class="hint" id="f-card-type-hint">เลือกกลุ่มเพื่อรวมไฟล์หลายเดือนในการ์ดเดียว</div>
+    </div>
     <div class="field">
       <label>หมวดหมู่ (แท็บ)</label>
       <select id="f-category"></select>
@@ -841,6 +846,7 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
       <label>ลิงก์ (URL) — ไม่บังคับ</label>
       <input type="text" id="f-url" placeholder="https://...">
     </div>
+    <div class="field" id="f-group-members" hidden></div>
     <div class="field">
       <label>สีของหัวข้อนี้ (ไม่บังคับ — ถ้าไม่เลือกจะใช้สีตามแท็บ)</label>
       <div class="colorrow">
@@ -1014,7 +1020,7 @@ return (Array.isArray(groups)?groups:[]).filter(group=>group && typeof group==='
 if(usedIds.has(group.id)) return [];
 usedIds.add(group.id);
 const memberIds = (Array.isArray(group.memberIds)?group.memberIds:[]).filter(id=>typeof id==='string' && items.has(id) && items.get(id).category===group.category && !usedMembers.has(id) && usedMembers.add(id));
-return [{id:group.id.slice(0,150),category:group.category,name:String(group.name).trim().slice(0,100),description:String(group.description||'').slice(0,1000),memberIds}];
+return [{id:group.id.slice(0,150),category:group.category,name:String(group.name).trim().slice(0,100),description:String(group.description||'').slice(0,1000),memberIds,color:/^#[0-9a-f]{6}$/i.test(group.color||'')?group.color:null,bgColor:/^#[0-9a-f]{6}$/i.test(group.bgColor||'')?group.bgColor:null}];
 });
 }
 const PCT_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwrhRqiS1gTyUqDD7xvBIT5ATi3P425qLwKU8jvuwX1luUlqa2KhjDdDNwrQpoS3ioZ/exec';
@@ -1891,6 +1897,7 @@ buildItemSwatches(item.color, cat ? cat.color : '#FF6900');
 currentItemBg = item.bgColor || null;
 buildBgSwatches(item.bgColor);
 document.getElementById('overlay').classList.add('show');
+if(window.PCTCatalogGroups) window.PCTCatalogGroups.configureModal();
 }
 function openAdd(){
 editingId = null;
@@ -1905,6 +1912,7 @@ buildItemSwatches(null, cat ? cat.color : '#FF6900');
 currentItemBg = null;
 buildBgSwatches(null);
 document.getElementById('overlay').classList.add('show');
+if(window.PCTCatalogGroups) window.PCTCatalogGroups.configureModal();
 }
 function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
 function diffSummary(oldObj, newObj){
@@ -1930,6 +1938,7 @@ url: document.getElementById('f-url').value.trim(),
 color: currentItemColor || null,
 bgColor: currentItemBg || null,
 };
+if(window.PCTCatalogGroups && window.PCTCatalogGroups.saveModal(obj)) return;
 if(editingId){
 const idx = DATA.findIndex(d=>d.id===editingId);
 const old = DATA[idx];
@@ -6160,7 +6169,7 @@ mnavSync();</script>
 })();
 </script>
 <script src="data/quick-access.js?v=20261005"></script>
-<script src="data/catalog-groups-capacity.js?v=20261005a"></script>
+<script src="data/catalog-groups-capacity.js?v=20261005b"></script>
 </body>
 </html>
 
