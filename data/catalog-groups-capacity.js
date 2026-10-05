@@ -6,7 +6,14 @@
  const CAPACITY_URL='https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1526247490#gid=1526247490';
  const esc=value=>String(value==null?'':value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
- let dialog=null,capacityHost=null,capacityFrame=null,lastFocus=null,modalGroup=null;
+ let dialog=null,capacityHost=null,capacityFrame=null,lastFocus=null,modalGroup=null,capacityTools=false;
+ const CAPACITY_STATUSES=[
+   {color:'#ffff00',name:'สีเหลือง',description:'นัดหมายเบื้องต้น'},
+   {color:'#00ff00',name:'สีเขียว',description:'ไม่สามารถเลื่อนวันได้'},
+   {color:'#9900ff',name:'สีม่วง',description:'เลื่อนวันได้ ต้องการเร็วกว่าวันที่ลงได้'},
+   {color:'#1c4587',name:'สีน้ำเงินเข้ม',description:'งานซ่อมนอกระบบ Problem case'},
+   {color:'#ff9900',name:'สีส้ม',description:'KOL/Xiaomi order'}
+ ];
  function linkUrl(value){try{const url=new URL(String(value).trim());return /^https?:$/.test(url.protocol)&&!url.username&&!url.password?url.href:'';}catch(error){return '';}}
  function sheetUrl(value){try{const u=new URL(String(value).trim());if(u.protocol!=='https:'||u.hostname!=='docs.google.com'||u.username||u.password||u.port||!/^\/spreadsheets\/d\/[A-Za-z0-9_-]+\/edit\/?$/.test(u.pathname))return '';const gid=u.searchParams.get('gid')||(u.hash.match(/gid=(\d+)/)||[])[1];if(gid&&!/^\d+$/.test(gid))return '';const out=new URL(u.origin+u.pathname);if(gid)out.searchParams.set('gid',gid);return out.href;}catch(error){return '';}}
  function period(item){
@@ -147,6 +154,10 @@
    main.querySelectorAll('.row-block').forEach(block=>{if(!block.querySelector('.row-flex > .card'))block.hidden=true;});
  }
  function getCapacityUrl(){let stored='';try{stored=localStorage.getItem(CAPACITY_KEY)||'';}catch(error){}return sheetUrl(stored)||sheetUrl(CAPACITY_URL);}
+ function openCapacityLegend(){
+   const host=showDialog(header('หมายเหตุสี Capacity','เลือกสีตามสถานะของงาน เพื่อให้ทีมอ่านตารางตรงกัน')+'<div class="pct-cap-legend">'+CAPACITY_STATUSES.map(status=>'<div class="pct-cap-status"><span class="pct-cap-swatch" style="background:'+status.color+'" aria-hidden="true"></span><div><strong>'+esc(status.name)+'</strong><p>'+esc(status.description)+'</p></div></div>').join('')+'</div><p class="cg-muted">ปรับสีจริง: กด “สีช่องในชีต” → เลือกเซลล์ในตาราง → ใช้เครื่องมือสีพื้นหลัง (ถังสี) ของ Google Sheets · ต้องมีสิทธิ์แก้ไขชีต</p>');
+   host.setAttribute('aria-label','หมายเหตุสี Capacity');
+ }
  function lockCapacityScroll(locked){
    // Cross-origin Sheets cannot expose wheel events to CRM. Lock only the
    // parent scroll container while interacting with the embedded table.
@@ -167,7 +178,7 @@
  function loadCapacity(refresh){
    if(!capacityHost)return;const area=capacityHost.querySelector('[data-cap-frame]');
    if(capacityFrame&&!refresh)return;
-   const url=new URL(getCapacityUrl());url.searchParams.set('rm','minimal');
+   const url=new URL(getCapacityUrl());if(capacityTools)url.searchParams.delete('rm');else url.searchParams.set('rm','minimal');
    if(refresh)url.searchParams.set('_pct_refresh',Date.now());
    const frame=document.createElement('iframe');frame.title='Order Capacity — Google Sheet';frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads');frame.src=url.href;
    frame.addEventListener('focus',()=>lockCapacityScroll(true));
@@ -179,6 +190,11 @@
    capacityHost=document.createElement('section');capacityHost.className='pct-capacity-host';capacityHost.hidden=true;
    capacityHost.innerHTML='<details class="pct-capacity"><summary><span class="pct-cap-icon">▦</span><span><strong>Capacity <span class="pct-cap-badge">LIVE</span></strong><small>ตารางรถและทีมติดตั้ง · Google Sheet</small></span><span class="pct-cap-chevron">⌄</span></summary><div class="pct-cap-body"><div class="cg-toolbar"><a class="cg-btn" data-cap-open target="_blank" rel="noopener noreferrer">เปิดชีตเต็ม ↗</a><button class="cg-btn" type="button" data-cap-refresh>↻ โหลดตารางใหม่</button><button class="cg-btn cg-primary" type="button" data-cap-copy>คัดลอก Template เคส</button><label class="pct-cap-zoom">มุมมอง <select data-cap-zoom aria-label="ขนาดมุมมอง Capacity"><option value="0.5">50%</option><option value="0.65">65%</option><option value="0.75">75%</option><option value="1">100%</option></select></label></div><div class="pct-cap-frame" data-cap-frame style="--cap-scale:.5;--cap-size:200%"></div><p class="cg-muted">เริ่มต้นที่ 50% เพื่อเห็นทะเบียนรถได้มากขึ้น · เลื่อนตารางแนวนอนเพื่อดูรถที่อยู่ด้านขวา · แก้ไข Template ได้ในเคสด้านล่าง</p><details class="pct-cap-settings"><summary>เปลี่ยนลิงก์แท็บ Capacity</summary><form><label>ลิงก์ Google Sheet พร้อม gid ของแท็บ<input type="url" data-cap-url required></label><button class="cg-btn" type="submit">บันทึกลิงก์</button><p class="cg-message" role="alert"></p></form></details></div></details>';
    main.before(capacityHost);const details=capacityHost.querySelector('.pct-capacity');
+   const toolbar=capacityHost.querySelector('.cg-toolbar'),zoom=capacityHost.querySelector('.pct-cap-zoom');
+   const legend=document.createElement('button');legend.type='button';legend.className='cg-btn pct-cap-legend-button';legend.setAttribute('aria-haspopup','dialog');legend.innerHTML='<span class="pct-cap-legend-dots" aria-hidden="true">'+CAPACITY_STATUSES.map(status=>'<i style="background:'+status.color+'"></i>').join('')+'</span> หมายเหตุสี';legend.onclick=openCapacityLegend;toolbar.insertBefore(legend,zoom);
+   const tools=document.createElement('button');tools.type='button';tools.className='cg-btn';tools.dataset.capTools='';tools.setAttribute('aria-pressed','false');tools.textContent='◩ สีช่องในชีต';toolbar.insertBefore(tools,zoom);
+   const toolsHelp=document.createElement('p');toolsHelp.className='pct-cap-tools-help';toolsHelp.hidden=true;toolsHelp.setAttribute('role','status');toolsHelp.textContent='เลือกเซลล์ในตาราง แล้วกด “สีพื้นหลัง / Fill color” (ถังสี) ในแถบ Google Sheets เพื่อบันทึกสีลงชีตจริง · แนะนำซูม 75–100% ขณะปรับสี · ต้องลงชื่อเข้าใช้บัญชีที่มีสิทธิ์แก้ไข หากเครื่องมือไม่แสดงให้กด “เปิดชีตเต็ม”';toolbar.after(toolsHelp);
+   tools.onclick=()=>{capacityTools=!capacityTools;tools.setAttribute('aria-pressed',String(capacityTools));tools.textContent=capacityTools?'◩ ซ่อนเครื่องมือชีต':'◩ สีช่องในชีต';toolsHelp.hidden=!capacityTools;lockCapacityScroll(false);loadCapacity(true);};
    const summary=details.querySelector('summary'),body=capacityHost.querySelector('.pct-cap-body');
    body.id='pct-capacity-body';summary.setAttribute('aria-controls',body.id);summary.setAttribute('aria-expanded','false');
    capacityHost.querySelector('.pct-cap-icon').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4m8-4v4M3 10h18M10 21H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"/><path d="M7 14h3m-3 3h2"/><circle cx="17" cy="17" r="5"/><path d="M17 14v3l2 1"/></svg>';
