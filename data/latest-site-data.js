@@ -2,7 +2,7 @@
 // Customer cases, credentials, editor history, sheet configuration, and daily reports are intentionally excluded.
 window.PCT_LATEST_SITE_DATA={
   "version": 4,
-  "exportedAt": 1791190365154,
+  "exportedAt": 1791191529415,
   "categories": [
     {
       "id": "logi",
@@ -211,14 +211,6 @@ window.PCT_LATEST_SITE_DATA={
       "title": "แอร์ — Template สอบถามงานซ่อม",
       "desc": "Service Order :\nCustomer : \nContact :\nSecondary Contact : -\nLine ID : \nAddress : \nExpected Time : \nType : \n\n\nNoted : (หากลูกค้ามีการเปลี่ยนวันติดตั้งให้ใส่ลงด้วย)\n\nรายการสอบถาม\n1.อาการของเครื่อง\n\n2.มีข้อจำกัดจากนิติบุคคลหรือไม่ เวลาในการใช้เสียงได้กี่โมงถึงกี่โมง ติดตั้งวันเสาร์ได้ไหม (ที่จอดรถ / การขออนุญาตใช้ลิฟต์)(หากต้องมีการยืนยันที่ก่อนเข้า ให้แจ้งชื่อช่าง ป้ายทะเบียนรถกับลูกค้า )(มีสายไฟหรือขอบที่ประมาณ 3.5 เมตรหรือไม่)\n\nห้ามเลื่อนนัด \nหมายเหตุ : หากพบปัญหาที่ไม่เป็นไปตามขั้นตอนการทำงาน หรือปัญหาใดๆรบกวนติดต่อเข้ามายัง Fleet/Manager เพื่อรับทราบและแก้ไขปัญหาโดยเร็วที่สุด",
       "url": "",
-      "color": null,
-      "bgColor": null
-    },
-    {
-      "id": "item_s5w52ew7",
-      "category": "cust",
-      "title": "เกณฑ์เลือก Class ความยากงาน",
-      "desc": "Class I: เงื่อนไขผ่านน้อยกว่า 2 ข้อ\nClass II: เท่ากับ 2 ข้อ\nClass III: มากกว่า 2 ข้อ\nเงื่อนไข: 1.ติดตั้งผ่านรูเดิม 2.ไม่ต้องต่อท่อเพิ่ม 3.ไม่ต้องดัดแปลงเบรกเกอร์ 4.ไม่ต้องเจาะผนัง 5.เดินสายไฟง่าย 6.ไม่ต้องทำงานที่สูง 7.ไม่ต้องเปิดฝ้าเพดาน",
       "color": null,
       "bgColor": null
     },
@@ -551,6 +543,14 @@ window.PCT_LATEST_SITE_DATA={
       "url": "https://docs.google.com/spreadsheets/d/1KuQEeZReuK1a0qUYqEKEwHepFeOhYAa7N34iYDAkk0Q/edit?gid=1499793412#gid=1499793412",
       "color": null,
       "bgColor": null
+    },
+    {
+      "id": "item_s5w52ew7",
+      "category": "cust",
+      "title": "เกณฑ์เลือก Class ความยากงาน",
+      "desc": "Class I: เงื่อนไขผ่านน้อยกว่า 2 ข้อ\nClass II: เท่ากับ 2 ข้อ\nClass III: มากกว่า 2 ข้อ\nเงื่อนไข: 1.ติดตั้งผ่านรูเดิม 2.ไม่ต้องต่อท่อเพิ่ม 3.ไม่ต้องดัดแปลงเบรกเกอร์ 4.ไม่ต้องเจาะผนัง 5.เดินสายไฟง่าย 6.ไม่ต้องทำงานที่สูง 7.ไม่ต้องเปิดฝ้าเพดาน",
+      "color": null,
+      "bgColor": null
     }
   ],
   "catalogGroups": [
@@ -577,7 +577,48 @@ window.PCT_LATEST_SITE_DATA={
       "memberIds": [
         "item_j0kw2gy4",
         "item_wz68b5xy",
+        "item_4qpsdrd3",
         "item_hbflrug5"
+      ]
+    },
+    {
+      "id": "group_axieglkd",
+      "category": "people",
+      "name": "Staff Info",
+      "description": "บันทึกIncentive 2026",
+      "color": null,
+      "bgColor": null,
+      "memberIds": [
+        "item_46vso7jf",
+        "item_0adeqijk",
+        "item_tfzsawt4"
+      ]
+    },
+    {
+      "id": "group_7yvdzhgv",
+      "category": "cust",
+      "name": "Air Conditioner Template",
+      "description": "Service Order :\nCustomer : \nContact :\nSecondary Contact : -\nLine ID : \nAddress : \nExpected Time : \nType : \n\n\nNoted : (หากลูกค้ามีการเปลี่ยนวันติดตั้งให้ใส่ลงด้วย)\n\nรายการสอบถาม\n1.มีแอร์เครื่องเก่าหรือไม่ (ขนาดกี่ BTU)(ใช้สารทำความเย็น R32 หรือไม่ )(เป็นท่อฝังหรือไม่)\n**หากเป็นจุดติดตั้งใหม่ ให้ลูกค้าเตรียมเมนไฟไว้**\n\n2.จุดติดตั้งคอยล์ร้อนและคอยล์เย็นอยู่ชั้นไหน\n\n- คอยล์ร้อนห่างจากพื้นกี่เมตร (หากความสูงเกิน 6 เมตร เราไม่สามารถติดตั้งได้)\n\n- คอยล์เย็นห่างจากฝ้ากี่เมตร (สำหรับรูท่อแอร์ที่มีอยู่แล้ว) (พื้นที่ว่างรวมประมาณ 50 เซนติเมตร)\n\n3.มีเซอร์กิตเบรกเกอร์ (Circuit Breaker) ที่สามารถใช้งานได้ทันทีหรือไม่\n\n4.จำเป็นต้องเจาะรูหรือไม่(รูเดิมเป็นของขนาดกี่ BTU)(หากใช้รูเดิมไม่ได้อาจจะต้องเจาะใหม่)(ความหนาของกำแพง)\n\n5.จำเป็นต้องเดินสายไฟ/ท่อร้อยสายเพิ่มเติมหรือไม่ (กรุณาบันทึกวิดีโอเพื่อยืนยัน)\n\n6.ระยะทางจาก เบรคเกอร์ ถึงตำแหน่งติดตั้งเครื่องปรับอากาศภายใน เท่าไร (ช่างจะเตรียมสายไฟไว้)\n\n7.สายไฟจำเป็นต้องเดินเข้าฝ้าเพดานหรือไม่ (บางบ้านเป็นตึกไม่มีฝ้า)\n\n8.จำเป็นต้องใช้รางครอบท่อ (Casing) หรือไ",
+      "color": null,
+      "bgColor": null,
+      "memberIds": [
+        "item_va0342il",
+        "item_5vit48ce",
+        "item_dwuijdc6",
+        "item_w2hsrmy3"
+      ]
+    },
+    {
+      "id": "group_vbr0kwqr",
+      "category": "cust",
+      "name": "Washing Machine Template",
+      "description": "Service Order / Customer / Contact / Line ID / Address / Expected Time / Type / Noted\n1) มีปลั๊กที่ใช้งานได้ มีสายกราวด์หรือไม่\n2) มีก๊อกน้ำใช้งานได้หรือต้องต่อท่อใหม่\n3) มีจุดน้ำทิ้งหรือไม่\n4) ติดต่อนิติก่อนเข้า\n5) ลูกค้าอยู่หน้างานหรือไม่\nหมายเหตุ: ติดตั้งระบบน้ำ/ไฟ ให้ถ่ายรูปลงกลุ่มทุกเคส",
+      "color": null,
+      "bgColor": null,
+      "memberIds": [
+        "item_29x8q7bh",
+        "item_n2tjk8zk",
+        "item_peymqs17"
       ]
     }
   ],
@@ -607,8 +648,7 @@ window.PCT_LATEST_SITE_DATA={
           "item_5vit48ce",
           "item_dwuijdc6",
           "item_ha4n7rql",
-          "item_w2hsrmy3",
-          "item_s5w52ew7"
+          "item_w2hsrmy3"
         ]
       },
       {
@@ -622,7 +662,8 @@ window.PCT_LATEST_SITE_DATA={
       {
         "label": "Template การใช้งานเบื้องต้นส่งให้ลูกค้า",
         "ids": [
-          "item_g2u9zo9b"
+          "item_g2u9zo9b",
+          "item_s5w52ew7"
         ]
       }
     ],
