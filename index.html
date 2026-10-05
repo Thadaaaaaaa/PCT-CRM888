@@ -1005,7 +1005,48 @@ let currentCatBg = null;
 let reorderMode = false;
 let dragId = null;
 let CASES = [];
-let SHEET_CONFIG = { webAppUrl:'' };
+const PCT_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwrhRqiS1gTyUqDD7xvBIT5ATi3P425qLwKU8jvuwX1luUlqa2KhjDdDNwrQpoS3ioZ/exec';
+const PCT_RETIRED_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxLUoq_OCTXKKEkTaSvtegOTr1l3PKefmtvj-OlP7E-Ir7qZtq8fOxPmJxbwZkpNxrtgA/exec';
+const PCT_SHEET_URL_KEY = 'pctDashboardWebAppUrl_v2';
+function pctValidSheetUrl(value){
+return /^https:\/\/script\.google\.com\/macros\/s\/[^/?#]+\/exec(?:[?#].*)?$/.test(String(value || '').trim());
+}
+function pctNormalizeSheetUrl(value){
+const url = String(value || '').trim();
+if(!url || url.split(/[?#]/)[0] === PCT_RETIRED_WEB_APP_URL) return PCT_SHEET_WEB_APP_URL;
+return pctValidSheetUrl(url) ? url : PCT_SHEET_WEB_APP_URL;
+}
+let SHEET_CONFIG = { webAppUrl:PCT_SHEET_WEB_APP_URL };
+function pctGetSheetUrl(){
+// Recover only the known retired deployment; keep explicitly configured URLs.
+let stored = '';
+try { stored = localStorage.getItem(PCT_SHEET_URL_KEY) || ''; } catch(error) {}
+const trustedStored = pctValidSheetUrl(stored) || String(stored).split(/[?#]/)[0] === PCT_RETIRED_WEB_APP_URL;
+const url = pctNormalizeSheetUrl((trustedStored ? stored : '') || SHEET_CONFIG.webAppUrl);
+SHEET_CONFIG.webAppUrl = url;
+try { localStorage.setItem(PCT_SHEET_URL_KEY, url); } catch(error) {}
+return url;
+}
+function pctSetSheetUrl(value){
+const input = String(value || '').trim();
+if(input && input.split(/[?#]/)[0] !== PCT_RETIRED_WEB_APP_URL && !pctValidSheetUrl(input)) return false;
+const url = pctNormalizeSheetUrl(value);
+SHEET_CONFIG.webAppUrl = url;
+try { localStorage.setItem(PCT_SHEET_URL_KEY, url); } catch(error) {}
+saveAll();
+return true;
+}
+async function pctSheetFetch(url, options){
+const controller = new AbortController();
+const timeout = setTimeout(()=>controller.abort(), 45000);
+try {
+const response = await fetch(url, Object.assign({}, options || {}, {
+credentials:'omit', redirect:'follow', signal:controller.signal
+}));
+const body = await response.text();
+return {ok:response.ok, status:response.status, text:async()=>body, json:async()=>JSON.parse(body)};
+} finally { clearTimeout(timeout); }
+}
 let crmEditingId = null;
 let crmCaseSearchQ = '';
 let selectedCaseIds = new Set(); // bulk copy selection
@@ -1127,14 +1168,9 @@ DATA = sanitizeCatalogItems(DATA);
 if(useLatestDataExport){ DATA.forEach(function(item){ if(Object.prototype.hasOwnProperty.call(LATEST_LINKS,item.id)) item.url = LATEST_LINKS[item.id]; }); }
 CASES = sanitizeCases((useLatestDataExport && Array.isArray(PUBLIC_DATA_PAYLOAD.cases)) ? PUBLIC_DATA_PAYLOAD.cases : ((parsed && Array.isArray(parsed.cases)) ? parsed.cases : []));
 SHEET_CONFIG = useLatestDataExport ? {...SHEET_CONFIG, ...(PUBLIC_DATA_PAYLOAD.sheetConfig || {})} : ((parsed && parsed.sheetConfig) ? {...SHEET_CONFIG, ...parsed.sheetConfig} : SHEET_CONFIG);
-if(!SHEET_CONFIG.webAppUrl) SHEET_CONFIG.webAppUrl = 'https://script.google.com/macros/s/AKfycbxLUoq_OCTXKKEkTaSvtegOTr1l3PKefmtvj-OlP7E-Ir7qZtq8fOxPmJxbwZkpNxrtgA/exec';
+SHEET_CONFIG.webAppUrl = pctNormalizeSheetUrl(SHEET_CONFIG.webAppUrl);
 DAILY_REPORTS = (useLatestDataExport && PUBLIC_DATA_PAYLOAD.dailyReports) ? PUBLIC_DATA_PAYLOAD.dailyReports : ((parsed && parsed.dailyReports) ? parsed.dailyReports : {});
-if(!parsed || !parsed.sheetConfig || !parsed.sheetConfig.webAppUrl) {
-  SHEET_CONFIG.webAppUrl = 'https://script.google.com/macros/s/AKfycbwrhRqiS1gTyUqDD7xvBIT5ATi3P425qLwKU8jvuwX1luUlqa2KhjDdDNwrQpoS3ioZ/exec';
-}
-try {
-  if(!localStorage.getItem('pctDashboardWebAppUrl_v2')) localStorage.setItem('pctDashboardWebAppUrl_v2', SHEET_CONFIG.webAppUrl);
-} catch (storageError) {}
+pctGetSheetUrl();
 activeCategory = CATS.length ? CATS[0].id : null;
 initSidebarCollapse();
 setupGlobalEvents();
@@ -1142,7 +1178,13 @@ saveAll();
 render();
 }
 function saveAll(){
+const requestedSheetUrl = String(SHEET_CONFIG.webAppUrl || '').trim();
+if(requestedSheetUrl && requestedSheetUrl.split(/[?#]/)[0] !== PCT_RETIRED_WEB_APP_URL && !pctValidSheetUrl(requestedSheetUrl)){
+  SHEET_CONFIG.webAppUrl = pctGetSheetUrl();
+  showToast('URL ของ Google Apps Script ไม่ถูกต้อง — คงค่าเดิมไว้');
+} else SHEET_CONFIG.webAppUrl = pctNormalizeSheetUrl(requestedSheetUrl);
 try{
+localStorage.setItem(PCT_SHEET_URL_KEY, SHEET_CONFIG.webAppUrl);
 CATS = sanitizeCategories(CATS);
 DATA = sanitizeCatalogItems(DATA);
 CASES = sanitizeCases(CASES);
@@ -2446,8 +2488,9 @@ try{
 // which Apps Script Web Apps generally don't handle. doPost() still reads
 // e.postData.contents as raw text and JSON.parse()s it correctly regardless
 // of the declared content type.
-const res = await fetch(SHEET_CONFIG.webAppUrl, {
+const res = await pctSheetFetch(pctGetSheetUrl(), {
 method: 'POST',
+headers: {'Content-Type':'text/plain;charset=UTF-8'},
 body: JSON.stringify(crmBuildWebhookPayload(c))
 });
 let result = null;
@@ -2464,7 +2507,7 @@ showToast((result && result.message) || ('ส่งข้อมูลไม่�
 return false;
 }
 }catch(e){
-showToast('เชื่อมต่อ Web App ไม่สำเร็จ — ตรวจสอบ URL หรือดูคำแนะนำการ Deploy ด้านล่างของกล่องตั้งค่า');
+showToast((e.name==='AbortError' ? 'หมดเวลารอ Google Sheet' : 'เชื่อมต่อ Google Sheet ไม่สำเร็จ') + ' — เคสยังอยู่ในเครื่อง ผลการส่งยังยืนยันไม่ได้ กรุณาค้นหา SO ในชีตก่อนส่งซ้ำ');
 return false;
 }
 }
@@ -2474,8 +2517,9 @@ const query = String(so||'').trim();
 if(!query){ showToast('กรุณากรอกเลข SO'); return; }
 if(!SHEET_CONFIG.webAppUrl){ showToast('ยังไม่ได้ตั้งค่า Google Apps Script Web App URL'); return; }
 try{
-const separator = SHEET_CONFIG.webAppUrl.includes('?') ? '&' : '?';
-const response = await fetch(SHEET_CONFIG.webAppUrl + separator + 'action=getCRMOrderBySO&so=' + encodeURIComponent(query) + '&_=' + Date.now(), {method:'GET',cache:'no-store'});
+const sheetUrl = pctGetSheetUrl();
+const separator = sheetUrl.includes('?') ? '&' : '?';
+const response = await pctSheetFetch(sheetUrl + separator + 'action=getCRMOrderBySO&so=' + encodeURIComponent(query) + '&_=' + Date.now(), {method:'GET',cache:'no-store'});
 const payload = await response.json();
 if(!response.ok || !payload || payload.ok!==true || !payload.data){ throw new Error((payload&&payload.message)||'ไม่พบ SO ในแท็บ Orders'); }
 const row = payload.data;
@@ -2866,12 +2910,18 @@ crmEditingId = crmDraft.id;
 saveCases();
 return true;
 }
+let crmSendBusy = false;
 async function crmSaveAndSend(){
+if(crmSendBusy) return;
 const saved = crmSaveCase();
 if(!saved) return;
+crmSendBusy = true;
+const button = document.getElementById('crmSaveSendBtn');
+if(button){ button.disabled = true; button.textContent = 'กำลังส่งเข้า Google Sheet…'; }
+const sendingCase = JSON.parse(JSON.stringify(crmDraft));
 showToast('บันทึกเคสเรียบร้อย — กำลังส่งเข้า Google Sheet...');
-await crmSendToWebApp(crmDraft);
-render();
+try { await crmSendToWebApp(sendingCase); }
+finally { crmSendBusy = false; render(); }
 }
 function crmLoadCase(caseId){
 const found = CASES.find(x=>x.id===caseId);
@@ -4379,7 +4429,7 @@ mnavSync();</script>
   const URL_KEY = 'pctDashboardWebAppUrl_v2';
   const THEME_KEY = 'pctFleetTheme_v2';
   const REPORT_CACHE_KEY = 'pctReportCache_v1';
-  const DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbxLUoq_OCTXKKEkTaSvtegOTr1l3PKefmtvj-OlP7E-Ir7qZtq8fOxPmJxbwZkpNxrtgA/exec';
+  const DEFAULT_URL = PCT_SHEET_WEB_APP_URL;
   const DEFAULT_THEME = { color: '#ff6900', bg: '#f6f7f9', panel: '#ffffff', text: '#1d1d1f', line: '#e5e6ea', radius: 16, density: 'comfortable' };
   let dashboardActive = false;
   let renderTimer = 0;
@@ -4426,8 +4476,8 @@ mnavSync();</script>
   }
 
   function getDashboardUrl() {
-    const stored = clean(localStorage.getItem(URL_KEY));
-    return validWebAppUrl(stored) ? stored : ((typeof SHEET_CONFIG !== 'undefined' && validWebAppUrl(SHEET_CONFIG.webAppUrl)) ? SHEET_CONFIG.webAppUrl : DEFAULT_URL);
+    const url = pctGetSheetUrl();
+    return validWebAppUrl(url) ? url : DEFAULT_URL;
   }
 
   function setDashboardUrl(value) {
@@ -4436,9 +4486,7 @@ mnavSync();</script>
       showToast('กรุณาใช้ Google Apps Script Web App URL ที่ลงท้ายด้วย /exec');
       return false;
     }
-    localStorage.setItem(URL_KEY, value);
-    if (typeof SHEET_CONFIG !== 'undefined') SHEET_CONFIG.webAppUrl = value;
-    return true;
+    return pctSetSheetUrl(value);
   }
 
   function escapeAttr(value) {
@@ -5609,7 +5657,7 @@ mnavSync();</script>
     const url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'action=getReports&limit=5000&_=' + Date.now();
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
-        const response = await fetch(url, { method: 'GET', cache: 'no-store' });
+        const response = await pctSheetFetch(url, { method: 'GET', cache: 'no-store' });
         const payload = safeParse(await response.text(), null);
         if (!response.ok || !payload || payload.reportApi !== true || !Array.isArray(payload.items)) {
           throw new Error('Report API is not ready');
@@ -5657,8 +5705,9 @@ mnavSync();</script>
   async function sendReportToSheet(record) {
     if (!reportServerReady) await fetchReportRows();
     if (!reportServerReady) throw new Error('Report API is unavailable');
-    const response = await fetch(getDashboardUrl(), {
+    const response = await pctSheetFetch(getDashboardUrl(), {
       method: 'POST',
+      headers: {'Content-Type':'text/plain;charset=UTF-8'},
       cache: 'no-store',
       body: JSON.stringify({ action: 'saveReport', data: record })
     });
