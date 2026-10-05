@@ -12,7 +12,8 @@
    {color:'#00ff00',name:'สีเขียว',description:'ไม่สามารถเลื่อนวันได้'},
    {color:'#9900ff',name:'สีม่วง',description:'เลื่อนวันได้ ต้องการเร็วกว่าวันที่ลงได้'},
    {color:'#1c4587',name:'สีน้ำเงินเข้ม',description:'งานซ่อมนอกระบบ Problem case'},
-   {color:'#ff9900',name:'สีส้ม',description:'KOL/Xiaomi order'}
+   {color:'#ff9900',name:'สีส้ม',description:'KOL/Xiaomi order'},
+   {color:'#000000',name:'สีดำ',description:'ห้ามใส่เคส'}
  ];
  function linkUrl(value){try{const url=new URL(String(value).trim());return /^https?:$/.test(url.protocol)&&!url.username&&!url.password?url.href:'';}catch(error){return '';}}
  function sheetUrl(value){try{const u=new URL(String(value).trim());if(u.protocol!=='https:'||u.hostname!=='docs.google.com'||u.username||u.password||u.port||!/^\/spreadsheets\/d\/[A-Za-z0-9_-]+\/edit\/?$/.test(u.pathname))return '';const gid=u.searchParams.get('gid')||(u.hash.match(/gid=(\d+)/)||[])[1];if(gid&&!/^\d+$/.test(gid))return '';const out=new URL(u.origin+u.pathname);if(gid)out.searchParams.set('gid',gid);return out.href;}catch(error){return '';}}
@@ -22,7 +23,7 @@
    if(!match)return '';const month=months.findIndex(m=>m.toLowerCase()===match[1].slice(0,3).toLowerCase())+1;
    return (match[2].length===2?'20'+match[2]:match[2])+'-'+String(month).padStart(2,'0');
  }
- function members(group){return group.memberIds.map(id=>DATA.find(item=>item.id===id&&item.category===group.category)).filter(Boolean).sort((a,b)=>period(b).localeCompare(period(a))||String(a.title).localeCompare(String(b.title),'th'));}
+ function members(group,index){const items=index||new Map(DATA.map(item=>[item.id,item]));return group.memberIds.map(id=>items.get(id)).filter(item=>item&&item.category===group.category).sort((a,b)=>period(b).localeCompare(period(a))||String(a.title).localeCompare(String(b.title),'th'));}
  function allowedGroup(group){return !!group&&(!isManagerCategory(group.category)||managerGateIsOpen());}
  function seed(){
    let seeded=false;try{seeded=localStorage.getItem(SEED_KEY)==='1';}catch(error){}
@@ -118,6 +119,14 @@
    const links=members(group),latest=links.find(item=>period(item));
    const host=showDialog(header(group.name,(group.description?group.description+' · ':'')+links.length+' ลิงก์')+'<div class="cg-toolbar"><button class="cg-btn cg-primary" type="button" data-cg-add>＋ เพิ่มลิงก์</button><button class="cg-btn" type="button" data-cg-manage>เลือก / แก้ไขกลุ่ม</button></div><form class="cg-form cg-new-link" data-cg-add-form hidden><h3>เพิ่มลิงก์ในกลุ่มนี้</h3><div class="cg-fields"><label>ชื่อไฟล์<input name="title" maxlength="200" required placeholder="เช่น Stock consum out Nov26"></label><label>เดือนของไฟล์ (ไม่บังคับ)<input name="month" type="month"></label></div><label>ลิงก์ไฟล์<input name="url" type="url" required maxlength="2048" placeholder="https://docs.google.com/…"></label><div class="cg-toolbar"><button class="cg-btn cg-primary" type="submit">บันทึกลิงก์</button><button class="cg-btn" type="button" data-cg-cancel-add>ยกเลิก</button></div><p class="cg-message" role="alert"></p></form><div class="cg-links">'+(links.length?links.map(item=>{const p=period(item),u=linkUrl(item.url);return '<article class="cg-link-row"><div class="cg-month">'+(p?'<strong>'+months[Number(p.slice(5))-1]+'</strong><small>'+p.slice(0,4)+'</small>':'↗')+'</div><div class="cg-link-info"><strong>'+esc(item.title)+(latest&&latest.id===item.id?'<span class="cg-latest">ล่าสุด</span>':'')+'</strong><small>'+esc(item.desc||'ลิงก์อ้างอิง')+'</small></div><div class="cg-link-actions">'+(u?'<a class="cg-btn" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">เปิดไฟล์ ↗</a><button class="cg-btn" type="button" data-cg-copy="'+esc(item.id)+'" aria-label="คัดลอกลิงก์ '+esc(item.title)+'">คัดลอก</button>':'<span class="cg-muted">ไม่มีลิงก์</span>')+'<button class="cg-btn" type="button" data-cg-item-edit="'+esc(item.id)+'" aria-label="แก้ไข '+esc(item.title)+'">✎</button></div></article>';}).join(''):'<p class="cg-empty">กลุ่มนี้ยังไม่มีลิงก์ กด “เพิ่มลิงก์” เพื่อเริ่มต้น</p>')+'</div><footer class="cg-dialog-foot"><span class="cg-muted">การ์ดเดิมยังค้นหาและเพิ่มในทางลัดได้</span><button class="cg-btn cg-danger" type="button" data-cg-ungroup>ยกเลิกกลุ่ม</button></footer>');
    host.querySelector('[data-cg-manage]').onclick=()=>editTopicGroup(group.category,group);
+   host.querySelector('[data-cg-manage]').textContent='✎ แก้ไขชื่อ / กลุ่ม';
+   const allText=groupCopyText(group,links);
+   const copyAll=document.createElement('button');copyAll.type='button';copyAll.className='cg-btn';copyAll.dataset.cgCopyAll='';copyAll.textContent='คัดลอกทุกลิงก์';copyAll.disabled=!allText;copyAll.onclick=()=>copyText(allText,copyAll);host.querySelector('.cg-toolbar').appendChild(copyAll);
+   const search=document.createElement('label');search.className='cg-group-search';search.innerHTML='<span>ค้นหาลิงก์ในกลุ่ม</span><input type="search" placeholder="ชื่อไฟล์ เดือน หรือคำสำคัญ" aria-label="ค้นหาลิงก์ในกลุ่ม"><small role="status"></small>';
+   host.querySelector('.cg-links').before(search);
+   const rows=[...host.querySelectorAll('.cg-link-row')],searchIndex=links.map(item=>[item.title,item.desc,item.url,period(item)].join(' ').normalize('NFKC').toLocaleLowerCase('th'));
+   search.querySelector('small').textContent=links.length+' ลิงก์';
+   search.querySelector('input').oninput=event=>{const terms=event.target.value.normalize('NFKC').toLocaleLowerCase('th').trim().split(/\s+/).filter(Boolean);let found=0;rows.forEach((row,i)=>{const match=terms.every(term=>searchIndex[i].includes(term));row.hidden=!match;if(match)found++;});search.querySelector('small').textContent=found?'แสดง '+found+' จาก '+links.length+' ลิงก์':'ไม่พบลิงก์ที่ตรงกับคำค้น';};
    const form=host.querySelector('[data-cg-add-form]');
    host.querySelector('[data-cg-add]').onclick=()=>{form.hidden=!form.hidden;if(!form.hidden)form.elements.title.focus();};
    host.querySelector('[data-cg-cancel-add]').onclick=()=>{form.hidden=true;};
@@ -132,21 +141,29 @@
    host.querySelectorAll('[data-cg-item-edit]').forEach(button=>button.onclick=()=>{closeDialog();openEdit(button.dataset.cgItemEdit);});
    host.querySelector('[data-cg-ungroup]').onclick=()=>{if(!confirm('ยกเลิกกลุ่มนี้และแสดงการ์ดแยกเหมือนเดิม? ลิงก์และข้อมูลทั้งหมดจะยังอยู่'))return;CATALOG_GROUPS=CATALOG_GROUPS.filter(g=>g.id!==id);closeDialog();saveAndRender();};
  }
- function groupCard(group,cat){
-   const links=members(group),latest=links.find(item=>period(item));const card=document.createElement('section');card.className='card cg-group-card';card.dataset.groupId=group.id;card.style.setProperty('--c',cat.color);card.style.setProperty('--cg-accent',cat.color);
+ function groupCopyText(group,links){const blocks=links.filter(item=>linkUrl(item.url)).map(item=>String(item.title||'ไฟล์')+'\n'+linkUrl(item.url));return blocks.length?group.name+'\n\n'+blocks.join('\n\n'):'';}
+ function openGroupCopy(group,links){
+   if(!allowedGroup(group))return;
+   const text=groupCopyText(group,links),host=showDialog(header('คัดลอกกลุ่ม',group.name)+'<div class="cg-copy-options"><button class="cg-btn" type="button" data-cg-copy-name>คัดลอกชื่อกลุ่ม</button><button class="cg-btn" type="button" data-cg-copy-description '+(!group.description?'disabled':'')+'>คัดลอกคำอธิบาย</button><button class="cg-btn cg-primary" type="button" data-cg-copy-links '+(!text?'disabled':'')+'>คัดลอกทุกลิงก์พร้อมชื่อไฟล์</button></div><p class="cg-muted">คัดลอกทุกลิงก์ในกลุ่ม เรียงเดือนล่าสุดก่อน · คัดลอกเฉพาะไฟล์ได้เมื่อเปิดกลุ่ม</p>');
+   host.setAttribute('aria-label','คัดลอกข้อมูลกลุ่ม');host.querySelector('[data-cg-copy-name]').onclick=event=>copyText(group.name,event.currentTarget);host.querySelector('[data-cg-copy-description]').onclick=event=>copyText(group.description,event.currentTarget);host.querySelector('[data-cg-copy-links]').onclick=event=>copyText(text,event.currentTarget);
+ }
+ function groupCard(group,cat,index){
+   const links=members(group,index),latest=links.find(item=>period(item));const card=document.createElement('section');card.className='card cg-group-card';card.dataset.groupId=group.id;card.style.setProperty('--c',cat.color);card.style.setProperty('--cg-accent',cat.color);
    if(group.color)card.style.setProperty('--c',group.color);if(group.bgColor)card.style.setProperty('--bgc',group.bgColor);
    card.innerHTML='<button class="cg-group-open" type="button"><span class="cg-group-top"><span class="cg-folder">📁</span><span class="cg-count">'+links.length+' ลิงก์</span></span><strong>'+esc(group.name)+'</strong><span class="cg-muted">'+esc(group.description||'รวมลิงก์ที่เกี่ยวข้อง')+'</span><span class="cg-group-bottom"><span>'+(latest?'ล่าสุด · '+esc(period(latest)):'เพิ่มลิงก์ในกลุ่มได้')+'</span><b>เปิดกลุ่ม →</b></span></button><button class="cg-edit-group" type="button" aria-label="แก้ไขกลุ่ม '+esc(group.name)+'">✎</button>';
-   card.querySelector('.cg-group-open').onclick=()=>openGroup(group.id);card.querySelector('.cg-edit-group').onclick=()=>editTopicGroup(group.category,group);return card;
+   const copy=document.createElement('button');copy.type='button';copy.className='cg-copy-group';copy.setAttribute('aria-label','คัดลอกข้อมูลกลุ่ม '+group.name);copy.title='คัดลอกชื่อ คำอธิบาย หรือทุกลิงก์';copy.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/></svg>';copy.onclick=()=>openGroupCopy(group,members(group));card.appendChild(copy);
+   const edit=card.querySelector('.cg-edit-group');edit.title='แก้ไขชื่อ / กลุ่ม';edit.setAttribute('aria-label','แก้ไขชื่อ / กลุ่ม '+group.name);
+   card.querySelector('.cg-group-open').onclick=()=>openGroup(group.id);edit.onclick=()=>editTopicGroup(group.category,group);return card;
  }
  function decorateGroups(){
    const main=document.getElementById('main'),cat=CATS.find(c=>c.id===activeCategory);
    if(!main||!cat||reorderMode||(document.getElementById('ask').value||'').trim()||(isManagerCategory(cat.id)&&!managerGateIsOpen()))return;
    const banner=main.querySelector('.page-banner');if(!banner)return;
    const button=document.createElement('button');button.type='button';button.className='btn secondary';button.textContent='📁 สร้างกลุ่ม';button.onclick=()=>editTopicGroup(cat.id);banner.querySelector('.right-actions').prepend(button);
-   const groups=CATALOG_GROUPS.filter(g=>g.category===cat.id),cardNodes=[...main.querySelectorAll('.row-flex > .card[data-id]')];
+   const groups=CATALOG_GROUPS.filter(g=>g.category===cat.id),cardNodes=[...main.querySelectorAll('.row-flex > .card[data-id]')],itemIndex=new Map(DATA.map(item=>[item.id,item]));
    groups.forEach(group=>{
      const nodes=cardNodes.filter(card=>group.memberIds.includes(card.dataset.id));
-     const card=groupCard(group,cat);
+     const card=groupCard(group,cat,itemIndex);
      if(nodes.length){nodes[0].replaceWith(card);nodes.slice(1).forEach(node=>node.remove());}
      else{let row=main.querySelector('.row-flex');if(!row){row=document.createElement('div');row.className='row-flex';banner.after(row);}row.appendChild(card);}
    });
@@ -155,7 +172,7 @@
  }
  function getCapacityUrl(){let stored='';try{stored=localStorage.getItem(CAPACITY_KEY)||'';}catch(error){}return sheetUrl(stored)||sheetUrl(CAPACITY_URL);}
  function openCapacityLegend(){
-   const host=showDialog(header('หมายเหตุสี Capacity','เลือกสีตามสถานะของงาน เพื่อให้ทีมอ่านตารางตรงกัน')+'<div class="pct-cap-legend">'+CAPACITY_STATUSES.map(status=>'<div class="pct-cap-status"><span class="pct-cap-swatch" style="background:'+status.color+'" aria-hidden="true"></span><div><strong>'+esc(status.name)+'</strong><p>'+esc(status.description)+'</p></div></div>').join('')+'</div><p class="cg-muted">ปรับสีจริง: กด “สีช่องในชีต” → เลือกเซลล์ในตาราง → ใช้เครื่องมือสีพื้นหลัง (ถังสี) ของ Google Sheets · ต้องมีสิทธิ์แก้ไขชีต</p>');
+   const host=showDialog(header('หมายเหตุสี Capacity','เลือกสีตามสถานะของงาน เพื่อให้ทีมอ่านตารางตรงกัน')+'<div class="pct-cap-legend">'+CAPACITY_STATUSES.map(status=>'<div class="pct-cap-status"><span class="pct-cap-swatch" style="background:'+status.color+'" aria-hidden="true"></span><div><strong>'+esc(status.name)+'</strong><p>'+esc(status.description)+'</p></div></div>').join('')+'</div><p class="cg-muted">ปรับสีจริง: กด “เครื่องมือ” → เลือกเซลล์ในตาราง → ใช้เครื่องมือสีพื้นหลัง (ถังสี) ของ Google Sheets · ต้องมีสิทธิ์แก้ไขชีต</p>');
    host.setAttribute('aria-label','หมายเหตุสี Capacity');
  }
  function lockCapacityScroll(locked){
@@ -192,9 +209,9 @@
    main.before(capacityHost);const details=capacityHost.querySelector('.pct-capacity');
    const toolbar=capacityHost.querySelector('.cg-toolbar'),zoom=capacityHost.querySelector('.pct-cap-zoom');
    const legend=document.createElement('button');legend.type='button';legend.className='cg-btn pct-cap-legend-button';legend.setAttribute('aria-haspopup','dialog');legend.innerHTML='<span class="pct-cap-legend-dots" aria-hidden="true">'+CAPACITY_STATUSES.map(status=>'<i style="background:'+status.color+'"></i>').join('')+'</span> หมายเหตุสี';legend.onclick=openCapacityLegend;toolbar.insertBefore(legend,zoom);
-   const tools=document.createElement('button');tools.type='button';tools.className='cg-btn';tools.dataset.capTools='';tools.setAttribute('aria-pressed','false');tools.textContent='◩ สีช่องในชีต';toolbar.insertBefore(tools,zoom);
+   const tools=document.createElement('button');tools.type='button';tools.className='cg-btn';tools.dataset.capTools='';tools.setAttribute('aria-pressed','false');tools.textContent='◩ เครื่องมือ';toolbar.insertBefore(tools,zoom);
    const toolsHelp=document.createElement('p');toolsHelp.className='pct-cap-tools-help';toolsHelp.hidden=true;toolsHelp.setAttribute('role','status');toolsHelp.textContent='เลือกเซลล์ในตาราง แล้วกด “สีพื้นหลัง / Fill color” (ถังสี) ในแถบ Google Sheets เพื่อบันทึกสีลงชีตจริง · แนะนำซูม 75–100% ขณะปรับสี · ต้องลงชื่อเข้าใช้บัญชีที่มีสิทธิ์แก้ไข หากเครื่องมือไม่แสดงให้กด “เปิดชีตเต็ม”';toolbar.after(toolsHelp);
-   tools.onclick=()=>{capacityTools=!capacityTools;tools.setAttribute('aria-pressed',String(capacityTools));tools.textContent=capacityTools?'◩ ซ่อนเครื่องมือชีต':'◩ สีช่องในชีต';toolsHelp.hidden=!capacityTools;lockCapacityScroll(false);loadCapacity(true);};
+   tools.onclick=()=>{capacityTools=!capacityTools;tools.setAttribute('aria-pressed',String(capacityTools));tools.textContent='◩ เครื่องมือ';toolsHelp.hidden=!capacityTools;lockCapacityScroll(false);loadCapacity(true);};
    const summary=details.querySelector('summary'),body=capacityHost.querySelector('.pct-cap-body');
    body.id='pct-capacity-body';summary.setAttribute('aria-controls',body.id);summary.setAttribute('aria-expanded','false');
    capacityHost.querySelector('.pct-cap-icon').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4m8-4v4M3 10h18M10 21H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"/><path d="M7 14h3m-3 3h2"/><circle cx="17" cy="17" r="5"/><path d="M17 14v3l2 1"/></svg>';
