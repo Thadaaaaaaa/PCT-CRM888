@@ -30,6 +30,7 @@ const uiReminder = 'หมายเหตุ : หากมี Wallpaper สิ�
 assert.equal(html.split(uiReminder).length - 1, 1, 'Reminder exists only in the form markup');
 assert(html.includes('class="crm-installation-reminder" style="color:#dc2626;'), 'Reminder is red');
 const templateContext = vm.createContext({crmQuestionsFor:()=>['ข้อหนึ่ง','ข้อสอง','ข้อสาม'],toDMY:()=>'',CRM_REMINDER_TEXT:'Existing reminder'});
+vm.runInContext(extract('formatAppointmentTimeForPost'), templateContext);
 const templateStart = html.indexOf('function crmBuildColumnO(');
 const templateEnd = html.indexOf('\nconst CRM_CUSTOMER_NOTE_TEXT_AIR',templateStart);
 vm.runInContext(html.slice(templateStart,templateEnd), templateContext);
