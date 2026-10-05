@@ -959,7 +959,7 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
 @media(max-width:640px){.kb-error-shell{padding:13px;margin-left:-4px;margin-right:-4px}.kb-error-head{align-items:center}.kb-error-head p{display:none}.kb-error-summary{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 10px;gap:8px}.kb-error-code{min-width:50px;padding:5px 6px}.kb-error-actions{align-items:stretch;flex-direction:column}.kb-error-copy{min-height:42px}.kb-tabbar{overflow-x:auto}.kb-tab{min-width:max-content}}
 @media(max-width:640px){.kb-unified-head{align-items:flex-start;flex-direction:column}.kb-unified-counts{justify-content:flex-start}.kb-unified-list{grid-template-columns:1fr}.kb-unified-copy{min-width:44px}}
 </style>
-<script src="data/latest-site-data.js?v=20261005b"></script>
+<script src="data/latest-site-data.js?v=20261005c"></script>
 <script src="data/postcode-zones.js?v=20260915"></script>
 <script>const ICON_OPTIONS = ['📅','💬','📊','🧰','👥','🚗','🛠️','📦','🧾','📍','🔧','💧','❄️','🧼','💰','📌','🗂️','🛡️','🔌','⚙️','📞','✅','⚠️','🏠','🧯','🔥','🌡️','🧊','📡','🪫','🔋','📋','🗃️','📁','🛒','🎯','⭐','🏷️','🧑‍🔧','🚚','🚀','🧠','🧪','🧭','🗓️','⏱️','🔔','🔒','🔓','🆘','❌','🟢','🟡','🔴','🔵','🟣','🟠','🧮','📈','📉','🛎️','🧹','🔩','🧱','🧑‍💼','👨‍🔧','👩‍🔧','🏢','🌬️','💡','🎨','🌟','🏆','💎','📝','🔍','🧩','🛰️','🗺️','🧳','🎁','🔗'];
 const COLOR_SWATCHES = ['#FF6900','#3b82f6','#16a34a','#d97706','#9333ea','#db2777','#0d9488','#ef4444','#0ea5e9','#1f2a44'];
@@ -996,6 +996,8 @@ const LATEST_SETTINGS_SEED = {
 };
 let CATS = [];
 let DATA = [];
+// Retire only these shortcut cards, not their built-in programs or Google Sheet.
+const RETIRED_CATALOG_ITEM_IDS = new Set(['item_g2f2zimm','item_9xx075sw']);
 let LAYOUT = {};
 let activeCategory = null;
 const MANAGER_CATEGORY_ID = 'cat_esfziig5';
@@ -1086,7 +1088,7 @@ return safe;
 });
 }
 function sanitizeCatalogItems(items){
-return (Array.isArray(items) ? items : []).filter(item=>item && typeof item==='object').map(item=>{
+return (Array.isArray(items) ? items : []).filter(item=>item && typeof item==='object' && !RETIRED_CATALOG_ITEM_IDS.has(item.id)).map(item=>{
 const safe = {...item};
 ['cred','credential','credentials','password','username','lastEditor','editor'].forEach(key=>delete safe[key]);
 safe.history = sanitizeHistory(safe.history);
@@ -1221,6 +1223,7 @@ CATS = sanitizeCategories(CATS);
 DATA = sanitizeCatalogItems(DATA);
 CASES = sanitizeCases(CASES);
 CATALOG_GROUPS = sanitizeCatalogGroups(CATALOG_GROUPS);
+Object.values(LAYOUT).forEach(rows=>{if(Array.isArray(rows))rows.forEach(row=>{if(Array.isArray(row.ids))row.ids=row.ids.filter(id=>!RETIRED_CATALOG_ITEM_IDS.has(id));});});
 localStorage.setItem(LS_KEY, JSON.stringify({seedVersion:LATEST_SETTINGS_SEED.version, dataExportedAt:LATEST_DATA_EXPORT, categories:CATS, items:DATA, layout:LAYOUT, catalogGroups:CATALOG_GROUPS, cases:CASES, sheetConfig:SHEET_CONFIG, dailyReports:DAILY_REPORTS}));
 }catch(e){
 showToast('บันทึกไม่สำเร็จ — พื้นที่จัดเก็บอาจเต็มหรือถูกบล็อกโดยเบราว์เซอร์');

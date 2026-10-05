@@ -5,7 +5,8 @@ if(!Array.isArray(source.categories)||!Array.isArray(source.items)||!Array.isArr
 const pick=(value,keys)=>Object.fromEntries(keys.filter(key=>value[key]!==undefined).map(key=>[key,value[key]]));
 const categories=source.categories.map(cat=>pick(cat,['id','name','icon','color','bgColor']));
 const categoryIds=new Set(categories.map(cat=>cat.id));
-const items=source.items.filter(item=>categoryIds.has(item.category)).map(item=>{
+const retiredIds=new Set(['item_g2f2zimm','item_9xx075sw']);
+const items=source.items.filter(item=>categoryIds.has(item.category)&&!retiredIds.has(item.id)).map(item=>{
  const safe=pick(item,['id','category','title','desc','url','color','bgColor','linkMonth']);
  if(/(?:password|รหัสผ่าน|username|user\s*:|pass\s*:)/i.test(safe.desc||''))safe.desc='ข้อมูลเข้าสู่ระบบ: ติดต่อผู้ดูแลระบบ';
  if(safe.url){try{const url=new URL(safe.url);if(!/^https?:$/.test(url.protocol)||url.username||url.password)safe.url='';}catch(error){safe.url='';}}
