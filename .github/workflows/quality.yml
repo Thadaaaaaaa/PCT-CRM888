@@ -29,4 +29,6 @@ jobs:
           node verify-sync.cjs
           node verify-so-post.cjs
           node verify-catalog-groups.cjs
+          node verify-public-catalog.cjs
+          node --check data/latest-site-data.js
           node --check data/catalog-groups-capacity.js

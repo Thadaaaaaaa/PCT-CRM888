@@ -126,7 +126,7 @@
    host.querySelectorAll('.cg-link-row').forEach((row,i)=>{
      const item=links[i],actions=row.querySelector('.cg-link-actions'),empty=actions.querySelector('.cg-muted');if(empty)empty.remove();
      const copy=document.createElement('button');copy.type='button';copy.className='cg-btn';copy.dataset.cgCopyText=item.id;copy.textContent='คัดลอกข้อความ';copy.setAttribute('aria-label','คัดลอกข้อความ '+item.title);copy.onclick=()=>copyText(groupItemCopyText(item),copy);actions.prepend(copy);
-     if(item.desc){const desc=document.createElement('button');desc.type='button';desc.className='cg-btn';desc.dataset.cgCopyDesc=item.id;desc.textContent='คัดลอกคำอธิบาย';desc.onclick=()=>copyText(item.desc,desc);actions.insertBefore(desc,copy.nextSibling);}
+     if(item.desc){const desc=document.createElement('button');desc.type='button';desc.className='cg-btn';desc.dataset.cgCopyDesc=item.id;desc.textContent='คัดลอกเนื้อหา';desc.setAttribute('aria-label','คัดลอกเนื้อหา '+item.title);desc.onclick=()=>copyText(item.desc,desc);actions.insertBefore(desc,copy.nextSibling);}
    });
    const search=document.createElement('label');search.className='cg-group-search';search.innerHTML='<span>ค้นหาลิงก์ในกลุ่ม</span><input type="search" placeholder="ชื่อไฟล์ เดือน หรือคำสำคัญ" aria-label="ค้นหาลิงก์ในกลุ่ม"><small role="status"></small>';
    host.querySelector('.cg-links').before(search);
@@ -153,7 +153,7 @@
    if(!allowedGroup(group))return;
    const text=groupCopyText(group,links),host=showDialog(header('คัดลอกกลุ่ม',group.name)+'<div class="cg-copy-options"><button class="cg-btn" type="button" data-cg-copy-name>คัดลอกชื่อกลุ่ม</button><button class="cg-btn" type="button" data-cg-copy-description '+(!group.description?'disabled':'')+'>คัดลอกคำอธิบาย</button><button class="cg-btn cg-primary" type="button" data-cg-copy-links '+(!text?'disabled':'')+'>คัดลอกทุกลิงก์พร้อมชื่อไฟล์</button></div><p class="cg-muted">คัดลอกทุกลิงก์ในกลุ่ม เรียงเดือนล่าสุดก่อน · คัดลอกเฉพาะไฟล์ได้เมื่อเปิดกลุ่ม</p>');
    host.setAttribute('aria-label','คัดลอกข้อมูลกลุ่ม');host.querySelector('[data-cg-copy-name]').onclick=event=>copyText(group.name,event.currentTarget);host.querySelector('[data-cg-copy-description]').onclick=event=>copyText(group.description,event.currentTarget);host.querySelector('[data-cg-copy-links]').onclick=event=>copyText(text,event.currentTarget);
-   host.querySelector('[data-cg-copy-links]').textContent='คัดลอกทั้งหมดในกลุ่ม';host.querySelector('.cg-muted').textContent='คัดลอกชื่อ คำอธิบาย และลิงก์ของทุกรายการ รวมรายการที่เป็นข้อความหรือที่อยู่ · เรียงเดือนล่าสุดก่อน';
+   host.querySelector('[data-cg-copy-description]').textContent='คัดลอกเนื้อหากลุ่ม';host.querySelector('[data-cg-copy-links]').textContent='คัดลอกทั้งหมดในกลุ่ม';host.querySelector('.cg-muted').textContent='คัดลอกชื่อ คำอธิบาย และลิงก์ของทุกรายการ รวมรายการที่เป็นข้อความหรือที่อยู่ · เรียงเดือนล่าสุดก่อน';
  }
  function groupCard(group,cat,index){
    const links=members(group,index),latest=links.find(item=>period(item));const card=document.createElement('section');card.className='card cg-group-card';card.dataset.groupId=group.id;card.style.setProperty('--c',cat.color);card.style.setProperty('--cg-accent',cat.color);
