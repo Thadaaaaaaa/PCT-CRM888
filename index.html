@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>PCT x Xiaomi Fleet Operations Hub</title>
 <link rel="stylesheet" href="data/quick-access.css?v=20261005">
+<link rel="stylesheet" href="data/catalog-groups-capacity.css?v=20261005a">
 <!-- ===== PWA / Mobile App ===== -->
 <meta name="theme-color" content="#FF6900">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1005,6 +1006,17 @@ let currentCatBg = null;
 let reorderMode = false;
 let dragId = null;
 let CASES = [];
+let CATALOG_GROUPS = [];
+function sanitizeCatalogGroups(groups){
+const items = new Map(DATA.map(item=>[item.id,item]));
+const usedIds = new Set(), usedMembers = new Set();
+return (Array.isArray(groups)?groups:[]).filter(group=>group && typeof group==='object' && typeof group.id==='string' && typeof group.category==='string' && String(group.name||'').trim() && CATS.some(cat=>cat.id===group.category)).slice(0,100).flatMap(group=>{
+if(usedIds.has(group.id)) return [];
+usedIds.add(group.id);
+const memberIds = (Array.isArray(group.memberIds)?group.memberIds:[]).filter(id=>typeof id==='string' && items.has(id) && items.get(id).category===group.category && !usedMembers.has(id) && usedMembers.add(id));
+return [{id:group.id.slice(0,150),category:group.category,name:String(group.name).trim().slice(0,100),description:String(group.description||'').slice(0,1000),memberIds}];
+});
+}
 const PCT_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwrhRqiS1gTyUqDD7xvBIT5ATi3P425qLwKU8jvuwX1luUlqa2KhjDdDNwrQpoS3ioZ/exec';
 const PCT_RETIRED_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxLUoq_OCTXKKEkTaSvtegOTr1l3PKefmtvj-OlP7E-Ir7qZtq8fOxPmJxbwZkpNxrtgA/exec';
 const PCT_SHEET_URL_KEY = 'pctDashboardWebAppUrl_v2';
@@ -1166,6 +1178,7 @@ LAYOUT[catId].push({label:seedRow.label,ids:[...(seedRow.ids||[])]});
 if(Array.isArray(LAYOUT.claims)) LAYOUT.claims.forEach(row=>{ row.ids = (row.ids||[]).filter(id=>!removedReportIds.has(id)); });
 DATA = sanitizeCatalogItems(DATA);
 if(useLatestDataExport){ DATA.forEach(function(item){ if(Object.prototype.hasOwnProperty.call(LATEST_LINKS,item.id)) item.url = LATEST_LINKS[item.id]; }); }
+CATALOG_GROUPS = sanitizeCatalogGroups((parsed && parsed.catalogGroups) || PUBLIC_DATA_PAYLOAD.catalogGroups || []);
 CASES = sanitizeCases((useLatestDataExport && Array.isArray(PUBLIC_DATA_PAYLOAD.cases)) ? PUBLIC_DATA_PAYLOAD.cases : ((parsed && Array.isArray(parsed.cases)) ? parsed.cases : []));
 SHEET_CONFIG = useLatestDataExport ? {...SHEET_CONFIG, ...(PUBLIC_DATA_PAYLOAD.sheetConfig || {})} : ((parsed && parsed.sheetConfig) ? {...SHEET_CONFIG, ...parsed.sheetConfig} : SHEET_CONFIG);
 SHEET_CONFIG.webAppUrl = pctNormalizeSheetUrl(SHEET_CONFIG.webAppUrl);
@@ -1188,7 +1201,8 @@ localStorage.setItem(PCT_SHEET_URL_KEY, SHEET_CONFIG.webAppUrl);
 CATS = sanitizeCategories(CATS);
 DATA = sanitizeCatalogItems(DATA);
 CASES = sanitizeCases(CASES);
-localStorage.setItem(LS_KEY, JSON.stringify({seedVersion:LATEST_SETTINGS_SEED.version, dataExportedAt:LATEST_DATA_EXPORT, categories:CATS, items:DATA, layout:LAYOUT, cases:CASES, sheetConfig:SHEET_CONFIG, dailyReports:DAILY_REPORTS}));
+CATALOG_GROUPS = sanitizeCatalogGroups(CATALOG_GROUPS);
+localStorage.setItem(LS_KEY, JSON.stringify({seedVersion:LATEST_SETTINGS_SEED.version, dataExportedAt:LATEST_DATA_EXPORT, categories:CATS, items:DATA, layout:LAYOUT, catalogGroups:CATALOG_GROUPS, cases:CASES, sheetConfig:SHEET_CONFIG, dailyReports:DAILY_REPORTS}));
 }catch(e){
 showToast('บันทึกไม่สำเร็จ — พื้นที่จัดเก็บอาจเต็มหรือถูกบล็อกโดยเบราว์เซอร์');
 }
@@ -2078,7 +2092,7 @@ showToast('ข้อมูล Manager ต้องปลดล็อกก่อ
 }
 const payload = {
 version:4, exportedAt:Date.now(),
-categories:sanitizeCategories(CATS), items:sanitizeCatalogItems(DATA), layout:LAYOUT,
+categories:sanitizeCategories(CATS), items:sanitizeCatalogItems(DATA), layout:LAYOUT, catalogGroups:sanitizeCatalogGroups(CATALOG_GROUPS),
 cases:sanitizeCases(CASES), sheetConfig:SHEET_CONFIG, dailyReports:DAILY_REPORTS
 };
 const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
@@ -2096,7 +2110,8 @@ return {
 version:4,
 exportedAt:Date.now(),
 categories:sanitizeCategories(CATS).map(({id,name,icon,color,bgColor})=>({id,name,icon,color,bgColor:bgColor||null})),
-items:sanitizeCatalogItems(managerGateIsOpen() ? DATA : getSearchableCatalogItems()).map(({id,category,title,desc,url,color,bgColor})=>({id,category,title,desc:desc||'',url:url||'',color:color||null,bgColor:bgColor||null})),
+items:sanitizeCatalogItems(managerGateIsOpen() ? DATA : getSearchableCatalogItems()).map(({id,category,title,desc,url,color,bgColor,linkMonth})=>({id,category,title,desc:desc||'',url:url||'',color:color||null,bgColor:bgColor||null,...(linkMonth?{linkMonth}:{} )})),
+catalogGroups:sanitizeCatalogGroups(CATALOG_GROUPS).filter(group=>managerGateIsOpen() || !isManagerCategory(group.category)),
 layout:JSON.parse(JSON.stringify(Object.fromEntries(Object.entries(LAYOUT||{}).filter(([catId])=>managerGateIsOpen() || !isManagerCategory(catId)))))
 };
 }
@@ -2126,6 +2141,7 @@ return;
 CATS = sanitizeCategories(payload.categories);
 DATA = sanitizeCatalogItems(payload.items);
 LAYOUT = payload.layout || {};
+CATALOG_GROUPS = sanitizeCatalogGroups(Array.isArray(payload.catalogGroups) ? payload.catalogGroups : CATALOG_GROUPS);
 // Newer fields — fall back to current values if the imported file predates them (e.g. older exports).
 CASES = Array.isArray(payload.cases) ? sanitizeCases(payload.cases) : sanitizeCases(CASES);
 SHEET_CONFIG = payload.sheetConfig ? {...SHEET_CONFIG, ...payload.sheetConfig} : SHEET_CONFIG;
@@ -3178,20 +3194,23 @@ const RULES = [
 { key:'picture',words:['picture in case','picture'] },
 ];
 function detectCols(headers){
-const norm = headers.map(h => h.replace(/[\r\n]+/g,' ').trim().toLowerCase());
+const norm = headers.map(h => String(h||'').replace(/["“”]/g,'').replace(/[\r\n\\/]+/g,' ').replace(/\s+/g,' ').trim().toLowerCase());
 const map = {};
 const engCols = [];
-let dateCount = 0;
+const legacyDateCols = [];
 norm.forEach((h,i) => {
 // Engineers — collect all
 if(h.includes('engineer') || (h.includes('工程师') && !h.includes('team'))){
 engCols.push(i); return;
 }
-// Date — first = date, second = time
-if(h.includes('上门日期')){
-dateCount++;
-if(dateCount===1) map.date = i;
-if(dateCount===2) map.time = i;
+// Explicit appointment-time headers take precedence over old duplicated date headers.
+if(h.includes('上门时间') || /^(?:time|appointment time)(?:\s|$)/.test(h) || h==='เวลานัดหมาย'){
+if(map.time===undefined) map.time = i;
+return;
+}
+if(h.includes('上门日期') || h==='date' || h==='date appointment' || h==='appointment date' || h==='วันที่นัดหมาย'){
+legacyDateCols.push(i);
+if(map.date===undefined) map.date = i;
 return;
 }
 for(const r of RULES){
@@ -3204,6 +3223,7 @@ for(const w of r.words){ if(h.includes(w)){ map[r.key]=i; return; } }
 }
 }
 });
+if(map.time===undefined && legacyDateCols.length>1) map.time=legacyDateCols[1];
 map.engCols = engCols;
 return map;
 }
@@ -6134,6 +6154,7 @@ mnavSync();</script>
 })();
 </script>
 <script src="data/quick-access.js?v=20261005"></script>
+<script src="data/catalog-groups-capacity.js?v=20261005a"></script>
 </body>
 </html>
 

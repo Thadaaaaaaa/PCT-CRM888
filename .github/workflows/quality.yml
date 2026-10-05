@@ -27,3 +27,5 @@ jobs:
           node verify-performance.cjs
           node verify-quick-access.cjs
           node verify-sync.cjs
+          node verify-so-post.cjs
+          node --check data/catalog-groups-capacity.js
