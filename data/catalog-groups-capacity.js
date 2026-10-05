@@ -147,12 +147,31 @@
    main.querySelectorAll('.row-block').forEach(block=>{if(!block.querySelector('.row-flex > .card'))block.hidden=true;});
  }
  function getCapacityUrl(){let stored='';try{stored=localStorage.getItem(CAPACITY_KEY)||'';}catch(error){}return sheetUrl(stored)||sheetUrl(CAPACITY_URL);}
+ function lockCapacityScroll(locked){
+   // Cross-origin Sheets cannot expose wheel events to CRM. Lock only the
+   // parent scroll container while interacting with the embedded table.
+   document.documentElement.classList.toggle('pct-cap-scroll-locked',!!locked);
+ }
+ function installCapacityScroll(area){
+   area.addEventListener('pointerenter',()=>lockCapacityScroll(true));
+   area.addEventListener('pointerleave',event=>{if(event.pointerType!=='touch')lockCapacityScroll(false);});
+   area.addEventListener('pointercancel',()=>lockCapacityScroll(false));
+   document.addEventListener('pointerdown',event=>{if(!area.contains(event.target))lockCapacityScroll(false);},true);
+   document.addEventListener('wheel',event=>{if(!area.contains(event.target))lockCapacityScroll(false);},{passive:true,capture:true});
+   document.addEventListener('focusin',event=>lockCapacityScroll(area.contains(event.target)));
+   document.addEventListener('keydown',event=>{if(event.key==='Escape')lockCapacityScroll(false);});
+   document.addEventListener('visibilitychange',()=>{if(document.hidden)lockCapacityScroll(false);});
+   window.addEventListener('blur',()=>{if(document.activeElement!==capacityFrame)lockCapacityScroll(false);});
+   window.addEventListener('pagehide',()=>lockCapacityScroll(false));
+ }
  function loadCapacity(refresh){
    if(!capacityHost)return;const area=capacityHost.querySelector('[data-cap-frame]');
    if(capacityFrame&&!refresh)return;
    const url=new URL(getCapacityUrl());url.searchParams.set('rm','minimal');
    if(refresh)url.searchParams.set('_pct_refresh',Date.now());
    const frame=document.createElement('iframe');frame.title='Order Capacity — Google Sheet';frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads');frame.src=url.href;
+   frame.addEventListener('focus',()=>lockCapacityScroll(true));
+   frame.addEventListener('blur',()=>lockCapacityScroll(false));
    area.replaceChildren(frame);capacityFrame=frame;
  }
  function installCapacity(){
@@ -160,15 +179,20 @@
    capacityHost=document.createElement('section');capacityHost.className='pct-capacity-host';capacityHost.hidden=true;
    capacityHost.innerHTML='<details class="pct-capacity"><summary><span class="pct-cap-icon">▦</span><span><strong>Capacity <span class="pct-cap-badge">LIVE</span></strong><small>ตารางรถและทีมติดตั้ง · Google Sheet</small></span><span class="pct-cap-chevron">⌄</span></summary><div class="pct-cap-body"><div class="cg-toolbar"><a class="cg-btn" data-cap-open target="_blank" rel="noopener noreferrer">เปิดชีตเต็ม ↗</a><button class="cg-btn" type="button" data-cap-refresh>↻ โหลดตารางใหม่</button><button class="cg-btn cg-primary" type="button" data-cap-copy>คัดลอก Template เคส</button><label class="pct-cap-zoom">มุมมอง <select data-cap-zoom aria-label="ขนาดมุมมอง Capacity"><option value="0.5">50%</option><option value="0.65">65%</option><option value="0.75">75%</option><option value="1">100%</option></select></label></div><div class="pct-cap-frame" data-cap-frame style="--cap-scale:.5;--cap-size:200%"></div><p class="cg-muted">เริ่มต้นที่ 50% เพื่อเห็นทะเบียนรถได้มากขึ้น · เลื่อนตารางแนวนอนเพื่อดูรถที่อยู่ด้านขวา · แก้ไข Template ได้ในเคสด้านล่าง</p><details class="pct-cap-settings"><summary>เปลี่ยนลิงก์แท็บ Capacity</summary><form><label>ลิงก์ Google Sheet พร้อม gid ของแท็บ<input type="url" data-cap-url required></label><button class="cg-btn" type="submit">บันทึกลิงก์</button><p class="cg-message" role="alert"></p></form></details></div></details>';
    main.before(capacityHost);const details=capacityHost.querySelector('.pct-capacity');
+   const summary=details.querySelector('summary'),body=capacityHost.querySelector('.pct-cap-body');
+   body.id='pct-capacity-body';summary.setAttribute('aria-controls',body.id);summary.setAttribute('aria-expanded','false');
+   capacityHost.querySelector('.pct-cap-icon').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4m8-4v4M3 10h18M10 21H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"/><path d="M7 14h3m-3 3h2"/><circle cx="17" cy="17" r="5"/><path d="M17 14v3l2 1"/></svg>';
+   const toggle=capacityHost.querySelector('.pct-cap-chevron');toggle.innerHTML='<span data-cap-toggle-label>แสดงตาราง</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg>';
+   installCapacityScroll(capacityHost.querySelector('[data-cap-frame]'));
    const openLink=capacityHost.querySelector('[data-cap-open]');openLink.href=getCapacityUrl();
    capacityHost.querySelector('[data-cap-url]').value=getCapacityUrl();
-   details.addEventListener('toggle',()=>{if(details.open)loadCapacity(false);});
+   details.addEventListener('toggle',()=>{summary.setAttribute('aria-expanded',String(details.open));toggle.querySelector('[data-cap-toggle-label]').textContent=details.open?'ซ่อนตาราง':'แสดงตาราง';if(details.open)loadCapacity(false);else lockCapacityScroll(false);});
    capacityHost.querySelector('[data-cap-refresh]').onclick=()=>loadCapacity(true);
    capacityHost.querySelector('[data-cap-copy]').onclick=event=>copyText(crmBuildColumnO(crmDraft),event.currentTarget);
    capacityHost.querySelector('[data-cap-zoom]').onchange=event=>{const scale=Number(event.target.value);if(![.5,.65,.75,1].includes(scale))return;const area=capacityHost.querySelector('[data-cap-frame]');area.style.setProperty('--cap-scale',scale);area.style.setProperty('--cap-size',(100/scale)+'%');};
    capacityHost.querySelector('form').onsubmit=event=>{event.preventDefault();const url=sheetUrl(capacityHost.querySelector('[data-cap-url]').value);const message=capacityHost.querySelector('.cg-message');if(!url){message.textContent='กรุณาใช้ลิงก์ https://docs.google.com/spreadsheets/d/…/edit พร้อม gid ที่เป็นตัวเลข';return;}try{localStorage.setItem(CAPACITY_KEY,url);}catch(error){message.textContent='บันทึกไม่ได้ เบราว์เซอร์ปิดการจัดเก็บข้อมูล';return;}message.textContent='บันทึกลิงก์แล้ว';openLink.href=url;capacityHost.querySelector('[data-cap-url]').value=url;loadCapacity(true);};
  }
- function syncCapacity(){if(capacityHost)capacityHost.hidden=activeCategory!=='cust'||!!(document.getElementById('ask').value||'').trim()||!document.querySelector('#main .crm-panel');}
+ function syncCapacity(){if(capacityHost){capacityHost.hidden=activeCategory!=='cust'||!!(document.getElementById('ask').value||'').trim()||!document.querySelector('#main .crm-panel');if(capacityHost.hidden)lockCapacityScroll(false);}}
  function afterRender(){decorateGroups();syncCapacity();}
  seed();installCapacity();
  const baseRender=window.render;window.render=function(){const result=baseRender.apply(this,arguments);afterRender();return result;};
