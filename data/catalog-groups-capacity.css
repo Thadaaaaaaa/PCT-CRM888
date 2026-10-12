@@ -64,3 +64,16 @@ body .pct-cap-chevron{display:inline-flex;align-items:center;justify-content:cen
 .cg-copy-group{position:absolute;right:49px;top:16px;border:1px solid var(--line);background:var(--panel);border-radius:8px;width:30px;height:30px;color:var(--muted);cursor:pointer;display:grid;place-items:center}.cg-copy-group svg{width:17px;height:17px}
 .cg-copy-group:hover,.cg-edit-group:hover{color:var(--orange-dark);border-color:var(--orange)}.cg-group-top .cg-count{margin-right:68px}.cg-copy-options{display:grid;gap:10px}.cg-copy-options button{justify-content:flex-start}.cg-btn:disabled{opacity:.5;cursor:not-allowed}
 .cg-group-search{display:block;margin-top:12px;font-size:12px;color:var(--muted)}.cg-group-search input{display:block;width:100%;padding:11px 12px;margin:7px 0;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:14px;background:var(--panel);color:var(--text)}.cg-group-search small{font-size:11px}.cg-link-row[hidden]{display:none}
+
+/* Direct Sheet access stays visible while Capacity is collapsed. */
+.pct-cap-title{min-width:0}
+.pct-cap-header-actions{display:flex;align-items:center;gap:9px;margin-left:auto;flex-shrink:0}
+.pct-cap-open-sheet{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:7px 11px;border:1px solid #ffd0ad;border-radius:10px;background:#fff7f0;color:#c2410c;text-decoration:none;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap;transition:background-color .16s ease,border-color .16s ease,transform .12s ease,box-shadow .16s ease}
+.pct-cap-open-sheet:hover{background:#ffeddc;border-color:#fb923c;box-shadow:0 2px 8px rgba(194,65,12,.12)}
+.pct-cap-open-sheet:focus-visible{outline:3px solid #fb923c;outline-offset:2px}
+.pct-cap-open-sheet:active{transform:translateY(1px)}
+.pct-cap-open-sheet[aria-disabled=true]{opacity:.58;cursor:not-allowed;pointer-events:none}
+.pct-cap-header-actions .pct-cap-chevron{margin-left:0}
+@media(max-width:620px){.pct-capacity>summary{flex-wrap:wrap}.pct-cap-header-actions{width:100%;margin-left:0;justify-content:flex-end}.pct-cap-header-actions .pct-cap-open-sheet,.pct-cap-header-actions .pct-cap-chevron{min-height:44px}}
+@media(max-width:480px){.pct-cap-header-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.pct-cap-header-actions .pct-cap-open-sheet,.pct-cap-header-actions .pct-cap-chevron{width:100%;min-width:0;min-height:46px;padding:8px 9px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.pct-cap-open-sheet{transition:none}}
