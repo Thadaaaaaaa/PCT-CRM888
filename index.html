@@ -2411,22 +2411,22 @@ lines.push('');
 lines.push(CRM_REMINDER_TEXT);
 return lines.join('\n');
 }
-const CRM_CUSTOMER_NOTE_TEXT_AIR = 'หมายเหตุ:\n- หากเป็นจุดติดตั้งใหม่ รบกวนเตรียมเมนไฟไว้หน้างานติดตั้ง\n- หากเข้าติดตั้งไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n- แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่ออุปกรณ์ให้ใช้งานได้เต็มประสิทธิภาพ\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
-const CRM_CUSTOMER_NOTE_TEXT_WASHER = 'หมายเหตุ:\n- หากเข้าติดตั้งไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n- แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่ออุปกรณ์ให้ใช้งานได้เต็มประสิทธิภาพ\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
-const CRM_CUSTOMER_NOTE_TEXT_REPAIR = 'หมายเหตุ:\n- หากเข้าซ่อมไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
+const CRM_CUSTOMER_NOTE_TEXT_AIR = 'หมายเหตุ:\n- หากเป็นจุดติดตั้งใหม่ รบกวนเตรียมเมนไฟไว้หน้างานติดตั้ง\n- หากเข้าติดตั้งไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n- แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่ออุปกรณ์ให้ใช้งานได้เต็มประสิทธิภาพ\n- แนะนำให้ลูกค้าหรือผู้แทนอยู่ตรวจสอบและยืนยันความเรียบร้อยหลังการติดตั้ง\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
+const CRM_CUSTOMER_NOTE_TEXT_WASHER = 'หมายเหตุ:\n- หากเป็นจุดติดตั้งใหม่ รบกวนเตรียมเมนไฟไว้หน้างานติดตั้ง\n- หากเข้าติดตั้งไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n- แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่ออุปกรณ์ให้ใช้งานได้เต็มประสิทธิภาพ\n- แนะนำให้ลูกค้าหรือผู้แทนอยู่ตรวจสอบและยืนยันความเรียบร้อยหลังการติดตั้ง\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
+const CRM_CUSTOMER_NOTE_TEXT_REPAIR = 'หมายเหตุ:\n- หากเข้าซ่อมไม่ได้ตามเวลานัด ช่างจำเป็นต้องไปจุดถัดไปตามกำหนดเวลา รบกวนเตรียมพื้นที่ให้พร้อมก่อนเวลานัด\n- แนะนำติดตั้งแอป Mi Home เพื่อเชื่อมต่ออุปกรณ์ให้ใช้งานได้เต็มประสิทธิภาพ\n- แนะนำให้ลูกค้าหรือผู้แทนอยู่ตรวจสอบและยืนยันความเรียบร้อยหลังงานซ่อม\n\n**ค่าใช้จ่ายเพิ่มเติมหน้างาน (ถ้ามี) ต้อง Scan QR Code บัญชีของบริษัทเท่านั้น**';
 const CRM_LINE_LANGUAGES = {
 th:{label:'ไทย',flag:'🇹🇭'}, en:{label:'English',flag:'🇬🇧'}, zh:{label:'中文',flag:'🇨🇳'}
 };
 const CRM_CUSTOMER_NOTES_I18N = {
 en:{
-air:'Notes:\n- For a new installation point, please have the main electrical supply ready at the installation site.\n- If installation cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n- We recommend installing the Mi Home app to access all device features.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**',
-washer:'Notes:\n- If installation cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n- We recommend installing the Mi Home app to access all device features.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**',
-repair:'Notes:\n- If the inspection cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**'
+air:'Notes:\n- For a new installation point, please have the main electrical supply ready at the installation site.\n- If installation cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n- We recommend installing the Mi Home app to access all device features.\n- We recommend that the customer or their representative be present to inspect and confirm the completed installation.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**',
+washer:'Notes:\n- For a new installation point, please have the main electrical supply ready at the installation site.\n- If installation cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n- We recommend installing the Mi Home app to access all device features.\n- We recommend that the customer or their representative be present to inspect and confirm the completed installation.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**',
+repair:'Notes:\n- If the repair cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n- We recommend installing the Mi Home app to access all device features.\n- We recommend that the customer or their representative be present to inspect and confirm the completed repair.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**'
 },
 zh:{
-air:'注意事项：\n- 如为新安装位置，请提前准备好安装点的主电源。\n- 如无法按预约时间开始安装，技术人员需按计划前往下一服务地点。请在预约前准备好安装区域。\n- 建议安装米家（Mi Home）应用，以便使用设备的完整功能。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**',
-washer:'注意事项：\n- 如无法按预约时间开始安装，技术人员需按计划前往下一服务地点。请在预约前准备好安装区域。\n- 建议安装米家（Mi Home）应用，以便使用设备的完整功能。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**',
-repair:'注意事项：\n- 如无法按预约时间开始检修，技术人员需按计划前往下一服务地点。请在预约前准备好现场。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**'
+air:'注意事项：\n- 如为新的安装位置，请提前准备好安装点的主电源。\n- 如无法按预约时间开始安装，技术人员需按计划前往下一服务地点。请在预约前准备好安装区域。\n- 建议安装米家（Mi Home）应用，以便充分使用设备功能。\n- 建议客户或其代表在场检查并确认安装完成情况。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**',
+washer:'注意事项：\n- 如为新的安装位置，请提前准备好安装点的主电源。\n- 如无法按预约时间开始安装，技术人员需按计划前往下一服务地点。请在预约前准备好安装区域。\n- 建议安装米家（Mi Home）应用，以便充分使用设备功能。\n- 建议客户或其代表在场检查并确认安装完成情况。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**',
+repair:'注意事项：\n- 如无法按预约时间开始维修，技术人员需按计划前往下一服务地点。请在预约前准备好现场。\n- 建议安装米家（Mi Home）应用，以便充分使用设备功能。\n- 建议客户或其代表在场检查并确认维修完成情况。\n\n**如现场产生额外费用，仅可扫描本公司账户二维码付款。**'
 }
 };
 function crmBuildLineMessage(c, language){
