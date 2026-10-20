@@ -670,8 +670,41 @@ input:not([type=checkbox]):not([type=radio]),select{min-height:42px}
 .crm-section-title::after{background:color-mix(in srgb,var(--line) 75%,transparent)}
 .crm-actions-row{gap:10px;margin-top:20px}
 .crm-actions-row .btn{min-height:44px}
+.crm-action-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,300px);align-items:start;gap:12px;margin-top:20px}
+.crm-action-tools>.crm-actions-row,.crm-action-tools>.crm-reason-codes{margin-top:0}
+.crm-action-tools>.crm-reason-codes{width:100%;align-self:start}
+.crm-action-tools.reason-expanded{grid-template-columns:minmax(0,1fr)}
+.crm-action-tools.reason-expanded>.crm-reason-codes{grid-column:1/-1}
+@media(max-width:900px){.crm-action-tools{grid-template-columns:1fr}.crm-action-tools>.crm-reason-codes{max-width:none}}
 .crm-line-language button{min-height:40px}
 .crm-line-copy-btn{min-height:46px}
+.crm-reason-codes{margin-top:20px;border:1px solid #2563eb;border-radius:12px;background:#fff;overflow:hidden}
+.crm-reason-header{display:flex;align-items:center;gap:8px;padding:8px 10px 8px 14px;background:#2563eb}
+.crm-reason-toggle{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0;border:0;background:transparent;color:#fff;text-align:left;font:inherit;cursor:pointer}
+.crm-reason-toggle>span:first-child{display:flex;flex-direction:column;gap:3px}
+.crm-reason-toggle b{font-size:12.5px}
+.crm-reason-toggle small{font-size:11px;line-height:1.4;color:rgba(255,255,255,.82)}
+.crm-reason-chevron{margin-left:auto;color:#fff;transition:transform .15s}
+.crm-reason-codes.expanded .crm-reason-chevron{transform:rotate(180deg)}
+.crm-reason-edit{min-height:38px;padding:6px 11px;font-size:11.5px;flex:0 0 auto}
+.crm-reason-edit.btn.secondary{background:#fff;color:#1d4ed8;border-color:#dbeafe}
+.crm-reason-edit.btn.secondary:hover{background:#eff6ff;color:#1e40af}
+.crm-reason-content{border-top:1px solid var(--line);padding:12px}
+.crm-reason-add{display:flex;gap:8px;margin-bottom:10px}
+.crm-reason-add[hidden]{display:none}
+.crm-reason-add input{flex:1;min-width:0;padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);font:inherit;font-size:12px}
+.crm-reason-add .btn{min-height:40px}
+.crm-reason-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px}
+.crm-reason-empty{grid-column:1/-1;padding:12px;color:var(--muted);font-size:12px;text-align:center}
+.crm-reason-row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel)}
+.crm-reason-row code{font:600 11.5px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--text);overflow-wrap:anywhere}
+.crm-reason-row-actions{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.crm-reason-copy{min-height:36px;padding:6px 10px;font-size:11px;flex:0 0 auto}
+.crm-reason-delete{min-width:36px;min-height:36px;padding:4px 8px;border:1px solid #fecaca;border-radius:8px;background:#fff;color:#b91c1c;cursor:pointer}
+.crm-reason-delete:hover{background:#fef2f2}
+.crm-reason-codes.editing .crm-reason-row{border-color:color-mix(in srgb,var(--orange) 25%,var(--line))}
+.crm-reason-header button:focus-visible,.crm-reason-row button:focus-visible,.crm-reason-add input:focus-visible{outline:3px solid color-mix(in srgb,var(--orange) 35%,transparent);outline-offset:2px}
+@media(max-width:620px){.crm-reason-header{align-items:flex-start;padding:10px}.crm-reason-edit{min-height:42px}.crm-reason-list{grid-template-columns:1fr}.crm-reason-row{gap:8px}.crm-reason-row code{font-size:11px}.crm-reason-add{flex-direction:column}.crm-reason-add .btn{min-height:44px}}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid color-mix(in srgb,var(--orange) 35%,transparent)!important;outline-offset:2px}
 @media(max-width:900px){
   .row-flex{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
@@ -2417,6 +2450,67 @@ const CRM_CUSTOMER_NOTE_TEXT_REPAIR = 'หมายเหตุ:\n- หากเ
 const CRM_LINE_LANGUAGES = {
 th:{label:'ไทย',flag:'🇹🇭'}, en:{label:'English',flag:'🇬🇧'}, zh:{label:'中文',flag:'🇨🇳'}
 };
+const CRM_STANDARD_REASON_CODES_KEY = 'pctStandardReasonCodes_v1';
+const CRM_STANDARD_REASON_CODES_DEFAULT = [
+'RS02 - Customer Requested New Date/Time',
+'RS03 - Unable to Contact Customer',
+'RS05 - Site Not Ready',
+'RS11 - Additional Work / Site Condition',
+'RS12 - Customer Cancelled / Postponed',
+'AC01 - Installation Area Not Ready',
+'AC03 - Electrical System Not Ready'
+];
+function crmNormalizeReasonCodes(values){
+if(!Array.isArray(values)) return [...CRM_STANDARD_REASON_CODES_DEFAULT];
+const seen=new Set(), result=[];
+values.forEach(value=>{
+const code=String(value||'').trim().slice(0,160);
+const key=code.toLocaleLowerCase();
+if(code&&!seen.has(key)&&result.length<100){seen.add(key);result.push(code);}
+});
+return result;
+}
+function crmLoadReasonCodes(){
+try{const raw=localStorage.getItem(CRM_STANDARD_REASON_CODES_KEY);if(raw!==null)return crmNormalizeReasonCodes(JSON.parse(raw));}catch(error){}
+return [...CRM_STANDARD_REASON_CODES_DEFAULT];
+}
+let CRM_STANDARD_REASON_CODES=crmLoadReasonCodes();
+function crmRenderReasonCodes(panel,editing){
+const list=panel.querySelector('#crmReasonList');
+if(!list)return;
+list.innerHTML=CRM_STANDARD_REASON_CODES.length?CRM_STANDARD_REASON_CODES.map((code,index)=>`<div class="crm-reason-row"><code>${escapeHtml(code)}</code><div class="crm-reason-row-actions"><button type="button" class="btn secondary crm-reason-copy" data-reason-copy="${index}" aria-label="คัดลอก ${escapeAttr(code)}">คัดลอก</button>${editing?`<button type="button" class="crm-reason-delete" data-reason-delete="${index}" aria-label="ลบ ${escapeAttr(code)}" title="ลบรหัสนี้">ลบ</button>`:''}</div></div>`).join(''):'<div class="crm-reason-empty">ยังไม่มีรหัสเหตุผล — กด “แก้ไข” เพื่อเพิ่มรายการ</div>';
+}
+function crmSetupReasonCodes(panel){
+let expanded=false,editing=false;
+const box=panel.querySelector('.crm-reason-codes'),tools=box.closest('.crm-action-tools'),toggle=panel.querySelector('#crmReasonToggle'),edit=panel.querySelector('#crmReasonEditBtn'),content=panel.querySelector('#crmReasonContent'),form=panel.querySelector('#crmReasonAddForm'),input=panel.querySelector('#crmReasonNewCode');
+const refresh=()=>{
+box.classList.toggle('expanded',expanded);box.classList.toggle('editing',editing);
+tools.classList.toggle('reason-expanded',expanded);
+toggle.setAttribute('aria-expanded',String(expanded));content.hidden=!expanded;form.hidden=!editing;
+edit.setAttribute('aria-pressed',String(editing));edit.textContent=editing?'✓ เสร็จสิ้น':'✎ แก้ไข';
+crmRenderReasonCodes(panel,editing);
+};
+const save=next=>{
+const normalized=crmNormalizeReasonCodes(next);
+try{localStorage.setItem(CRM_STANDARD_REASON_CODES_KEY,JSON.stringify(normalized));}
+catch(error){showToast('บันทึกรหัสไม่สำเร็จ — ตรวจสอบพื้นที่จัดเก็บของเบราว์เซอร์');return false;}
+CRM_STANDARD_REASON_CODES=normalized;crmRenderReasonCodes(panel,editing);return true;
+};
+toggle.onclick=()=>{expanded=!expanded;refresh();};
+edit.onclick=()=>{editing=!editing;if(editing)expanded=true;refresh();if(editing)input.focus();};
+form.onsubmit=event=>{
+event.preventDefault();const value=input.value.trim();if(!value){input.focus();return;}
+if(CRM_STANDARD_REASON_CODES.some(code=>code.toLocaleLowerCase()===value.toLocaleLowerCase())){showToast('มีรหัสนี้อยู่แล้ว');input.focus();return;}
+if(CRM_STANDARD_REASON_CODES.length>=100){showToast('เพิ่มได้สูงสุด 100 รายการ');return;}
+if(save([...CRM_STANDARD_REASON_CODES,value])){input.value='';input.focus();showToast('เพิ่มรหัสแล้ว');}
+};
+input.onkeydown=event=>{if(event.key==='Escape'){input.value='';input.blur();}};
+panel.querySelector('#crmReasonList').onclick=event=>{
+const copy=event.target.closest('[data-reason-copy]');if(copy){copyText(CRM_STANDARD_REASON_CODES[Number(copy.dataset.reasonCopy)]||'',copy);return;}
+const remove=event.target.closest('[data-reason-delete]');if(remove){const index=Number(remove.dataset.reasonDelete);if(Number.isInteger(index)&&index>=0&&index<CRM_STANDARD_REASON_CODES.length){const next=CRM_STANDARD_REASON_CODES.filter((_,i)=>i!==index);if(save(next))showToast('ลบรหัสแล้ว');}}
+};
+refresh();
+}
 const CRM_CUSTOMER_NOTES_I18N = {
 en:{
 air:'Notes:\n- For a new installation point, please have the main electrical supply ready at the installation site.\n- If installation cannot begin at the appointed time, the technician must continue to the next scheduled location. Please prepare the area before the appointment.\n- We recommend installing the Mi Home app to access all device features.\n- We recommend that the customer or their representative be present to inspect and confirm the completed installation.\n\n**Any additional on-site charges must be paid only by scanning the company account QR Code.**',
@@ -2703,10 +2797,19 @@ ${c.productType==='air' ? `<div class="crm-section-title">🏠 Conseal / Conceal
 <div class="crm-survey" id="crmSurveyBox"></div>
 <div class="crm-section-title">⚙️ ข้อความมัดรวม (จะถูกบันทึกลงคอลัมน์ Q โดยอัตโนมัติ)</div>
 <div class="crm-o-preview" id="crmOPreview"></div>
+<div class="crm-action-tools">
 <div class="crm-actions-row">
 <button class="btn" id="crmSaveSendBtn">💾 บันทึกเคสและส่งเข้า Google Sheet</button>
 <button class="btn secondary" id="crmCopyOBtn">📋 คัดลอกข้อความคอลัมน์ Q</button>
 <button class="btn secondary" id="crmCopyRowBtn">📋 คัดลอกแถวสำหรับ Google Sheet</button>
+</div>
+<section class="crm-reason-codes" aria-labelledby="crmReasonTitle">
+<div class="crm-reason-header"><button type="button" class="crm-reason-toggle" id="crmReasonToggle" aria-expanded="false" aria-controls="crmReasonContent"><span><b id="crmReasonTitle">Standard Reason Codes</b><small>เลือกข้อความเพื่อคัดลอก หรือเปิดแก้ไขเพื่อเพิ่ม/ลบรหัส</small></span><span class="crm-reason-chevron" aria-hidden="true">▾</span></button><button type="button" class="btn secondary crm-reason-edit" id="crmReasonEditBtn" aria-pressed="false">✎ แก้ไข</button></div>
+<div class="crm-reason-content" id="crmReasonContent" hidden>
+<form class="crm-reason-add" id="crmReasonAddForm" hidden><input type="text" id="crmReasonNewCode" maxlength="160" placeholder="พิมพ์รหัสและข้อความที่ต้องการเพิ่ม" aria-label="รหัสเหตุผลใหม่"><button type="submit" class="btn">+ เพิ่มรหัส</button></form>
+<div class="crm-reason-list" id="crmReasonList"></div>
+</div>
+</section>
 </div>
 <div class="crm-section-title">💬 ข้อความส่งต่อ Line@ — เลือกภาษา แก้ไข และคัดลอกได้ทันที</div>
 <div class="crm-line-import"><label>วางเนื้อหาแบบเต็มเพื่อดึงข้อมูลอัตโนมัติ</label><textarea id="crmLineImport" placeholder="วางข้อความที่มี Customer, Service Order และ Model ที่นี่..."></textarea><small>ระบบจะตรวจ Customer → ชื่อลูกค้า, Service Order → SO และ Model → รุ่นสินค้า โดยไม่เปลี่ยนเนื้อหาส่วนอื่นของข้อความ</small></div>
@@ -2725,6 +2828,7 @@ ${navigator.onLine === false ? `<div class="crm-section-title">🗂️ Case Log 
 <div class="case-table-wrap" id="crmCaseTableWrap"></div>` : `<div class="crm-section-title">🛡️ Case Log ถูกซ่อนไว้ขณะออนไลน์</div><div class="hint">ข้อมูลเคสลูกค้าจะแสดงเฉพาะเมื่ออุปกรณ์อยู่ในโหมด Offline และเก็บไว้ในเครื่องนี้เท่านั้น</div>`}
 `;
 main.appendChild(panel);
+crmSetupReasonCodes(panel);
 // product type dropdown
 panel.querySelector('#crmProductType').onchange = (e)=>{
 const newType = e.target.value;
@@ -2869,6 +2973,9 @@ if(event.key==='Enter'){ event.preventDefault(); crmLoadOrderFromSheet(event.cur
 panel.querySelector('#crmSaveSendBtn').onclick = crmSaveAndSend;
 panel.querySelector('#crmCopyOBtn').onclick = (e)=>copyText(crmBuildColumnO(crmDraft), e.target);
 panel.querySelector('#crmCopyRowBtn').onclick = ()=>crmCopyRowForSheet(crmDraft);
+panel.querySelectorAll('[data-reason-code]').forEach(button=>{
+button.onclick=()=>copyText(button.dataset.reasonCode,button);
+});
 panel.querySelectorAll('#crmLineLanguage button').forEach(button=>{
 button.onclick=()=>{
 crmDraft.lineLanguage=button.dataset.lang;
