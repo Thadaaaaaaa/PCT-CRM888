@@ -826,8 +826,9 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
       <div class="breadcrumb" id="breadcrumb"></div>
       <button class="btn" id="addBtn">+<span class="lbl"> เพิ่มหัวข้อ</span></button>
       <div class="topbar-tools" id="topbarTools">
-        <button class="btn secondary topbar-more-btn" id="topbarMoreBtn" type="button" aria-expanded="false" aria-controls="topbarMenu">•••<span class="lbl"> เครื่องมือ</span></button>
-        <div class="topbar-menu" id="topbarMenu" role="menu" aria-label="เครื่องมือระบบ">
+        <button class="btn secondary topbar-more-btn" id="topbarMoreBtn" type="button" aria-expanded="false" aria-controls="topbarMenu" aria-label="ตั้งค่าระบบ" title="ตั้งค่าระบบ"><svg class="pct-settings-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M19.11,9.05 L19.51,10.32 L21.86,10.36 L21.86,13.64 L19.51,13.68 L19.11,14.95 L19.11,14.95 L18.50,16.13 L20.14,17.81 L17.81,20.14 L16.13,18.50 L14.95,19.11 L14.95,19.11 L13.68,19.51 L13.64,21.86 L10.36,21.86 L10.32,19.51 L9.05,19.11 L9.05,19.11 L7.87,18.50 L6.19,20.14 L3.86,17.81 L5.50,16.13 L4.89,14.95 L4.89,14.95 L4.49,13.68 L2.14,13.64 L2.14,10.36 L4.49,10.32 L4.89,9.05 L4.89,9.05 L5.50,7.87 L3.86,6.19 L6.19,3.86 L7.87,5.50 L9.05,4.89 L9.05,4.89 L10.32,4.49 L10.36,2.14 L13.64,2.14 L13.68,4.49 L14.95,4.89 L14.95,4.89 L16.13,5.50 L17.81,3.86 L20.14,6.19 L18.50,7.87 L19.11,9.05 Z"/><circle cx="12" cy="12" r="3.2"/></svg><span class="lbl"> ตั้งค่า</span></button>
+        <div class="topbar-menu" id="topbarMenu" role="menu" aria-label="ตั้งค่าระบบ">
+          <button class="btn secondary" id="apiSettingsBtn" type="button">🔗 การเชื่อมต่อ API ทุกหน้า</button>
           <button class="btn secondary" id="helpBtn" type="button">❓ การจัดเก็บและซิงก์ข้อมูล</button>
           <button class="btn secondary" id="exportBtn" type="button">⬇️ Export ข้อมูลสำรอง</button>
           <button class="btn secondary" id="catalogCopyBtn" type="button">📋 คัดลอกเฉพาะข้อมูลหัวข้อ</button>
@@ -970,6 +971,35 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
   </div>
 </div>
 
+<style id="pctApiSettingsStyles">
+.topbar-more-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:44px;min-height:44px}.pct-settings-icon{display:block;flex:none}
+#apiSettingsOverlay .modal{max-width:740px}#apiSettingsOverlay h3{margin-bottom:7px}.pct-api-intro{font-size:12.5px;line-height:1.7;color:var(--muted);margin:0 0 16px}
+.pct-api-card{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;background:var(--panel)}.pct-api-card h4{margin:0 0 6px;font-size:13px}.pct-api-card .field{margin:10px 0}.pct-api-card .hint{line-height:1.6;overflow-wrap:anywhere}
+.pct-api-row{display:flex;gap:8px;align-items:center}.pct-api-row input{min-width:0;flex:1}.pct-api-row button{min-height:40px}.pct-api-status{font-size:12px;line-height:1.6;overflow-wrap:anywhere;margin:6px 0 0;min-height:1em}.pct-api-status[data-state=error]{color:#b91c1c}.pct-api-status[data-state=ok]{color:#15803d}
+.pct-api-caption{font-size:12px;color:var(--muted);line-height:1.6}.pct-api-card label{color:var(--text)}.pct-api-footer{position:sticky;bottom:-22px;background:var(--panel);border-top:1px solid var(--line);padding:14px 0 0;justify-content:flex-end;flex-wrap:wrap}
+@media(max-width:520px){#apiSettingsOverlay{padding:10px}#apiSettingsOverlay .modal{padding:16px}.pct-api-row{flex-wrap:wrap}.pct-api-row input{flex-basis:100%}.pct-api-footer{bottom:-16px}.pct-api-footer .btn{flex:1;min-height:44px}}
+</style>
+<div class="overlay" id="apiSettingsOverlay">
+  <form class="modal" id="apiSettingsForm" role="dialog" aria-modal="true" aria-labelledby="apiSettingsTitle">
+    <h3 id="apiSettingsTitle">การเชื่อมต่อ API ทุกหน้า</h3>
+    <p class="pct-api-intro">เปลี่ยนลิงก์กลางครั้งเดียว หรือกำหนดแยกแต่ละหน้า เว้นช่องของหน้าใดว่างไว้เพื่อใช้ลิงก์กลาง การตั้งค่าจำเฉพาะเบราว์เซอร์ในเครื่องนี้</p>
+    <section class="pct-api-card">
+      <h4>ลิงก์กลาง</h4>
+      <div class="field"><label for="apiSettingsUrl">Google Apps Script Web App URL</label>
+      <input type="text" inputmode="url" autocomplete="off" spellcheck="false" id="apiSettingsUrl" required placeholder="https://script.google.com/macros/s/…/exec" aria-describedby="apiSettingsHint">
+      <div class="hint" id="apiSettingsHint">คัดลอกจาก Deploy → Web app ใช้ลิงก์ที่ลงท้ายด้วย /exec</div></div>
+      <button class="btn ghost small" type="button" id="apiSettingsDefault">ใช้ลิงก์เริ่มต้น</button>
+    </section>
+    <div id="apiSettingsModules"></div>
+    <p class="pct-api-caption">การทดสอบจะอ่านข้อมูลจาก API โดยไม่บันทึกข้อมูลธุรกิจ ผลสำเร็จยืนยันเฉพาะการอ่าน ยังไม่ยืนยันสิทธิ์เขียน ลิงก์เอกสารและเว็บไซต์บนการ์ดแก้ไขได้จากปุ่มแก้ไขของการ์ดนั้น</p>
+    <p id="apiSettingsStatus" class="pct-api-status" role="status" aria-live="polite"></p>
+    <div class="modal-actions pct-api-footer">
+      <button class="btn secondary" type="button" id="apiSettingsCancel">ยกเลิก</button>
+      <button class="btn" type="submit">บันทึกและโหลดใหม่</button>
+    </div>
+  </form>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- ===== Mobile bottom navigation ===== -->
@@ -1061,6 +1091,13 @@ return [{id:group.id.slice(0,150),category:group.category,name:String(group.name
 const PCT_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwrhRqiS1gTyUqDD7xvBIT5ATi3P425qLwKU8jvuwX1luUlqa2KhjDdDNwrQpoS3ioZ/exec';
 const PCT_RETIRED_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxLUoq_OCTXKKEkTaSvtegOTr1l3PKefmtvj-OlP7E-Ir7qZtq8fOxPmJxbwZkpNxrtgA/exec';
 const PCT_SHEET_URL_KEY = 'pctDashboardWebAppUrl_v2';
+const PCT_API_SETTINGS_KEY = 'pctApiConnections_v1';
+function pctReadApiSettings(){
+try{
+const value = JSON.parse(localStorage.getItem(PCT_API_SETTINGS_KEY) || 'null');
+return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
+}catch(error){ return null; }
+}
 function pctValidSheetUrl(value){
 return /^https:\/\/script\.google\.com\/macros\/s\/[^/?#]+\/exec(?:[?#].*)?$/.test(String(value || '').trim());
 }
@@ -1074,6 +1111,8 @@ function pctGetSheetUrl(){
 // Recover only the known retired deployment; keep explicitly configured URLs.
 let stored = '';
 try { stored = localStorage.getItem(PCT_SHEET_URL_KEY) || ''; } catch(error) {}
+const connections = pctReadApiSettings();
+if(connections && pctValidSheetUrl(connections.webAppUrl)) stored = connections.webAppUrl;
 const trustedStored = pctValidSheetUrl(stored) || String(stored).split(/[?#]/)[0] === PCT_RETIRED_WEB_APP_URL;
 const url = pctNormalizeSheetUrl((trustedStored ? stored : '') || SHEET_CONFIG.webAppUrl);
 SHEET_CONFIG.webAppUrl = url;
@@ -1085,7 +1124,11 @@ const input = String(value || '').trim();
 if(input && input.split(/[?#]/)[0] !== PCT_RETIRED_WEB_APP_URL && !pctValidSheetUrl(input)) return false;
 const url = pctNormalizeSheetUrl(value);
 SHEET_CONFIG.webAppUrl = url;
-try { localStorage.setItem(PCT_SHEET_URL_KEY, url); } catch(error) {}
+try {
+const connections = pctReadApiSettings();
+if(connections) localStorage.setItem(PCT_API_SETTINGS_KEY,JSON.stringify({...connections,webAppUrl:url}));
+localStorage.setItem(PCT_SHEET_URL_KEY,url);
+} catch(error) {}
 saveAll();
 return true;
 }
@@ -1099,6 +1142,53 @@ credentials:'omit', redirect:'follow', signal:controller.signal
 const body = await response.text();
 return {ok:response.ok, status:response.status, text:async()=>body, json:async()=>JSON.parse(body)};
 } finally { clearTimeout(timeout); }
+}
+const PCT_API_MODULES = [
+{key:'crm',label:'CRM / Customer Workspace',note:'ค้นหา SO และส่งข้อมูลลูกค้าเข้า Orders',action:'getOrders'},
+{key:'dashboard',label:'Dashboard · ภาพรวม',note:'สรุปงานและอัปเดตภาพรวมอัตโนมัติ',action:'dashboardLiveSummary'},
+{key:'orders',label:'Orders',note:'รายการงาน โหลดข้อมูลเริ่มต้น และแก้ไขเคส',action:'getOrders'},
+{key:'pendingFill',label:'Pending Fill',note:'งานที่รอกรอกข้อมูล',action:'getPendingFillCases'},
+{key:'pending',label:'Pending Case',note:'ติดตามงานค้าง',action:'getPendingCases'},
+{key:'problems',label:'Problem Case',note:'อ่านและบันทึกเคสปัญหา',action:'getProblemCases'},
+{key:'ac',label:'AC Service',note:'อ่านและเพิ่มงานล้างแอร์',action:'getACServices'},
+{key:'report',label:'Report',note:'ประวัติรายงานและบันทึกรายงานประจำวัน',action:'reportHealth'}
+];
+const PCT_API_ACTION_MODULES = {
+dashboardLiveSummary:'dashboard',dashboardBootstrap:'orders',getOrders:'orders',getEditableOrderCase:'orders',updateOrderCase:'orders',
+getPendingFillCases:'pendingFill',getPendingCases:'pending',getProblemCases:'problems',saveProblemCase:'problems',getACServices:'ac',addACService:'ac'
+};
+function pctReadApiConnections(){
+const settings = pctReadApiSettings();
+const source = settings ? settings.apiConnections : SHEET_CONFIG.apiConnections;
+const result = {};
+PCT_API_MODULES.forEach(module=>{
+  const value = source && String(source[module.key] || '').trim();
+  if(value && pctValidSheetUrl(value) && value.split(/[?#]/)[0] !== PCT_RETIRED_WEB_APP_URL) result[module.key] = value;
+});
+return result;
+}
+function pctGetConnectionUrl(module){
+return pctReadApiConnections()[module] || pctGetSheetUrl();
+}
+function pctGetActionUrl(action){
+return pctGetConnectionUrl(PCT_API_ACTION_MODULES[action] || 'dashboard');
+}
+function pctSaveApiConnections(shared, overrides){
+if(!pctValidSheetUrl(shared) || shared.split(/[?#]/)[0] === PCT_RETIRED_WEB_APP_URL) return false;
+const next = {};
+for(const module of PCT_API_MODULES){
+  const value = String(overrides[module.key] || '').trim();
+  if(value && (!pctValidSheetUrl(value) || value.split(/[?#]/)[0] === PCT_RETIRED_WEB_APP_URL)) return false;
+  if(value) next[module.key] = value;
+}
+// Persist all endpoint choices atomically, independently of future catalog updates.
+const settings = {webAppUrl:shared,apiConnections:next};
+try{ localStorage.setItem(PCT_API_SETTINGS_KEY,JSON.stringify(settings)); }
+catch(error){ return false; }
+SHEET_CONFIG = {...SHEET_CONFIG,...settings};
+try{ localStorage.setItem(PCT_SHEET_URL_KEY,shared); }catch(error){}
+saveAll();
+return true;
 }
 let crmEditingId = null;
 let crmCaseSearchQ = '';
@@ -2217,8 +2307,110 @@ const button = document.getElementById('topbarMoreBtn');
 if(menu) menu.classList.remove('open');
 if(button) button.setAttribute('aria-expanded','false');
 }
+function openApiSettings(){
+const button = document.getElementById('apiSettingsBtn');
+if(button) button.click();
+}
+function setupApiSettings(){
+const overlay = document.getElementById('apiSettingsOverlay');
+const form = document.getElementById('apiSettingsForm');
+const input = document.getElementById('apiSettingsUrl');
+const status = document.getElementById('apiSettingsStatus');
+const host = document.getElementById('apiSettingsModules');
+let opener = null, generation = 0;
+function close(){
+  generation++;
+  overlay.classList.remove('show');
+  if(opener) opener.focus();
+}
+function valid(value){
+return pctValidSheetUrl(value) && value.split(/[?#]/)[0] !== PCT_RETIRED_WEB_APP_URL;
+}
+function clearResult(node){ node.textContent = ''; delete node.dataset.state; }
+function error(message,field){
+status.textContent = message; status.dataset.state = 'error';
+if(field) field.focus();
+}
+document.getElementById('apiSettingsBtn').onclick = function(){
+  opener = document.getElementById('topbarMoreBtn');
+  closeTopbarMenu();
+  generation++;
+  input.value = pctGetSheetUrl();
+  clearResult(status);
+  const overrides = pctReadApiConnections();
+  host.innerHTML = PCT_API_MODULES.map(module=>'<section class="pct-api-card"><h4>'+module.label+'</h4><div class="field"><label for="apiUrl-'+module.key+'">'+module.note+'</label><div class="pct-api-row"><input type="text" inputmode="url" autocomplete="off" spellcheck="false" id="apiUrl-'+module.key+'" data-api-module="'+module.key+'" aria-describedby="apiHint-'+module.key+' apiStatus-'+module.key+'"><button type="button" class="btn secondary small" data-api-test="'+module.key+'">ทดสอบ</button></div><div class="hint" id="apiHint-'+module.key+'">เว้นว่างเพื่อใช้ลิงก์กลาง</div></div><p class="pct-api-status" id="apiStatus-'+module.key+'" role="status" aria-live="polite"></p></section>').join('');
+  host.querySelectorAll('[data-api-module]').forEach(field=>{
+    field.value = overrides[field.dataset.apiModule] || '';
+    field.placeholder = input.value;
+  });
+  host.querySelectorAll('[data-api-test]').forEach(button=>{
+    button.onclick = async function(){
+      const module = PCT_API_MODULES.find(item=>item.key === button.dataset.apiTest);
+      const field = document.getElementById('apiUrl-'+module.key);
+      const result = document.getElementById('apiStatus-'+module.key);
+      const value = field.value.trim() || input.value.trim();
+      if(!valid(value)){ error('ลิงก์ของ '+module.label+' ไม่ถูกต้อง กรุณาใช้ Web App URL ที่ลงท้ายด้วย /exec',field); return; }
+      const version = generation;
+      button.disabled = true;
+      result.textContent = 'กำลังทดสอบ…'; delete result.dataset.state;
+      try{
+        const url = new URL(value);
+        url.hash = '';
+        url.searchParams.set('action',module.action);
+        url.searchParams.set('page','1');url.searchParams.set('pageSize','1');
+        url.searchParams.set('_',String(Date.now()));
+        const response = await pctSheetFetch(url.toString(),{method:'GET',cache:'no-store'});
+        const payload = await response.json();
+        if(!response.ok || !payload || payload.ok !== true || (module.key === 'report' ? payload.reportApi !== true : payload.dashboardApi !== true)) throw new Error('Unexpected API');
+        if(version === generation){ result.textContent = 'เชื่อมต่อได้ · อ่านข้อมูลสำเร็จ ยังไม่ได้ทดสอบการเขียน';result.dataset.state = 'ok'; }
+      }catch(error){
+        if(version === generation){ result.textContent = 'เชื่อมต่อไม่สำเร็จ ตรวจสอบลิงก์ สิทธิ์ Web app และอินเทอร์เน็ต';result.dataset.state = 'error'; }
+      }finally{ button.disabled = false; }
+    };
+  });
+  overlay.classList.add('show');
+  input.focus();
+};
+document.getElementById('apiSettingsCancel').onclick = close;
+overlay.addEventListener('click',event=>{ if(event.target === overlay) close(); });
+overlay.addEventListener('keydown',event=>{
+  if(event.key === 'Escape'){event.stopPropagation();close();}
+  if(event.key === 'Tab'){
+    const controls = Array.from(form.querySelectorAll('input,button')).filter(el=>!el.disabled);
+    const first = controls[0], last = controls[controls.length-1];
+    if(event.shiftKey && document.activeElement === first){event.preventDefault();last.focus();}
+    else if(!event.shiftKey && document.activeElement === last){event.preventDefault();first.focus();}
+  }
+});
+form.addEventListener('input',()=>{
+  generation++;
+  clearResult(status);
+  host.querySelectorAll('[data-api-module]').forEach(field=>{field.placeholder = input.value;});
+  host.querySelectorAll('.pct-api-status').forEach(clearResult);
+  host.querySelectorAll('[data-api-test]').forEach(button=>{button.disabled = false;});
+});
+document.getElementById('apiSettingsDefault').onclick = function(){
+  input.value = PCT_SHEET_WEB_APP_URL;
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+  status.textContent = 'เลือกลิงก์กลางเริ่มต้นแล้ว ลิงก์แยกแต่ละหน้ายังคงเดิม กดบันทึกเพื่อใช้งาน';
+};
+form.onsubmit = function(event){
+  event.preventDefault();
+  const shared = input.value.trim(), overrides = {};
+  if(!valid(shared)){error('กรุณาใช้ลิงก์กลางที่ลงท้ายด้วย /exec และไม่ใช่เวอร์ชันที่เลิกใช้แล้ว',input);return;}
+  for(const module of PCT_API_MODULES){
+    const field = document.getElementById('apiUrl-'+module.key);
+    const value = field.value.trim();
+    if(value && !valid(value)){error('ลิงก์ของ '+module.label+' ไม่ถูกต้อง กรุณาแก้ไขก่อนบันทึก',field);return;}
+    overrides[module.key] = value;
+  }
+  if(!pctSaveApiConnections(shared,overrides)){error('บันทึกไม่ได้ เบราว์เซอร์ปิดกั้นพื้นที่จัดเก็บหรือพื้นที่เต็ม');return;}
+  window.location.reload();
+};
+}
 /* ===== wire up ===== */
 function setupGlobalEvents(){
+setupApiSettings();
 document.getElementById('addBtn').onclick = openAdd;
 document.getElementById('addTabBtn').onclick = ()=>openCatModal(null);
 document.getElementById('cancelBtn').onclick = closeModal;
@@ -2629,7 +2821,7 @@ try{
 // which Apps Script Web Apps generally don't handle. doPost() still reads
 // e.postData.contents as raw text and JSON.parse()s it correctly regardless
 // of the declared content type.
-const res = await pctSheetFetch(pctGetSheetUrl(), {
+const res = await pctSheetFetch(pctGetConnectionUrl('crm'), {
 method: 'POST',
 headers: {'Content-Type':'text/plain;charset=UTF-8'},
 body: JSON.stringify(crmBuildWebhookPayload(c))
@@ -2658,7 +2850,7 @@ const query = String(so||'').trim();
 if(!query){ showToast('กรุณากรอกเลข SO'); return; }
 if(!SHEET_CONFIG.webAppUrl){ showToast('ยังไม่ได้ตั้งค่า Google Apps Script Web App URL'); return; }
 try{
-const sheetUrl = pctGetSheetUrl();
+const sheetUrl = pctGetConnectionUrl('crm');
 const separator = sheetUrl.includes('?') ? '&' : '?';
 const response = await pctSheetFetch(sheetUrl + separator + 'action=getCRMOrderBySO&so=' + encodeURIComponent(query) + '&_=' + Date.now(), {method:'GET',cache:'no-store'});
 const payload = await response.json();
@@ -4758,7 +4950,7 @@ mnavSync();</script>
   }
 
   function dashboardApiUrl(action, params) {
-    const base = getDashboardUrl();
+    const base = pctGetActionUrl(action);
     const query = new URLSearchParams(Object.assign({ action: action, _: Date.now() }, params || {}));
     return base + (base.includes('?') ? '&' : '?') + query.toString();
   }
@@ -4794,7 +4986,7 @@ mnavSync();</script>
     const controller = new AbortController();
     const timeout = window.setTimeout(function () { controller.abort(); }, 25000);
     try {
-      const response = await fetch(getDashboardUrl(), {
+      const response = await fetch(pctGetActionUrl(action), {
         method: 'POST', credentials: 'omit', signal: controller.signal,
         body: JSON.stringify(Object.assign({ action: action }, data || {}))
       });
@@ -5547,21 +5739,7 @@ mnavSync();</script>
   }
 
   function renderDashboardSettings() {
-    const main = document.getElementById('main');
-    main.innerHTML = '<section class="pct-dashboard-shell">' +
-      dashboardHero() +
-      '<section class="pct-dashboard-panel pct-dashboard-setup">' +
-      '<div class="pct-setup-card">' +
-      '<div class="pct-setup-icon">🔗</div>' +
-      '<h3>ตั้งค่า Google Apps Script Web App</h3>' +
-      '<p>วาง URL จาก Deploy → Web app ระบบจะเปิด Dashboard เป็นฟังก์ชันภายในไฟล์นี้ และจดจำ URL ไว้เฉพาะบนเครื่องที่ใช้งาน</p>' +
-      '<div class="pct-url-row"><input id="pctDashboardUrlInput" type="url" value="' + escapeAttr(getDashboardUrl()) + '" placeholder="https://script.google.com/macros/s/…/exec">' +
-      '<button class="pct-dashboard-btn primary" id="pctDashboardUrlSave">บันทึกและเปิด Dashboard</button></div>' +
-      '<div class="pct-url-note">ควรใช้ URL ที่ลงท้ายด้วย /exec ไม่ใช่ URL หน้าแก้ไข Apps Script</div>' +
-      '</div></section></section>';
-    main.querySelector('#pctDashboardUrlSave').onclick = function () {
-      if (setDashboardUrl(main.querySelector('#pctDashboardUrlInput').value)) window.render();
-    };
+    openApiSettings();
   }
 
   function markRendering() {
@@ -5811,7 +5989,7 @@ mnavSync();</script>
   }
 
   async function fetchReportRows() {
-    const baseUrl = getDashboardUrl();
+    const baseUrl = pctGetConnectionUrl('report');
     const url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'action=getReports&limit=5000&_=' + Date.now();
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
@@ -5863,7 +6041,7 @@ mnavSync();</script>
   async function sendReportToSheet(record) {
     if (!reportServerReady) await fetchReportRows();
     if (!reportServerReady) throw new Error('Report API is unavailable');
-    const response = await pctSheetFetch(getDashboardUrl(), {
+    const response = await pctSheetFetch(pctGetConnectionUrl('report'), {
       method: 'POST',
       headers: {'Content-Type':'text/plain;charset=UTF-8'},
       cache: 'no-store',
