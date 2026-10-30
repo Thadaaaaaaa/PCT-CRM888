@@ -1,8 +1,8 @@
-// Public catalog snapshot generated from the 2026-10-05 export.
+// Public catalog snapshot generated from the 2026-10-30 export.
 // Customer cases, credentials, editor history, sheet configuration, and daily reports are intentionally excluded.
 window.PCT_LATEST_SITE_DATA={
   "version": 4,
-  "exportedAt": 1791191529415,
+  "exportedAt": 1793350056399,
   "categories": [
     {
       "id": "logi",
@@ -306,7 +306,7 @@ window.PCT_LATEST_SITE_DATA={
       "category": "logi",
       "title": "XMS",
       "desc": "Codeเช็คราคาอะไหล่ Thailand : GZMPTGL1906170003022\n\nระบบตรวจสอบงาน order ที่เข้ามาในระบบ และนำไปใส่ในไฟล์ Order Schedules",
-      "url": "https://sg.asp.mi.com/workbench/index#@workbench/dashboard-no-monitor?title=%E9%A6%96%E9%A1%B5&",
+      "url": "https://sg2.asp.mi.com/workbench/index#@platform/OrderHome?title=Service%20Order%20Management&breadcrumb=%5B%22Work%20Order%22%2C%22Service%20Order%22%2C%22Service%20Order%20Management%22%5D",
       "color": null,
       "bgColor": null
     },
@@ -359,7 +359,7 @@ window.PCT_LATEST_SITE_DATA={
       "id": "item_5n3f8lb8",
       "category": "cat_o41isi5b",
       "title": "Request Sparepart offline",
-      "desc": "TH-PRECISION-ESC-Samut Prakan (CE)",
+      "desc": "Xiaomi ทำเบิกอะไหล่นอกระบบ",
       "url": "https://docs.google.com/spreadsheets/d/1YKfeDMnAeeq0yf66Ip1v-G4nM9tviqden39spOQkNrY/edit?gid=331772661#gid=331772661",
       "color": null,
       "bgColor": null
@@ -551,6 +551,15 @@ window.PCT_LATEST_SITE_DATA={
       "desc": "Class I: เงื่อนไขผ่านน้อยกว่า 2 ข้อ\nClass II: เท่ากับ 2 ข้อ\nClass III: มากกว่า 2 ข้อ\nเงื่อนไข: 1.ติดตั้งผ่านรูเดิม 2.ไม่ต้องต่อท่อเพิ่ม 3.ไม่ต้องดัดแปลงเบรกเกอร์ 4.ไม่ต้องเจาะผนัง 5.เดินสายไฟง่าย 6.ไม่ต้องทำงานที่สูง 7.ไม่ต้องเปิดฝ้าเพดาน",
       "color": null,
       "bgColor": null
+    },
+    {
+      "id": "item_8d9era71",
+      "category": "logi",
+      "title": "Google sheet transfer",
+      "desc": "สำหรับTransfer งานไปยังศูนย์อื่น",
+      "url": "https://docs.google.com/spreadsheets/d/1BwDNluoQh_mxpB8Knh-WdEk1FGX9WVoOReLjnYnGZco/edit?usp=sharing",
+      "color": null,
+      "bgColor": null
     }
   ],
   "catalogGroups": [
@@ -678,7 +687,8 @@ window.PCT_LATEST_SITE_DATA={
         "label": "",
         "ids": [
           "item_hm0jl69j",
-          "item_7rksricg"
+          "item_7rksricg",
+          "item_8d9era71"
         ]
       }
     ],

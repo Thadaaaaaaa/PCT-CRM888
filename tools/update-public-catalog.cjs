@@ -19,5 +19,6 @@ const layout=Object.fromEntries(Object.entries(source.layout||{}).filter(([id])=
 }));
 const snapshot={version:4,exportedAt:source.exportedAt,categories,items,catalogGroups,layout};
 const file=path.join(__dirname,'../data/latest-site-data.js'),old=fs.readFileSync(file,'utf8').replace(/\r/g,'').trimEnd();
-const next='// Public catalog snapshot generated from the 2026-10-05 export.\n// Customer cases, credentials, editor history, sheet configuration, and daily reports are intentionally excluded.\nwindow.PCT_LATEST_SITE_DATA='+JSON.stringify(snapshot,null,2)+';';
+const exportDate=new Date(Number(source.exportedAt)).toISOString().slice(0,10);
+const next='// Public catalog snapshot generated from the '+exportDate+' export.\n// Customer cases, credentials, editor history, sheet configuration, and daily reports are intentionally excluded.\nwindow.PCT_LATEST_SITE_DATA='+JSON.stringify(snapshot,null,2)+';';
 process.stdout.write('*** Begin Patch\n*** Update File: '+file.replace(/\\/g,'/')+'\n@@\n'+old.split('\n').map(line=>'-'+line).join('\n')+'\n'+next.split('\n').map(line=>'+'+line).join('\n')+'\n*** End Patch');
