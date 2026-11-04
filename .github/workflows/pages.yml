@@ -1,0 +1,35 @@
+name: Publish CRM static site
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: crm-pages
+  cancel-in-progress: true
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify template output
+        run: node verify.cjs
+      - uses: actions/configure-pages@v5
+      - name: Prepare static website
+        run: |
+          mkdir _site
+          cp index.html _site/
+          cp -R data tools demo _site/
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - uses: actions/deploy-pages@v4
+        id: deployment
