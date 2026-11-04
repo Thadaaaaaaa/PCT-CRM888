@@ -21,41 +21,95 @@ const CONFIG = Object.freeze({
   DEFAULT_PAGE_SIZE: 30,
   MAX_PAGE_SIZE: 100
 });
-// Synced from the confirmed orange/yellow/blue zone list (14 Sep 2026). The Orders sheet also
-// has matching conditional-format rules; this direct format makes webhook
-// writes deterministic even before the sheet finishes recalculating.
+// Appointment Zone.xlsx (2026-11-04), same six header colours and 39 postcodes as CRM.
+// Orders!G2:G has matching conditional formatting; unknown postcodes stay white.
 const POSTCODE_ZONE_GROUPS = Object.freeze([
-  ['โซนสีส้ม','#C2410C','#FFFFFF',['10270','10271','10280']],
-  ['โซนสีเหลือง','#FACC15','#111827',['10210','10220','10222','10230','10310','10320','10321','10800','10900']],
-  ['โซนสีฟ้า','#7DD3FC','#0F172A',['10240','10250','10254','10260','10510']],
-  ['G01','#1E40AF','#FFFFFF',['10100','10110','10120']],
-  ['G02','#B91C1C','#FFFFFF',['10130','10140','10150','10600']],
-  ['G03','#15803D','#FFFFFF',['10160','10170']],
-  ['G04','#B45309','#FFFFFF',['10200','10300','10330','10400','10500']],
-  ['G08','#4D7C0F','#FFFFFF',['10290']],
-  ['G11','#9333EA','#FFFFFF',['10520','10521']],
-  ['G12','#0369A1','#FFFFFF',['10530']],
-  ['G13','#4338CA','#FFFFFF',['10540']],
-  ['G14','#E11D48','#FFFFFF',['10550','10560','10570']],
-  ['G15','#047857','#FFFFFF',['10700','11130']],
-  ['G16','#A16207','#FFFFFF',['11000','11120']],
-  ['G17','#6D28D9','#FFFFFF',['11110','11140']],
-  ['G18','#0F766E','#FFFFFF',['11150']],
-  ['G19','#9F1239','#FFFFFF',['12000']],
-  ['G20','#1D4ED8','#FFFFFF',['12110','12150']],
-  ['G21','#166534','#FFFFFF',['12120']],
-  ['G22','#C026D3','#FFFFFF',['12130']],
-  ['G23','#92400E','#FFFFFF',['12170']],
-  ['G24','#155E75','#FFFFFF',['74000']],
-  ['G25','#7C2D12','#FFFFFF',['75000']],
-  ['G26','#4F46E5','#FFFFFF',['80000']],
-  ['G27','#A21CAF','#FFFFFF',['92110']],
-  ['CHECK','#F59E0B','#111827',['1026','105410','90326']]
+  [
+    "Red zone",
+    "#FF0000",
+    "#111827",
+    [
+      "10100",
+      "10110",
+      "10120",
+      "10200",
+      "10300",
+      "10330",
+      "10500",
+      "10170",
+      "10600",
+      "10700"
+    ]
+  ],
+  [
+    "Orange zone",
+    "#E97132",
+    "#111827",
+    [
+      "10210",
+      "10220",
+      "10310",
+      "10320",
+      "10321",
+      "10400",
+      "10800",
+      "10900"
+    ]
+  ],
+  [
+    "Blue zone",
+    "#4E95D9",
+    "#111827",
+    [
+      "10130",
+      "10140",
+      "10150",
+      "10160",
+      "10290"
+    ]
+  ],
+  [
+    "Green zone",
+    "#47D45A",
+    "#111827",
+    [
+      "10230",
+      "10240",
+      "10250",
+      "10254",
+      "10260"
+    ]
+  ],
+  [
+    "Purple zone",
+    "#A02B93",
+    "#FFFFFF",
+    [
+      "10510",
+      "10520",
+      "10521",
+      "10530",
+      "10550",
+      "10570"
+    ]
+  ],
+  [
+    "Pink zone",
+    "#FFCCFF",
+    "#111827",
+    [
+      "10270",
+      "10271",
+      "10280",
+      "10540",
+      "10560"
+    ]
+  ]
 ]);
 let SPREADSHEET_CACHE_ = null;
 
 function postcodeZone_(value) {
-  const postcode = clean_(value).replace(/\D/g, '');
+  const postcode = clean_(value);
   for (let i = 0; i < POSTCODE_ZONE_GROUPS.length; i++) {
     if (POSTCODE_ZONE_GROUPS[i][3].indexOf(postcode) !== -1) {
       return { id: POSTCODE_ZONE_GROUPS[i][0], color: POSTCODE_ZONE_GROUPS[i][1], textColor: POSTCODE_ZONE_GROUPS[i][2] };

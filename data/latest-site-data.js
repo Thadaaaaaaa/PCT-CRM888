@@ -1,8 +1,8 @@
-// Public catalog snapshot generated from the 2026-10-30 export.
+// Public catalog snapshot generated from the 2026-11-04 export.
 // Customer cases, credentials, editor history, sheet configuration, and daily reports are intentionally excluded.
 window.PCT_LATEST_SITE_DATA={
   "version": 4,
-  "exportedAt": 1793350056399,
+  "exportedAt": 1793790648360,
   "categories": [
     {
       "id": "logi",
@@ -560,6 +560,34 @@ window.PCT_LATEST_SITE_DATA={
       "url": "https://docs.google.com/spreadsheets/d/1BwDNluoQh_mxpB8Knh-WdEk1FGX9WVoOReLjnYnGZco/edit?usp=sharing",
       "color": null,
       "bgColor": null
+    },
+    {
+      "id": "item_w4n6s8n8",
+      "category": "cat_o41isi5b",
+      "title": "Stock consum out Nov26",
+      "desc": "ใช้เช็คอุปกรณ์ที่เอาออกของอะเตา",
+      "url": "https://docs.google.com/spreadsheets/d/1BhYhjTiZQEYjoSd7LnlnDtj9QCZODY0R7YWzv6jvbXg/edit?usp=sharing",
+      "color": null,
+      "bgColor": null,
+      "linkMonth": ""
+    },
+    {
+      "id": "item_fm05cpmu",
+      "category": "cat_esfziig5",
+      "title": "SOP new system",
+      "desc": "",
+      "url": "https://mi.feishu.cn/wiki/IQJowYK8giRAmDkdfSXcGsCgnRf",
+      "color": null,
+      "bgColor": null
+    },
+    {
+      "id": "item_tm03jerm",
+      "category": "logi",
+      "title": "XMS update message",
+      "desc": "อัปเดต Message ของแต่ละเคสเข้าระบบ XMS",
+      "url": "https://repairpending-xm.github.io/service-remark-generator/",
+      "color": null,
+      "bgColor": null
     }
   ],
   "catalogGroups": [
@@ -587,7 +615,8 @@ window.PCT_LATEST_SITE_DATA={
         "item_j0kw2gy4",
         "item_wz68b5xy",
         "item_4qpsdrd3",
-        "item_hbflrug5"
+        "item_hbflrug5",
+        "item_w4n6s8n8"
       ]
     },
     {
@@ -688,7 +717,8 @@ window.PCT_LATEST_SITE_DATA={
         "ids": [
           "item_hm0jl69j",
           "item_7rksricg",
-          "item_8d9era71"
+          "item_8d9era71",
+          "item_tm03jerm"
         ]
       }
     ],
@@ -790,7 +820,8 @@ window.PCT_LATEST_SITE_DATA={
           "item_j0kw2gy4",
           "item_wz68b5xy",
           "item_4qpsdrd3",
-          "item_hbflrug5"
+          "item_hbflrug5",
+          "item_w4n6s8n8"
         ]
       }
     ],
@@ -798,7 +829,8 @@ window.PCT_LATEST_SITE_DATA={
       {
         "label": "",
         "ids": [
-          "item_f2it7hz2"
+          "item_f2it7hz2",
+          "item_fm05cpmu"
         ]
       }
     ]

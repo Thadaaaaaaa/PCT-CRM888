@@ -805,6 +805,22 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
 .fleet-map-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
 .fleet-map-preview{border:1px dashed #ccd5df;border-radius:8px;padding:24px;background:#f6f8fa;color:#627085}
 .fleet-map-preview iframe{display:block;width:100%;height:440px;border:0;background:#fff}
+.fleet-area-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.fleet-area-head h3{margin:0}.fleet-area-head p{margin:4px 0 0}
+.fleet-area-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:12px;max-width:1280px;margin:0 auto;align-items:start}
+.fleet-area-layout .fleet-map-preview{padding:0;border:1px solid #dce3eb;border-radius:12px;overflow:hidden}
+.fleet-area-layout .fleet-map-preview img{width:100%;height:auto;vertical-align:middle}
+.fleet-area-zones{padding:10px 14px;background:#fff;color:#172334;border:1px solid #dce3eb;border-radius:12px}
+.fleet-area-zones [data-zone-list]{display:block}
+.fleet-area-zones h4{margin:0;font-size:15px}.fleet-area-caption{font-size:12px!important;line-height:1.5;margin:6px 0!important;color:#536477}
+.fleet-area-zone{border-bottom:1px solid #e2e8f0}
+.fleet-area-zone summary{display:flex;align-items:center;gap:7px;min-height:44px;cursor:pointer;font-size:13px;font-weight:700;list-style:none}
+.fleet-area-zone summary::after{content:'⌄'}.fleet-area-zone[open] summary::after{content:'⌃'}
+.fleet-area-zone summary small{margin-left:auto;font-weight:400;white-space:nowrap}
+.fleet-area-chip{width:14px;height:14px;flex-shrink:0;border:1px solid #64748b;border-radius:4px}
+.fleet-area-place{display:grid;grid-template-columns:46px minmax(0,1fr);gap:6px;padding:7px 0;color:inherit;text-decoration:none;font-size:12px;line-height:1.5;border-top:1px dashed #dce3eb}
+.fleet-area-place:hover{color:#c2410c}.fleet-area-place:focus-visible,.fleet-area-zone summary:focus-visible{outline:2px solid #ff6900;outline-offset:2px}
+@media(max-width:900px){.fleet-area-layout{grid-template-columns:1fr}.fleet-area-zones{max-height:none}.fleet-area-head{flex-wrap:wrap}.fleet-area-place{min-height:44px;align-items:center}}
 @media(max-width:620px){.fleet-map-panel{padding:15px}.fleet-map-preview{padding:12px}.fleet-map-preview iframe{height:350px}}
 </style>
 <div class="app">
@@ -1022,8 +1038,8 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
 @media(max-width:640px){.kb-error-shell{padding:13px;margin-left:-4px;margin-right:-4px}.kb-error-head{align-items:center}.kb-error-head p{display:none}.kb-error-summary{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 10px;gap:8px}.kb-error-code{min-width:50px;padding:5px 6px}.kb-error-actions{align-items:stretch;flex-direction:column}.kb-error-copy{min-height:42px}.kb-tabbar{overflow-x:auto}.kb-tab{min-width:max-content}}
 @media(max-width:640px){.kb-unified-head{align-items:flex-start;flex-direction:column}.kb-unified-counts{justify-content:flex-start}.kb-unified-list{grid-template-columns:1fr}.kb-unified-copy{min-width:44px}}
 </style>
-<script src="data/latest-site-data.js?v=20261030"></script>
-<script src="data/postcode-zones.js?v=20260915"></script>
+<script src="data/latest-site-data.js?v=20261104b"></script>
+<script src="data/postcode-zones.js?v=20261104"></script>
 <script>const ICON_OPTIONS = ['📅','💬','📊','🧰','👥','🚗','🛠️','📦','🧾','📍','🔧','💧','❄️','🧼','💰','📌','🗂️','🛡️','🔌','⚙️','📞','✅','⚠️','🏠','🧯','🔥','🌡️','🧊','📡','🪫','🔋','📋','🗃️','📁','🛒','🎯','⭐','🏷️','🧑‍🔧','🚚','🚀','🧠','🧪','🧭','🗓️','⏱️','🔔','🔒','🔓','🆘','❌','🟢','🟡','🔴','🔵','🟣','🟠','🧮','📈','📉','🛎️','🧹','🔩','🧱','🧑‍💼','👨‍🔧','👩‍🔧','🏢','🌬️','💡','🎨','🌟','🏆','💎','📝','🔍','🧩','🛰️','🗺️','🧳','🎁','🔗'];
 const COLOR_SWATCHES = ['#FF6900','#3b82f6','#16a34a','#d97706','#9333ea','#db2777','#0d9488','#ef4444','#0ea5e9','#1f2a44'];
 const BG_SWATCHES = ['#FFFFFF','#FFF4EA','#FFF9DB','#EAF6FF','#EAFBEF','#F5EAFF','#FFE9F1','#E6FFFB','#F1F2F5','#FDEAEA'];
@@ -1620,7 +1636,7 @@ function openPostcodeZoneNote(triggerButton){
   const groups = window.PCT_POSTCODE_ZONE_REFERENCE || [];
   const overlay = document.createElement('div');
   overlay.className = 'postcode-zone-note-overlay';
-  overlay.innerHTML = '<section class="postcode-zone-note" role="dialog" aria-modal="true" aria-labelledby="postcodeZoneNoteTitle"><div class="postcode-zone-note-header"><h2 class="postcode-zone-note-title" id="postcodeZoneNoteTitle">หมายเหตุสีโซนรหัสไปรษณีย์</h2><button class="postcode-zone-note-close" type="button" aria-label="ปิด">✕</button></div><div class="postcode-zone-note-groups">' + groups.map(function(group){return '<section class="postcode-zone-note-group"><h3 class="postcode-zone-note-group-title" style="background:' + escapeAttr(group.color) + ';color:' + escapeAttr(group.textColor) + '">' + escapeHtml(group.label) + '</h3><ul class="postcode-zone-note-list">' + group.places.map(function(place){return '<li><span class="postcode-zone-note-code">' + escapeHtml(place[0]) + '</span><span>' + escapeHtml(place[1]) + '</span></li>';}).join('') + '</ul></section>';}).join('') + '</div><p class="postcode-zone-note-source">อ้างอิงจาก <a href="https://docs.google.com/spreadsheets/d/1yLyOaIkjQs88BKud9b5lYWY05jiZ6TrIg35Pgz4afNk/edit?gid=1113795633#gid=1113795633" target="_blank" rel="noopener noreferrer">ชีต Zone postcode</a></p></section>';
+  overlay.innerHTML = '<section class="postcode-zone-note" role="dialog" aria-modal="true" aria-labelledby="postcodeZoneNoteTitle"><div class="postcode-zone-note-header"><h2 class="postcode-zone-note-title" id="postcodeZoneNoteTitle">หมายเหตุสีโซนรหัสไปรษณีย์</h2><button class="postcode-zone-note-close" type="button" aria-label="ปิด">✕</button></div><div class="postcode-zone-note-groups">' + groups.map(function(group){return '<section class="postcode-zone-note-group"><h3 class="postcode-zone-note-group-title" style="background:' + escapeAttr(group.color) + ';color:' + escapeAttr(group.textColor) + '">' + escapeHtml(group.label) + '</h3><ul class="postcode-zone-note-list">' + group.places.map(function(place){return '<li><span class="postcode-zone-note-code">' + escapeHtml(place[0]) + '</span><span>' + escapeHtml(place[1]) + '</span></li>';}).join('') + '</ul></section>';}).join('') + '</div><p class="postcode-zone-note-source">อ้างอิง Appointment Zone.xlsx · 6 โซน · อัปเดต 4 พ.ย. 2026 · รหัสที่ไม่มีในไฟล์อยู่นอกพื้นที่รับดูแล</p></section>';
   document.body.appendChild(overlay);
   const closeButton = overlay.querySelector('.postcode-zone-note-close');
   const trigger = triggerButton || document.getElementById('postcodeZoneNoteBtn');
@@ -1792,19 +1808,39 @@ if(cat.id === 'ops'){ renderFleetMap(main); }
 requestAnimationFrame(detectCardOverflow);
 }
 function renderFleetMap(container){
-const mapUrl = 'https://www.google.com/maps/d/edit?mid=1QUd0t0wi9J74ccujhN81j3h6P_4z0IQ&ll=13.696191461698895%2C100.63406070000002&z=12';
-const panel = document.createElement('section');
-panel.className = 'fleet-map-panel';
+const mapUrl='https://www.google.com/maps/d/viewer?mid=1QUd0t0wi9J74ccujhN81j3h6P_4z0IQ&ll=13.696191461698895%2C100.63406070000002&z=10';
+const panel=document.createElement('section');
+panel.className='fleet-map-panel';
 panel.setAttribute('aria-label','Appointment Area');
-panel.innerHTML = '<h3>Appointment Area</h3><p>แผนที่พื้นที่นัดหมายจาก Google My Maps</p><div class="fleet-map-actions"><a class="btn" data-map-edit target="_blank" rel="noopener noreferrer">⤢ เปิดเต็มในแท็บใหม่ / จัดการข้อมูล</a></div><div class="fleet-map-preview" data-map-preview></div><p>ในหน้านี้: ดูแผนที่ เลื่อน ซูม และดูรายละเอียดจุด • เพิ่ม ลบ แก้ไข หรืออัปโหลดข้อมูล: เปิดเต็มในแท็บใหม่</p><p>My Maps ใช้บัญชี Google ที่ล็อกอินในเบราว์เซอร์ หากมีหลายบัญชีให้เลือกบัญชีที่มีสิทธิ์บนหน้า Google • PCT ไม่รับรหัสผ่านและไม่เปลี่ยนสิทธิ์การแชร์ หากตัวอย่างไม่แสดง ให้เปิดเต็มในแท็บใหม่</p>';
+panel.innerHTML='<div class="fleet-area-head"><h3>Appointment Area</h3><a class="btn secondary" data-map-edit target="_blank" rel="noopener noreferrer">เปิด Google Maps ↗</a></div><div class="fleet-area-layout"><div class="fleet-map-preview" data-map-preview></div><aside class="fleet-area-zones" aria-label="รายละเอียดโซน"><h4>โซนติดตั้ง · 39 รหัส</h4><div data-zone-list></div></aside></div>';
 panel.querySelector('[data-map-edit]').href = mapUrl;
-const preview = panel.querySelector('[data-map-preview]');
-const frame = document.createElement('iframe');
-frame.src = 'https://www.google.com/maps/d/embed?mid=1QUd0t0wi9J74ccujhN81j3h6P_4z0IQ&ll=13.696191461698895%2C100.63406070000002&z=12';
-frame.title = 'Appointment Area — Google My Maps';
-frame.loading = 'eager';
-frame.referrerPolicy = 'strict-origin-when-cross-origin';
-preview.appendChild(frame);
+const list=panel.querySelector('[data-zone-list]');
+(window.PCT_POSTCODE_ZONE_REFERENCE||[]).forEach(function(group){
+ const detail=document.createElement('details');detail.className='fleet-area-zone';
+ const summary=document.createElement('summary');
+ const chip=document.createElement('span');chip.className='fleet-area-chip';chip.style.backgroundColor=group.color;
+ const name=document.createElement('span');name.textContent=group.label;
+ const count=document.createElement('small');count.textContent=group.places.length+' รหัส';
+ summary.append(chip,name,count);detail.appendChild(summary);
+ group.places.forEach(function(place){
+  const row=document.createElement('div');row.className='fleet-area-place';
+  const code=document.createElement('b');code.textContent=place[0];
+  const text=document.createElement('span');text.textContent=place[1];
+  row.append(code,text);detail.appendChild(row);
+ });
+ list.appendChild(detail);
+});
+const image=document.createElement('img');
+image.src='data/appointment-zones-centered.webp?v=20261104b';
+image.alt='ภาพแผนที่พื้นที่สีโดยประมาณ 6 โซน: แดง ส้ม ฟ้า เขียว ม่วง ชมพู ตรวจรหัสไปรษณีย์เพื่อยืนยันพื้นที่ติดตั้ง';
+image.loading='lazy';image.decoding='async';
+image.width=1347;image.height=1167;
+image.style.cssText='display:block;width:100%;height:auto';
+const fullImage=document.createElement('a');
+fullImage.href=image.src;fullImage.target='_blank';fullImage.rel='noopener noreferrer';
+fullImage.setAttribute('aria-label','เปิดภาพโซนขนาดเต็มในแท็บใหม่');
+fullImage.appendChild(image);
+panel.querySelector('[data-map-preview]').appendChild(fullImage);
 container.appendChild(panel);
 }
 function renderIncentiveTool(container){
@@ -3218,7 +3254,7 @@ const editor=panel.querySelector('#crmLineEditor');if(editor)editor.value=crmGet
 const copyButton=panel.querySelector('#crmCopyLineBtn');if(copyButton)copyButton.textContent=`📋 คัดลอกข้อความ ${CRM_LINE_LANGUAGES[crmDraft.lineLanguage].label}`;
 const zoneBadge=panel.querySelector('#crmPostcodeZone');
 if(zoneBadge){
-const postcode=String(crmDraft.postcode||'').replace(/\D/g,'');
+const postcode=String(crmDraft.postcode||'').trim();
 const zone=typeof window.pctFindPostcodeZone==='function' ? window.pctFindPostcodeZone(postcode) : null;
 zoneBadge.style.backgroundColor='';zoneBadge.style.borderColor='';zoneBadge.style.color='';
 if(zone){
@@ -3226,7 +3262,7 @@ zoneBadge.dataset.state=zone.id==='CHECK'?'check':'mapped';
 zoneBadge.textContent=zone.id==='CHECK'?'CHECK · รหัสต้องตรวจสอบ':zone.id+' · สีตามกลุ่มพื้นที่';
 zoneBadge.style.backgroundColor=zone.color;zoneBadge.style.borderColor=zone.color;zoneBadge.style.color=zone.textColor||'#fff';
 }else if(postcode){
-zoneBadge.dataset.state='unknown';zoneBadge.textContent='ยังไม่พบรหัสนี้ในตารางกลุ่ม';
+zoneBadge.dataset.state='unknown';zoneBadge.textContent='นอกพื้นที่รับดูแลตาม Appointment Zone';zoneBadge.style.backgroundColor='#FFFFFF';zoneBadge.style.borderColor='#CBD5E1';zoneBadge.style.color='#111827';
 }else{
 zoneBadge.dataset.state='empty';zoneBadge.textContent='กรอกรหัส 5 หลักเพื่อดูโซน';
 }

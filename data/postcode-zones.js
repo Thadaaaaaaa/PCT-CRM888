@@ -1,51 +1,268 @@
-// Postcode groups and colours from the "postcode-zones" summary workbook.
-// Keep this file data-only so CRM display logic can change independently.
+// Source: Appointment Zone.xlsx; six worksheet header fills, Excel theme+tint resolved to RGB.
+// Reviewed 2026-11-04. Unknown postcodes are outside the supplied service zones.
 (function () {
-  'use strict';
-  const groups = [
-    ['โซนสีส้ม', '#C2410C', '#FFFFFF', ['10270','10271','10280']],
-    ['โซนสีเหลือง', '#FACC15', '#111827', ['10210','10220','10222','10230','10310','10320','10321','10800','10900']],
-    ['โซนสีฟ้า', '#7DD3FC', '#0F172A', ['10240','10250','10254','10260','10510']],
-    ['G01', '#1E40AF', '#FFFFFF', ['10100','10110','10120']],
-    ['G02', '#B91C1C', '#FFFFFF', ['10130','10140','10150','10600']],
-    ['G03', '#15803D', '#FFFFFF', ['10160','10170']],
-    ['G04', '#B45309', '#FFFFFF', ['10200','10300','10330','10400','10500']],
-    ['G08', '#4D7C0F', '#FFFFFF', ['10290']],
-    ['G11', '#9333EA', '#FFFFFF', ['10520','10521']],
-    ['G12', '#0369A1', '#FFFFFF', ['10530']],
-    ['G13', '#4338CA', '#FFFFFF', ['10540']],
-    ['G14', '#E11D48', '#FFFFFF', ['10550','10560','10570']],
-    ['G15', '#047857', '#FFFFFF', ['10700','11130']],
-    ['G16', '#A16207', '#FFFFFF', ['11000','11120']],
-    ['G17', '#6D28D9', '#FFFFFF', ['11110','11140']],
-    ['G18', '#0F766E', '#FFFFFF', ['11150']],
-    ['G19', '#9F1239', '#FFFFFF', ['12000']],
-    ['G20', '#1D4ED8', '#FFFFFF', ['12110','12150']],
-    ['G21', '#166534', '#FFFFFF', ['12120']],
-    ['G22', '#C026D3', '#FFFFFF', ['12130']],
-    ['G23', '#92400E', '#FFFFFF', ['12170']],
-    ['G24', '#155E75', '#FFFFFF', ['74000']],
-    ['G25', '#7C2D12', '#FFFFFF', ['75000']],
-    ['G26', '#4F46E5', '#FFFFFF', ['80000']],
-    ['G27', '#A21CAF', '#FFFFFF', ['92110']],
-    ['CHECK', '#F59E0B', '#111827', ['1026','105410','90326']]
-  ].map(function (entry) { return { id: entry[0], color: entry[1], textColor: entry[2], postcodes: entry[3] }; });
-  window.PCT_POSTCODE_ZONE_REFERENCE = [
-    { label: 'สีน้ำเงิน', color: '#1E40AF', textColor: '#FFFFFF', places: [['10100','ป้อมปราบศัตรูพ่าย, สัมพันธวงศ์'],['10110','คลองเตย, วัฒนา'],['10120','บางคอแหลม, ยานนาวา, สาทร'],['10200','พระนคร'],['10300','ดุสิต'],['10330','ปทุมวัน'],['10400','ราชเทวี, พญาไท, ดินแดง'],['10500','บางรัก']] },
-    { label: 'สีเขียว', color: '#15803D', textColor: '#FFFFFF', places: [['10160','บางแค, ภาษีเจริญ, หนองแขม'],['10170','ตลิ่งชัน, ทวีวัฒนา'],['10600','คลองสาน, ธนบุรี, บางกอกใหญ่'],['10700','บางพลัด, บางกอกน้อย']] },
-    { label: 'สีเหลือง', color: '#FACC15', textColor: '#111827', places: [['10210','หลักสี่, ดอนเมือง'],['10220','บางเขน, สายไหม'],['10222','สายไหม'],['10230','ลาดพร้าว, คันนายาว'],['10310','ห้วยขวาง, วังทองหลาง'],['10320','ห้วยขวาง'],['10321','ดินแดง, ห้วยขวาง'],['10800','บางซื่อ'],['10900','จตุจักร']] },
-    { label: 'สีฟ้า', color: '#7DD3FC', textColor: '#0F172A', places: [['10240','บางกะปิ, บึงกุ่ม, สะพานสูง'],['10250','สวนหลวง, ประเวศ'],['10254','ประเวศ (ซีคอนสแควร์)'],['10260','บางนา, พระโขนง'],['10510','มีนบุรี, คลองสามวา']] },
-    { label: 'สีแดง', color: '#B91C1C', textColor: '#FFFFFF', places: [['10130','พระประแดง (สมุทรปราการ)'],['10140','ราษฎร์บูรณะ, ทุ่งครุ'],['10150','บางบอน, บางขุนเทียน, จอมทอง'],['10290','พระสมุทรเจดีย์']] },
-    { label: 'สีม่วง', color: '#9900FF', textColor: '#FFFFFF', places: [['10520','ลาดกระบัง'],['10521','ลาดกระบัง (เจ้าคุณทหาร)'],['10530','หนองจอก'],['10540','บางพลี'],['10550','บางบ่อ (คลองด่าน)'],['10560','บางบ่อ'],['10570','บางเสาธง']] },
-    { label: 'สีส้ม', color: '#FF8800', textColor: '#111827', places: [['10270','เมืองสมุทรปราการ'],['10271','เมืองสมุทรปราการ (สำโรง)'],['10280','เมืองสมุทรปราการ (บางปู)']] }
-  ];
-  const lookup = {};
-  groups.forEach(function (group) {
-    group.postcodes.forEach(function (postcode) { lookup[postcode] = group; });
-  });
-  window.PCT_POSTCODE_ZONES = Object.freeze(groups);
-  window.pctFindPostcodeZone = function (postcode) {
-    return lookup[String(postcode == null ? '' : postcode).replace(/\D/g, '')] || null;
-  };
+ 'use strict';
+ const groups = [
+  {
+    "id": "Red zone",
+    "label": "โซนสีแดง",
+    "color": "#FF0000",
+    "textColor": "#111827",
+    "postcodes": [
+      "10100",
+      "10110",
+      "10120",
+      "10200",
+      "10300",
+      "10330",
+      "10500",
+      "10170",
+      "10600",
+      "10700"
+    ],
+    "places": [
+      [
+        "10100",
+        "วัดไตรมิตรวิทยาราม"
+      ],
+      [
+        "10110",
+        "Terminal 21 Asok"
+      ],
+      [
+        "10120",
+        "Central Rama 3"
+      ],
+      [
+        "10200",
+        "อนุสาวรีย์ประชาธิปไตย"
+      ],
+      [
+        "10300",
+        "พระที่นั่งอนันตสมาคม"
+      ],
+      [
+        "10330",
+        "MBK Center"
+      ],
+      [
+        "10500",
+        "King Power Mahanakhon"
+      ],
+      [
+        "10170",
+        "ตลาดน้ำตลิ่งชัน"
+      ],
+      [
+        "10600",
+        "วงเวียนใหญ่"
+      ],
+      [
+        "10700",
+        "โรงพยาบาลศิริราช"
+      ]
+    ]
+  },
+  {
+    "id": "Orange zone",
+    "label": "โซนสีส้ม",
+    "color": "#E97132",
+    "textColor": "#111827",
+    "postcodes": [
+      "10210",
+      "10220",
+      "10310",
+      "10320",
+      "10321",
+      "10400",
+      "10800",
+      "10900"
+    ],
+    "places": [
+      [
+        "10210",
+        "Lak Si · IT Square Laksi / Don Mueang · Don Mueang International Airport"
+      ],
+      [
+        "10220",
+        "Bang Khen · Central Ramindra"
+      ],
+      [
+        "10310",
+        "Huai Khwang · MRT Huai Khwang"
+      ],
+      [
+        "10320",
+        "Huai Khwang · Thailand Cultural Centre"
+      ],
+      [
+        "10321",
+        "Din Daeng / Huai Khwang · Sutthisan Post Office"
+      ],
+      [
+        "10400",
+        "Ratchathewi · Victory Monument"
+      ],
+      [
+        "10800",
+        "Bang Sue · Krung Thep Aphiwat Central Terminal"
+      ],
+      [
+        "10900",
+        "Chatuchak · Central Ladprao"
+      ]
+    ]
+  },
+  {
+    "id": "Blue zone",
+    "label": "โซนสีฟ้า",
+    "color": "#4E95D9",
+    "textColor": "#111827",
+    "postcodes": [
+      "10130",
+      "10140",
+      "10150",
+      "10160",
+      "10290"
+    ],
+    "places": [
+      [
+        "10130",
+        "Phra Pradaeng District Office"
+      ],
+      [
+        "10140",
+        "Rat Burana District Office"
+      ],
+      [
+        "10150",
+        "Chom Thong District Office"
+      ],
+      [
+        "10160",
+        "The Mall Lifestore Bangkae"
+      ],
+      [
+        "10290",
+        "Phra Samut Chedi"
+      ]
+    ]
+  },
+  {
+    "id": "Green zone",
+    "label": "โซนสีเขียว",
+    "color": "#47D45A",
+    "textColor": "#111827",
+    "postcodes": [
+      "10230",
+      "10240",
+      "10250",
+      "10254",
+      "10260"
+    ],
+    "places": [
+      [
+        "10230",
+        "Lat Phrao · Central EastVille"
+      ],
+      [
+        "10240",
+        "Bang Kapi · The Mall Lifestore Bangkapi"
+      ],
+      [
+        "10250",
+        "Suan Luang · Thanya Park Srinakarin"
+      ],
+      [
+        "10254",
+        "Prawet · Seacon Square Srinakarin"
+      ],
+      [
+        "10260",
+        "Bang Na · BITEC Bangna"
+      ]
+    ]
+  },
+  {
+    "id": "Purple zone",
+    "label": "โซนสีม่วง",
+    "color": "#A02B93",
+    "textColor": "#FFFFFF",
+    "postcodes": [
+      "10510",
+      "10520",
+      "10521",
+      "10530",
+      "10550",
+      "10570"
+    ],
+    "places": [
+      [
+        "10510",
+        "Min Buri · Min Buri Market"
+      ],
+      [
+        "10520",
+        "Lat Krabang · King Mongkut's Institute of Technology Ladkrabang"
+      ],
+      [
+        "10521",
+        "Lat Krabang · Chao Khun Thahan Post Office"
+      ],
+      [
+        "10530",
+        "Nong Chok · Nong Chok District Office"
+      ],
+      [
+        "10550",
+        "Khlong Dan · Khlong Dan Post Office"
+      ],
+      [
+        "10570",
+        "Bang Sao Thong · Assumption University Suvarnabhumi Campus"
+      ]
+    ]
+  },
+  {
+    "id": "Pink zone",
+    "label": "โซนสีชมพู",
+    "color": "#FFCCFF",
+    "textColor": "#111827",
+    "postcodes": [
+      "10270",
+      "10271",
+      "10280",
+      "10540",
+      "10560"
+    ],
+    "places": [
+      [
+        "10270",
+        "Mueang Samut Prakan · Samut Prakan City Hall"
+      ],
+      [
+        "10271",
+        "Samrong · Imperial World Samrong"
+      ],
+      [
+        "10280",
+        "Bang Pu · Ancient City Samut Prakan"
+      ],
+      [
+        "10540",
+        "Bang Phli · Mega Bangna"
+      ],
+      [
+        "10560",
+        "Bang Bo · Bang Bo District Office"
+      ]
+    ]
+  }
+];
+ const lookup = Object.create(null);
+ groups.forEach(function(group){group.postcodes.forEach(function(code){if(lookup[code])throw new Error('Duplicate service postcode: '+code);lookup[code]=group;});});
+ window.PCT_POSTCODE_ZONES = Object.freeze(groups);
+ window.PCT_POSTCODE_ZONE_REFERENCE = groups.map(function(group){return {label:group.label+' · '+group.id,color:group.color,textColor:group.textColor,places:group.places};});
+ window.pctFindPostcodeZone = function(postcode){return lookup[String(postcode==null?'':postcode).trim()]||null;};
 })();
 
