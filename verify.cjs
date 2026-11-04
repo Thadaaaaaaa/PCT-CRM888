@@ -37,5 +37,17 @@ vm.runInContext(html.slice(templateStart,templateEnd), templateContext);
 const copied = templateContext.crmBuildColumnO({productType:'air',answers:[],airFloor:'2',airOutdoor:'ภายนอก',airIndoor:'ภายใน'});
 assert(!copied.includes(uiReminder), 'Copied template excludes UI-only reminder');
 assert(copied.includes('- ชั้นที่ติดตั้ง: 2'), 'Existing answers remain in copied template');
+for(const productType of ['air','washer','repair']){
+ const output=templateContext.crmBuildColumnO({productType,so:'SO-DEMO',model:'Model demo',customerName:'Customer demo',answers:[]});
+ assert(output.startsWith('Service Order : SO-DEMO\nType : Model demo\nCustomer : Customer demo'),productType+' places model immediately after SO');
+ assert.equal(output.match(/^Type :/gm).length,1);
+}
+vm.runInContext(extract('patchBuildText'),templateContext);
+assert(templateContext.patchBuildText({fields:{so:'SO-DEMO',type:'Model demo'},questions:[]}).startsWith('Service Order : SO-DEMO\nType : Model demo\nCustomer :'));
+vm.runInContext(extract('customerTemplateModelFirst'),templateContext);
+const oldTemplate='Service Order : SO-DEMO\nCustomer : Name\nExpected Time : 10.00\nType : Model demo\nNoted : Note';
+const updated=templateContext.customerTemplateModelFirst(oldTemplate);
+assert.equal(updated,'Service Order : SO-DEMO\nType : Model demo\nCustomer : Name\nExpected Time : 10.00\nNoted : Note');
+assert.equal(templateContext.customerTemplateModelFirst(updated),updated);
 console.log('PASS: ' + scripts.length + ' inline scripts parse; original tests + 4 reminder assertions pass.');
 console.log('Browser smoke tests are separate; no production backend writes performed.');
