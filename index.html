@@ -805,11 +805,11 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
 .fleet-map-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
 .fleet-map-preview{border:1px dashed #ccd5df;border-radius:8px;padding:24px;background:#f6f8fa;color:#627085}
 .fleet-map-preview iframe{display:block;width:100%;height:440px;border:0;background:#fff}
-.fleet-area-head{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px}.fleet-area-head [data-map-edit]{justify-self:center}
+.fleet-area-head{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid #e8edf3}.fleet-area-head [data-map-edit]{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 18px;border:1px solid #ea580c;border-radius:12px;background:#f97316;color:#fff;font-size:13px;font-weight:750;text-decoration:none;box-shadow:0 4px 12px rgba(249,115,22,.2)}.fleet-area-head [data-map-edit]:hover{background:#ea580c}.fleet-area-head [data-map-edit]:focus-visible{outline:3px solid #fdba74;outline-offset:3px}
 .fleet-area-head h3{margin:0}.fleet-area-head p{margin:4px 0 0}
-.fleet-area-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;max-width:720px;margin:0 auto;align-items:start}
+.fleet-area-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:20px;max-width:1040px;margin:0 auto;align-items:start}
 .fleet-area-layout .fleet-map-preview{padding:0;border:1px solid #dce3eb;border-radius:12px;overflow:hidden}
-.fleet-area-layout .fleet-map-preview img{display:block;width:100%;height:auto;max-height:300px;max-height:min(40vh,300px);object-fit:contain;vertical-align:middle}
+.fleet-area-layout .fleet-map-preview img{display:block;width:100%;height:auto;max-height:480px;max-height:min(65vh,480px);object-fit:contain;vertical-align:middle}
 .fleet-area-zones{padding:10px 14px;background:#fff;color:#172334;border:1px solid #dce3eb;border-radius:12px}
 .fleet-area-zones [data-zone-list]{display:block}
 .fleet-area-zones h4{margin:0;font-size:15px}.fleet-area-caption{font-size:12px!important;line-height:1.5;margin:6px 0!important;color:#536477}
@@ -1691,13 +1691,11 @@ if(cat.bgColor){ banner.style.setProperty('--banner-bg', cat.bgColor); }
 const totalCount = DATA.filter(d=>d.category===cat.id).length;
 banner.innerHTML = `<div class="left"><div class="badge">${cat.icon}</div><div><h2>${escapeHtml(cat.name)}</h2><div class="sub">${totalCount} รายการ</div></div></div>
 <div class="right-actions">
-${cat.id === 'ops' ? '<button class="postcode-zone-note-btn" id="postcodeZoneNoteBtn" type="button" title="หมายเหตุสีโซนรหัสไปรษณีย์" aria-label="ดูหมายเหตุสีโซนรหัสไปรษณีย์">ⓘ</button>' : ''}
 <button class="btn secondary" id="repackBtn">📦 รวมเป็นบรรทัดเดียว</button>
 <button class="btn secondary reorder-toggle${reorderMode?' on':''}" id="reorderBtn">${reorderMode ? '✓ เสร็จสิ้นการจัดเรียง' : '↕ จัดเรียง/แบ่งบรรทัด'}</button>
 </div>`;
 main.appendChild(banner);
-  const zoneNoteBtn = banner.querySelector('#postcodeZoneNoteBtn');
-  if(zoneNoteBtn) zoneNoteBtn.onclick = function(){openPostcodeZoneNote(zoneNoteBtn);};banner.querySelector('#reorderBtn').onclick = ()=>{ reorderMode = !reorderMode; render(); };
+banner.querySelector('#reorderBtn').onclick = ()=>{ reorderMode = !reorderMode; render(); };
 banner.querySelector('#repackBtn').onclick = ()=>{
 if(!confirm('รวมการ์ดทั้งหมดในหมวดหมู่นี้ไว้บรรทัดเดียว (ป้ายชื่อบรรทัดเดิมจะหายไป) ใช่หรือไม่?')) return;
 const flatIds = [];
@@ -1812,7 +1810,7 @@ const mapUrl='https://www.google.com/maps/d/viewer?mid=1QUd0t0wi9J74ccujhN81j3h6
 const panel=document.createElement('section');
 panel.className='fleet-map-panel';
 panel.setAttribute('aria-label','Appointment Area');
-panel.innerHTML='<div class="fleet-area-head"><h3>Appointment Area</h3><a class="btn secondary" data-map-edit target="_blank" rel="noopener noreferrer">Google Mind Map ↗</a></div><div class="fleet-area-layout"><div class="fleet-map-preview" data-map-preview></div><aside class="fleet-area-zones" aria-label="รายละเอียดโซน"><h4>โซนติดตั้ง · 39 รหัส</h4><div data-zone-list></div></aside></div>';
+panel.innerHTML='<div class="fleet-area-head"><h3>Appointment Area</h3><a class="btn" data-map-edit target="_blank" rel="noopener noreferrer">Google Mind Map ↗</a></div><div class="fleet-area-layout"><div class="fleet-map-preview" data-map-preview></div><aside class="fleet-area-zones" aria-label="Post Area"><h4>Post Area</h4><div data-zone-list></div></aside></div>';
 panel.querySelector('[data-map-edit]').href = mapUrl;
 const list=panel.querySelector('[data-zone-list]');
 (window.PCT_POSTCODE_ZONE_REFERENCE||[]).forEach(function(group){
