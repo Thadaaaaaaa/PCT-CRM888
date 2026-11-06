@@ -56,6 +56,7 @@ assert.equal(templateContext.crmQuestionsFor('fridge').length,5);
 const fridgeText=templateContext.crmBuildColumnO(JSON.parse(JSON.stringify(fridge)));
 assert(fridgeText.startsWith('Service Order : SO-DEMO\nType : Refrigerator demo\nCustomer :'));
 assert(fridgeText.includes('3.จุดติดตั้งผ่านประตูหรือไม่'));
+assert.equal(templateContext.crmQuestionsFor('fridge')[2],'จุดติดตั้งผ่านประตูหรือไม่ ขนาดกว้าง ยาว สูงเท่าไหร่ หากขนาดไม่พอ รบกวนลูกค้าเตรียมพื้นที่ให้ทีมช่างสามารถนำสินค้าเข้าไปติดตั้งได้');
 for(const answer of fridge.answers) assert(fridgeText.includes(answer));
 assert(fridgeText.includes('ห้ามเลื่อนนัด') && fridgeText.includes('**หากมีการเลื่อนวันหรือยกเลิก'));
 assert(!fridgeText.includes('คอยล์ร้อน'));

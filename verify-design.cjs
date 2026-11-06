@@ -21,7 +21,7 @@ assert(html.includes('.crm-action-tools{display:grid;grid-template-columns:minma
 assert(html.includes('.crm-reason-header{display:flex;align-items:center;gap:8px;padding:8px 10px 8px 14px;background:#2563eb}') && html.includes('.crm-action-tools.reason-expanded{grid-template-columns:minmax(0,1fr)}') && html.includes('tools.classList.toggle(\'reason-expanded\',expanded);'),'Reason-code control is blue and expands to full row width');
 const questionStart = html.indexOf('const CRM_SURVEY_QUESTIONS_AIR');
 const questionEnd = html.indexOf('\nfunction toDMY',questionStart);
-assert.equal(crypto.createHash('sha256').update(html.slice(questionStart,questionEnd).replace(/\r/g,'')).digest('hex'),'4614ae111e0cc65da218e8e0e96e272e09f52fe2d4ecd038a07d87fbbad62f77','Approved five Refrigerator questions; existing product questions preserved');
+assert.equal(crypto.createHash('sha256').update(html.slice(questionStart,questionEnd).replace(/\r/g,'')).digest('hex'),'52cda0158a189e435d90460a11515466ce15b7964505a528ca5479ba7b9c369b','Approved Refrigerator question 3 revision; existing product questions preserved');
 assert(html.includes("activeCategory !== 'cust'"),'New design excludes Customer Workspace');
 assert(html.includes("if(cat.id === 'ops'){ renderFleetMap(main); }"));
 const mapStart = html.indexOf('function renderFleetMap(container){');
