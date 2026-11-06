@@ -49,5 +49,23 @@ const oldTemplate='Service Order : SO-DEMO\nCustomer : Name\nExpected Time : 10.
 const updated=templateContext.customerTemplateModelFirst(oldTemplate);
 assert.equal(updated,'Service Order : SO-DEMO\nType : Model demo\nCustomer : Name\nExpected Time : 10.00\nNoted : Note');
 assert.equal(templateContext.customerTemplateModelFirst(updated),updated);
+const questionStart=html.indexOf('const CRM_SURVEY_QUESTIONS_AIR');
+vm.runInContext(html.slice(questionStart,html.indexOf('\nfunction toDMY',questionStart)),templateContext);
+const fridge={productType:'fridge',model:'Refrigerator demo',so:'SO-DEMO',answers:['Grounded outlet','80 x 70 x 190 cm','Door 90 cm','Saturday allowed','Customer present']};
+assert.equal(templateContext.crmQuestionsFor('fridge').length,5);
+const fridgeText=templateContext.crmBuildColumnO(JSON.parse(JSON.stringify(fridge)));
+assert(fridgeText.startsWith('Service Order : SO-DEMO\nType : Refrigerator demo\nCustomer :'));
+assert(fridgeText.includes('3.จุดติดตั้งผ่านประตูหรือไม่'));
+for(const answer of fridge.answers) assert(fridgeText.includes(answer));
+assert(fridgeText.includes('ห้ามเลื่อนนัด') && fridgeText.includes('**หากมีการเลื่อนวันหรือยกเลิก'));
+assert(!fridgeText.includes('คอยล์ร้อน'));
+templateContext.CRM_LINE_LANGUAGES={th:{},en:{},zh:{}};
+vm.runInContext(extract('crmBuildLineMessage'),templateContext);
+for(const language of ['th','en','zh']){
+ const message=templateContext.crmBuildLineMessage(fridge,language);
+ assert(message.includes('Refrigerator demo'));
+ assert(!/คอยล์|Indoor and outdoor|室内机/.test(message));
+}
+assert(html.includes('<option value="fridge"'));
 console.log('PASS: ' + scripts.length + ' inline scripts parse; original tests + 4 reminder assertions pass.');
 console.log('Browser smoke tests are separate; no production backend writes performed.');

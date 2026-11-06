@@ -11,7 +11,7 @@ assert.equal((html.match(/<h4 class="crm-workspace-heading">/g)||[]).length,0);
 const crypto = require('node:crypto');
 const crmStart = html.indexOf('function renderAirCRM(main){');
 const crmEnd = html.indexOf('\nfunction renderAirCRMRefresh',crmStart);
-assert.equal(crypto.createHash('sha256').update(html.slice(crmStart,crmEnd).replace(/\r/g,'')).digest('hex'),'a121c4b27c06e3c0592659d56c0ed8911830b3a1a04bf1fb9308bd6827be1e4f','Customer Workspace changes must be reviewed and explicitly approved');
+assert.equal(crypto.createHash('sha256').update(html.slice(crmStart,crmEnd).replace(/\r/g,'')).digest('hex'),'ac16aaf9e7e6eeefb179139a4666e8262b7b3003337257122a0bfb295ab2abe1','Approved Refrigerator option and survey label in Customer Workspace');
 for(const code of ['RS02 - Customer Requested New Date/Time','RS03 - Unable to Contact Customer','RS05 - Site Not Ready','RS11 - Additional Work / Site Condition','RS12 - Customer Cancelled / Postponed','AC01 - Installation Area Not Ready','AC03 - Electrical System Not Ready']) assert(html.includes(code),`Missing Standard Reason Code: ${code}`);
 assert(html.includes('id="crmReasonTitle">Standard Reason Codes</b>'),'Reason-code panel uses the requested heading');
 assert(html.includes('id="crmReasonEditBtn"') && html.includes('id="crmReasonAddForm"') && html.includes('data-reason-delete='),'Reason codes can be added and removed from the edit control');
@@ -21,7 +21,7 @@ assert(html.includes('.crm-action-tools{display:grid;grid-template-columns:minma
 assert(html.includes('.crm-reason-header{display:flex;align-items:center;gap:8px;padding:8px 10px 8px 14px;background:#2563eb}') && html.includes('.crm-action-tools.reason-expanded{grid-template-columns:minmax(0,1fr)}') && html.includes('tools.classList.toggle(\'reason-expanded\',expanded);'),'Reason-code control is blue and expands to full row width');
 const questionStart = html.indexOf('const CRM_SURVEY_QUESTIONS_AIR');
 const questionEnd = html.indexOf('\nfunction toDMY',questionStart);
-assert.equal(crypto.createHash('sha256').update(html.slice(questionStart,questionEnd).replace(/\r/g,'')).digest('hex'),'8a452c811f69ad4402d729a3eb6204431507be1541ef55d32804d3a63b70fd0d','Air, Washer and Repair questions and choices are frozen');
+assert.equal(crypto.createHash('sha256').update(html.slice(questionStart,questionEnd).replace(/\r/g,'')).digest('hex'),'4614ae111e0cc65da218e8e0e96e272e09f52fe2d4ecd038a07d87fbbad62f77','Approved five Refrigerator questions; existing product questions preserved');
 assert(html.includes("activeCategory !== 'cust'"),'New design excludes Customer Workspace');
 assert(html.includes("if(cat.id === 'ops'){ renderFleetMap(main); }"));
 const mapStart = html.indexOf('function renderFleetMap(container){');
