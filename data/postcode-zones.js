@@ -1,5 +1,6 @@
 // Source: Appointment Zone.xlsx; six worksheet header fills, Excel theme+tint resolved to RGB.
 // Reviewed 2026-11-04. Unknown postcodes are outside the supplied service zones.
+// 2026-11-13: postcode 10230 moved from Green zone to Orange zone by request.
 (function () {
  'use strict';
  const groups = [
@@ -71,6 +72,7 @@
     "postcodes": [
       "10210",
       "10220",
+      "10230",
       "10310",
       "10320",
       "10321",
@@ -86,6 +88,10 @@
       [
         "10220",
         "Bang Khen · Central Ramindra"
+      ],
+      [
+        "10230",
+        "Lat Phrao · Central EastVille"
       ],
       [
         "10310",
@@ -154,17 +160,12 @@
     "color": "#47D45A",
     "textColor": "#111827",
     "postcodes": [
-      "10230",
       "10240",
       "10250",
       "10254",
       "10260"
     ],
     "places": [
-      [
-        "10230",
-        "Lat Phrao · Central EastVille"
-      ],
       [
         "10240",
         "Bang Kapi · The Mall Lifestore Bangkapi"

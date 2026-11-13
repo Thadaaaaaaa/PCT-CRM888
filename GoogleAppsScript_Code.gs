@@ -48,6 +48,7 @@ const POSTCODE_ZONE_GROUPS = Object.freeze([
     [
       "10210",
       "10220",
+      "10230",
       "10310",
       "10320",
       "10321",
@@ -73,7 +74,6 @@ const POSTCODE_ZONE_GROUPS = Object.freeze([
     "#47D45A",
     "#111827",
     [
-      "10230",
       "10240",
       "10250",
       "10254",
