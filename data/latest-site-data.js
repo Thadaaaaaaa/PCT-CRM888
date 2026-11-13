@@ -1,8 +1,8 @@
-// Public catalog snapshot generated from the 2026-11-04 export.
+// Public catalog snapshot generated from the 2026-11-13 export.
 // Customer cases, credentials, editor history, sheet configuration, and daily reports are intentionally excluded.
 window.PCT_LATEST_SITE_DATA={
   "version": 4,
-  "exportedAt": 1793790648360,
+  "exportedAt": 1794561591446,
   "categories": [
     {
       "id": "logi",
@@ -410,15 +410,6 @@ window.PCT_LATEST_SITE_DATA={
       "bgColor": null
     },
     {
-      "id": "item_xytl73hb",
-      "category": "cat_o41isi5b",
-      "title": "List Sparepart",
-      "desc": "ตรวจสอบรายชือ รหัส อะไหล่สำหรับเบิก",
-      "url": "https://docs.google.com/spreadsheets/d/1iQS9SrpClpwBD2peEmaV_2LTwRMbtgPzvYKnZOix3aI/edit?usp=sharing",
-      "color": null,
-      "bgColor": null
-    },
-    {
       "id": "item_1llp82v9",
       "category": "cat_68od6fap",
       "title": "NSS from Xiaomi",
@@ -586,6 +577,24 @@ window.PCT_LATEST_SITE_DATA={
       "title": "XMS update message",
       "desc": "อัปเดต Message ของแต่ละเคสเข้าระบบ XMS",
       "url": "https://repairpending-xm.github.io/service-remark-generator/",
+      "color": null,
+      "bgColor": null
+    },
+    {
+      "id": "item_0b6j1jct",
+      "category": "cat_w4u74o7a",
+      "title": "KOL Xiaomi V5",
+      "desc": "",
+      "url": "https://mi.feishu.cn/wiki/AedPwsUkciazXhkG62McumVWnDe?sheet=78J2Iu",
+      "color": null,
+      "bgColor": null
+    },
+    {
+      "id": "item_3dhx2rss",
+      "category": "cat_o41isi5b",
+      "title": "List spare-part",
+      "desc": "รายชื่ออะไหล่แต่ละสินค้า ใช้ตรวจสอบเพื่อเบิก",
+      "url": "https://docs.google.com/spreadsheets/d/1x_TFVUFBwS0FN5GpVjdftA-ugvN71oEVzmit6qijn60/edit?gid=1079515718#gid=1079515718",
       "color": null,
       "bgColor": null
     }
@@ -761,7 +770,8 @@ window.PCT_LATEST_SITE_DATA={
           "item_n5hgi7rz",
           "item_lt1ecvcw",
           "item_52f92o2h",
-          "item_118uxquy"
+          "item_118uxquy",
+          "item_0b6j1jct"
         ]
       }
     ],
@@ -811,7 +821,7 @@ window.PCT_LATEST_SITE_DATA={
         "ids": [
           "item_5n3f8lb8",
           "item_7uzzbukm",
-          "item_xytl73hb"
+          "item_3dhx2rss"
         ]
       },
       {

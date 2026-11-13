@@ -20,7 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Verify template output
-        run: node verify.cjs
+        run: |
+          node verify.cjs
+          node verify-public-catalog.cjs
+          node verify-shared-catalog.cjs
       - uses: actions/configure-pages@v5
       - name: Prepare static website
         run: |

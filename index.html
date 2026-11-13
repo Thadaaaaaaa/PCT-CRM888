@@ -1038,7 +1038,7 @@ body.pct-design-mode .card [data-card-action="delete"]:hover{color:#b91c1c;borde
 @media(max-width:640px){.kb-error-shell{padding:13px;margin-left:-4px;margin-right:-4px}.kb-error-head{align-items:center}.kb-error-head p{display:none}.kb-error-summary{grid-template-columns:auto minmax(0,1fr) auto;padding:11px 10px;gap:8px}.kb-error-code{min-width:50px;padding:5px 6px}.kb-error-actions{align-items:stretch;flex-direction:column}.kb-error-copy{min-height:42px}.kb-tabbar{overflow-x:auto}.kb-tab{min-width:max-content}}
 @media(max-width:640px){.kb-unified-head{align-items:flex-start;flex-direction:column}.kb-unified-counts{justify-content:flex-start}.kb-unified-list{grid-template-columns:1fr}.kb-unified-copy{min-width:44px}}
 </style>
-<script src="data/latest-site-data.js?v=20261104b"></script>
+<script src="data/latest-site-data.js?v=20261113"></script>
 <script src="data/postcode-zones.js?v=20261104"></script>
 <script>const ICON_OPTIONS = ['📅','💬','📊','🧰','👥','🚗','🛠️','📦','🧾','📍','🔧','💧','❄️','🧼','💰','📌','🗂️','🛡️','🔌','⚙️','📞','✅','⚠️','🏠','🧯','🔥','🌡️','🧊','📡','🪫','🔋','📋','🗃️','📁','🛒','🎯','⭐','🏷️','🧑‍🔧','🚚','🚀','🧠','🧪','🧭','🗓️','⏱️','🔔','🔒','🔓','🆘','❌','🟢','🟡','🔴','🔵','🟣','🟠','🧮','📈','📉','🛎️','🧹','🔩','🧱','🧑‍💼','👨‍🔧','👩‍🔧','🏢','🌬️','💡','🎨','🌟','🏆','💎','📝','🔍','🧩','🛰️','🗺️','🧳','🎁','🔗'];
 const COLOR_SWATCHES = ['#FF6900','#3b82f6','#16a34a','#d97706','#9333ea','#db2777','#0d9488','#ef4444','#0ea5e9','#1f2a44'];
@@ -1263,6 +1263,25 @@ try{ localStorage.setItem(SIDEBAR_COLLAPSE_KEY, collapsed ? '1' : '0'); }catch(e
 applySidebarCollapsed(collapsed);
 };
 }
+function pctApplyPublishedCatalog(parsed){
+if(!window.PCT_LATEST_SITE_DATA)return;
+const copy=value=>JSON.parse(JSON.stringify(value));
+const shared={categories:PUBLIC_DATA_PAYLOAD.categories,items:PUBLIC_DATA_PAYLOAD.items,layout:PUBLIC_DATA_PAYLOAD.layout||{},catalogGroups:PUBLIC_DATA_PAYLOAD.catalogGroups||[]};
+if(parsed){
+const previous={categories:parsed.categories||[],items:parsed.items||[],layout:parsed.layout||{},catalogGroups:parsed.catalogGroups||[]};
+if(JSON.stringify(previous)!==JSON.stringify(shared)){
+ try{
+  const key='pctCatalogBeforeSharedSync_v1';
+  const saved=JSON.parse(localStorage.getItem(key)||'null');
+  if(!saved||saved.targetExportedAt!==LATEST_DATA_EXPORT)localStorage.setItem(key,JSON.stringify({targetExportedAt:LATEST_DATA_EXPORT,previousExportedAt:parsed.dataExportedAt||null,...previous}));
+ }catch(error){showToast('สำรองเมนูเดิมในเครื่องไม่สำเร็จ — กำลังใช้เมนูส่วนกลางล่าสุด');}
+}
+}
+CATS=sanitizeCategories(copy(shared.categories));
+DATA=sanitizeCatalogItems(copy(shared.items));
+LAYOUT=copy(shared.layout);
+CATALOG_GROUPS=sanitizeCatalogGroups(copy(shared.catalogGroups));
+}
 function loadAll(){
 let parsed = null;
 try{
@@ -1339,6 +1358,8 @@ if(groupIds.has(group.id)||group.memberIds.some(id=>groupedIds.has(id)))return;
 CATALOG_GROUPS.push(group);group.memberIds.forEach(id=>groupedIds.add(id));
 });
 }
+// Published menus are shared by every browser; private cases and settings below remain local.
+pctApplyPublishedCatalog(parsed);
 CASES = sanitizeCases((useLatestDataExport && Array.isArray(PUBLIC_DATA_PAYLOAD.cases)) ? PUBLIC_DATA_PAYLOAD.cases : ((parsed && Array.isArray(parsed.cases)) ? parsed.cases : []));
 SHEET_CONFIG = useLatestDataExport ? {...SHEET_CONFIG, ...(PUBLIC_DATA_PAYLOAD.sheetConfig || {})} : ((parsed && parsed.sheetConfig) ? {...SHEET_CONFIG, ...parsed.sheetConfig} : SHEET_CONFIG);
 SHEET_CONFIG.webAppUrl = pctNormalizeSheetUrl(SHEET_CONFIG.webAppUrl);
